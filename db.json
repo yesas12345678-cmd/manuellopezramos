@@ -7,19 +7,14 @@
         {
           "id": "e1",
           "name": "Press de Banca con Barra",
-          "sets": [
-            { "setNum": 1, "weight": 80, "reps": 8, "notes": "Último set costó" },
-            { "setNum": 2, "weight": 80, "reps": 8, "notes": "" },
-            { "setNum": 3, "weight": 85, "reps": 6, "notes": "Fallo en la 6" }
-          ]
+          "weight": 80,
+          "notes": "Mantener los codos cerrados en la bajada"
         },
         {
           "id": "e2",
           "name": "Press Militar con Mancuernas",
-          "sets": [
-            { "setNum": 1, "weight": 24, "reps": 10, "notes": "" },
-            { "setNum": 2, "weight": 24, "reps": 8, "notes": "" }
-          ]
+          "weight": 24,
+          "notes": "Controlar la bajada lenta"
         }
       ]
     },
@@ -30,10 +25,8 @@
         {
           "id": "e3",
           "name": "Dominadas Pronas",
-          "sets": [
-            { "setNum": 1, "weight": 0, "reps": 10, "notes": "Peso corporal" },
-            { "setNum": 2, "weight": 5, "reps": 8, "notes": "Con lastre" }
-          ]
+          "weight": 5,
+          "notes": "Hacer rango completo de movimiento"
         }
       ]
     }

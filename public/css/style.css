@@ -949,37 +949,52 @@ tr:hover td {
   margin-bottom: 8px;
   color: var(--text-main);
 }
-.gym-sets-table {
-  width: 100%;
+.gym-exercise-inputs {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 10px;
+}
+.gym-input-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.gym-input-row label {
   font-size: 0.8rem;
-}
-.gym-sets-table th {
-  padding: 4px;
-  text-align: center;
-  font-weight: 600;
-  background: transparent;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-}
-.gym-sets-table td {
-  padding: 4px;
-  text-align: center;
-  border-bottom: none;
-}
-.gym-exercise-item .btn-add-set {
-  background: transparent;
-  border: 1px dashed var(--border-color);
   color: var(--text-muted);
+  width: 50px;
+  flex-shrink: 0;
+  font-weight: 600;
+}
+.gym-input-row input {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  padding: 6px 12px;
+  color: var(--text-main);
+  font-family: var(--font-primary);
+  font-size: 0.85rem;
   width: 100%;
-  padding: 4px;
-  font-size: 0.75rem;
-  border-radius: 4px;
-  margin-top: 6px;
-  cursor: pointer;
   transition: var(--transition-smooth);
 }
-.gym-exercise-item .btn-add-set:hover {
+.gym-input-row input:focus {
   border-color: var(--color-primary);
-  color: var(--color-primary);
+  background: rgba(255, 255, 255, 0.08);
+  outline: none;
+}
+.gym-weight-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.gym-weight-container input {
+  width: 80px;
+  text-align: center;
+}
+.gym-weight-container span {
+  font-size: 0.85rem;
+  color: var(--text-muted);
 }
 
 /* Modal */

@@ -598,7 +598,8 @@ function setupGymModule() {
       return {
         id: 'e_' + idx + '_' + Math.random().toString(36).substr(2, 5),
         name: input.value.trim(),
-        sets: []
+        weight: 0,
+        notes: ''
       };
     });
 
@@ -619,48 +620,42 @@ function setupGymModule() {
     }
   });
 
-  // Exponer dinámicamente función para añadir sets
-  window.addGymSetPrompt = async (dayId, exerciseId) => {
-    const weight = prompt('Introduce el Peso (kg):');
-    if (weight === null) return;
-    const reps = prompt('Introduce las Repeticiones:');
-    if (reps === null) return;
-    const notes = prompt('Observaciones / Notas (opcional):') || '';
+  // Escuchar cambios de peso y notas para auto-guardado
+  const gridContainer = document.getElementById('gym-days-grid');
+  gridContainer.addEventListener('change', async (e) => {
+    if (e.target.classList.contains('gym-weight-input') || e.target.classList.contains('gym-notes-input')) {
+      const dayId = e.target.getAttribute('data-day-id');
+      const exId = e.target.getAttribute('data-ex-id');
+      const isWeight = e.target.classList.contains('gym-weight-input');
+      const val = e.target.value;
 
-    try {
-      // Recuperar los datos actuales del día
-      const resGet = await fetch('/api/gym');
-      const gymData = await resGet.json();
-      const day = gymData.find(d => d.id === dayId);
-      
-      if (day) {
-        const exercise = day.exercises.find(e => e.id === exerciseId);
-        if (exercise) {
-          const setNum = exercise.sets.length + 1;
-          exercise.sets.push({
-            setNum,
-            weight: parseFloat(weight) || 0,
-            reps: parseInt(reps) || 0,
-            notes
-          });
+      try {
+        const resGet = await fetch('/api/gym');
+        const gymData = await resGet.json();
+        const day = gymData.find(d => d.id === dayId);
+        
+        if (day) {
+          const exercise = day.exercises.find(e => e.id === exId);
+          if (exercise) {
+            if (isWeight) {
+              exercise.weight = parseFloat(val) || 0;
+            } else {
+              exercise.notes = val.trim();
+            }
 
-          // Guardar actualización
-          const resPost = await fetch('/api/gym', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(day)
-          });
-          
-          if (resPost.ok) {
-            const data = await resPost.json();
-            renderGymDays(data.gym);
+            // Guardar en el backend sin re-renderizar para no perder el foco
+            await fetch('/api/gym', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(day)
+            });
           }
         }
+      } catch (err) {
+        console.error('Error al guardar datos de gimnasio:', err);
       }
-    } catch (e) {
-      console.error('Error agregando set:', e);
     }
-  };
+  });
 
   // Exponer borrar día
   window.deleteGymDay = async (id) => {
@@ -709,29 +704,19 @@ function renderGymDays(gymDays) {
         ${day.exercises.map(ex => `
           <div class="gym-exercise-item">
             <div class="gym-exercise-name">${escapeHTML(ex.name)}</div>
-            ${ex.sets.length > 0 ? `
-              <table class="gym-sets-table">
-                <thead>
-                  <tr>
-                    <th>Set</th>
-                    <th>Peso</th>
-                    <th>Reps</th>
-                    <th>Notas</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  ${ex.sets.map(s => `
-                    <tr>
-                      <td>${s.setNum}</td>
-                      <td><strong>${s.weight} kg</strong></td>
-                      <td>${s.reps}</td>
-                      <td class="text-muted" style="font-size:0.75rem;">${escapeHTML(s.notes)}</td>
-                    </tr>
-                  `).join('')}
-                </tbody>
-              </table>
-            ` : '<p class="text-muted" style="font-size:0.8rem;">Sin series registradas hoy.</p>'}
-            <button class="btn-add-set" onclick="addGymSetPrompt('${day.id}', '${ex.id}')">+ Añadir Serie</button>
+            <div class="gym-exercise-inputs">
+              <div class="gym-input-row">
+                <label>Peso:</label>
+                <div class="gym-weight-container">
+                  <input type="number" class="gym-weight-input" data-day-id="${day.id}" data-ex-id="${ex.id}" value="${ex.weight || 0}" min="0" step="any">
+                  <span>kg</span>
+                </div>
+              </div>
+              <div class="gym-input-row">
+                <label>Nota:</label>
+                <input type="text" class="gym-notes-input" data-day-id="${day.id}" data-ex-id="${ex.id}" value="${escapeHTML(ex.notes || '')}" placeholder="Ej: Mantener codos cerrados...">
+              </div>
+            </div>
           </div>
         `).join('')}
       </div>

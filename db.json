@@ -1,0 +1,53 @@
+{
+  "gym": [
+    {
+      "id": "1",
+      "dayName": "Lunes - Empuje (Pecho/Hombro/Tríceps)",
+      "exercises": [
+        {
+          "id": "e1",
+          "name": "Press de Banca con Barra",
+          "sets": [
+            { "setNum": 1, "weight": 80, "reps": 8, "notes": "Último set costó" },
+            { "setNum": 2, "weight": 80, "reps": 8, "notes": "" },
+            { "setNum": 3, "weight": 85, "reps": 6, "notes": "Fallo en la 6" }
+          ]
+        },
+        {
+          "id": "e2",
+          "name": "Press Militar con Mancuernas",
+          "sets": [
+            { "setNum": 1, "weight": 24, "reps": 10, "notes": "" },
+            { "setNum": 2, "weight": 24, "reps": 8, "notes": "" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "2",
+      "dayName": "Miércoles - Tracción (Espalda/Bíceps)",
+      "exercises": [
+        {
+          "id": "e3",
+          "name": "Dominadas Pronas",
+          "sets": [
+            { "setNum": 1, "weight": 0, "reps": 10, "notes": "Peso corporal" },
+            { "setNum": 2, "weight": 5, "reps": 8, "notes": "Con lastre" }
+          ]
+        }
+      ]
+    }
+  ],
+  "sitemaps": [],
+  "security": {
+    "targets": [],
+    "logs": []
+  },
+  "leads": {
+    "productIdeas": [],
+    "leadsList": []
+  },
+  "gmail": {
+    "chatHistory": []
+  }
+}

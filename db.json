@@ -37,7 +37,7 @@
       {
         "id": "t_70mj9rhl9",
         "url": "https://mihogarasegurado.com",
-        "lastScanDate": "2026-08-02T09:02:28.704Z",
+        "lastScanDate": "2026-08-02T17:27:54.847Z",
         "lastScanStatus": "Vulnerable"
       }
     ],
@@ -51,6 +51,16 @@
         "type": "Network Port Exposure",
         "status": "Open",
         "foundAt": "2026-08-02T09:02:28.704Z"
+      },
+      {
+        "id": "v_pdnj0n9cz",
+        "url": "https://mihogarasegurado.com",
+        "title": "Puertos de servicio expuestos al público",
+        "description": "Se detectaron los siguientes puertos abiertos: SSH (22). Tener estos servicios expuestos públicamente aumenta la superficie de ataque y puede permitir intentos de fuerza bruta.",
+        "severity": "Medium",
+        "type": "Network Port Exposure",
+        "status": "Open",
+        "foundAt": "2026-08-02T17:27:54.847Z"
       }
     ]
   },
@@ -59,6 +69,19 @@
     "leadsList": []
   },
   "gmail": {
-    "chatHistory": []
+    "chatHistory": [
+      {
+        "role": "user",
+        "content": "Elimina todos los correos de aliexpress",
+        "timestamp": "2026-08-02T17:28:35.224Z"
+      },
+      {
+        "role": "assistant",
+        "content": "❌ Error en el asistente: Error de Gemini API (404): {\n  \"error\": {\n    \"code\": 404,\n    \"message\": \"This model models/gemini-2.5-flash is no longer available to new users. Please update your code to use a newer model for the latest features and improvements.\",\n    \"status\": \"NOT_FOUND\"\n  }\n}\n",
+        "timestamp": "2026-08-02T17:28:37.097Z",
+        "actionTaken": null,
+        "details": null
+      }
+    ]
   }
 }

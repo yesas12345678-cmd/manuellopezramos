@@ -63,9 +63,8 @@ export async function fetchRecentEmails(limit = 5) {
   const emails = [];
 
   try {
-    // Obtener información del buzón actual
-    const mailbox = await client.select('INBOX');
-    const totalMessages = mailbox.exists;
+    // Obtener información del buzón actual de ImapFlow
+    const totalMessages = client.mailbox.exists;
     
     if (totalMessages > 0) {
       // Calcular rango para los últimos 'limit' mensajes

@@ -3,7 +3,7 @@ dotenv.config();
 
 /**
  * Helper to call Gemini API directly using native fetch.
- * Uses gemini-2.5-flash for speed and reliability.
+ * Uses gemini-1.5-flash for speed and reliability.
  */
 export async function callGemini(prompt, systemInstruction = '') {
   const apiKey = process.env.GEMINI_API_KEY;
@@ -11,7 +11,7 @@ export async function callGemini(prompt, systemInstruction = '') {
     throw new Error('GEMINI_API_KEY no está configurada en el archivo .env');
   }
 
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
   
   const payload = {
     contents: [

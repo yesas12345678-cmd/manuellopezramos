@@ -26,6 +26,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   setupSalesModule();
   setupGmailModule();
   setupConfigModule();
+  setupLeadsModule();
 });
 
 // Verificar si hay sesión activa
@@ -250,6 +251,15 @@ function setupSalesModule() {
     }
   });
 
+  const salesProductContext = document.getElementById('sales-product-context-text');
+  
+  // Cargar contexto persistido
+  salesProductContext.value = localStorage.getItem('sales_product_context') || '';
+  
+  salesProductContext.addEventListener('input', () => {
+    localStorage.setItem('sales_product_context', salesProductContext.value);
+  });
+
   // Enviar texto manual
   btnSendSalesContext.addEventListener('click', () => {
     const text = salesManualText.value.trim();
@@ -265,11 +275,15 @@ function setupSalesModule() {
   // Consultar consejos al backend
   async function triggerSalesAdvice(transcriptText) {
     salesAiStatus.textContent = 'Analizando...';
+    salesAiStatus.className = 'badge';
     try {
       const res = await fetch('/api/sales/advice', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ transcript: transcriptText })
+        body: JSON.stringify({ 
+          transcript: transcriptText,
+          productContext: salesProductContext.value.trim()
+        })
       });
       
       if (res.ok) {
@@ -277,18 +291,29 @@ function setupSalesModule() {
         renderSalesAdvice(data.advice);
         salesAiStatus.textContent = 'Actualizado';
       } else {
+        const data = await res.json();
         salesAiStatus.textContent = 'Error';
+        salesAiStatus.className = 'badge badge-critical';
+        renderSalesAdvice(`⚠️ **Error al consultar el asesor:**\n\n${data.message || 'Error en la API.'}\n\n*Por favor, asegúrate de configurar tu **API Key de Gemini** en los Ajustes de la Suite (esquina superior derecha) para activar este módulo.*`);
       }
     } catch (err) {
       console.error('Error obteniendo consejos de venta:', err);
       salesAiStatus.textContent = 'Error Red';
+      salesAiStatus.className = 'badge badge-critical';
+      renderSalesAdvice(`❌ **Error de Red:** No se pudo conectar con el servidor backend.`);
     }
   }
 
   function renderSalesAdvice(adviceMarkdown) {
-    // Convertir de forma simple las viñetas a HTML limpio
+    // Convertir de forma simple las viñetas y negritas a HTML limpio
     let htmlContent = '<div class="advice-block">';
-    htmlContent += '<h4><i class="fa-solid fa-lightbulb"></i> Consejos Tácticos de Cierre</h4>';
+    
+    // Verificar si es un mensaje de alerta
+    if (adviceMarkdown.includes('⚠️') || adviceMarkdown.includes('❌')) {
+      htmlContent += '<h4><i class="fa-solid fa-triangle-exclamation"></i> Estado del Módulo</h4>';
+    } else {
+      htmlContent += '<h4><i class="fa-solid fa-lightbulb"></i> Consejos Tácticos de Cierre</h4>';
+    }
     
     const lines = adviceMarkdown.split('\n');
     let inList = false;
@@ -300,7 +325,6 @@ function setupSalesModule() {
           htmlContent += '<ul>';
           inList = true;
         }
-        // Reemplazar marcadores de negrita **texto**
         let listText = cleanLine.substring(1).trim();
         listText = listText.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
         htmlContent += `<li>${listText}</li>`;

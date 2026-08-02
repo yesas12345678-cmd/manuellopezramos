@@ -262,11 +262,11 @@ app.post('/api/security/scan-now', authMiddleware, async (req, res) => {
 
 app.post('/api/sales/advice', authMiddleware, async (req, res) => {
   try {
-    const { transcript } = req.body;
+    const { transcript, productContext } = req.body;
     if (!transcript) {
       return res.status(400).json({ success: false, message: 'Falta transcripción' });
     }
-    const advice = await getSalesAdvice(transcript);
+    const advice = await getSalesAdvice(transcript, productContext);
     res.json({ success: true, advice });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });

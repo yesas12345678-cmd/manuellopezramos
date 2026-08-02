@@ -56,12 +56,13 @@ export async function callGemini(prompt, systemInstruction = '') {
 /**
  * Analiza una transcripción en vivo y da consejos de cierre de venta rápidos.
  */
-export async function getSalesAdvice(transcript) {
+export async function getSalesAdvice(transcript, productContext = '') {
   const systemInstruction = `Eres un cerrador de ventas experto de alto rendimiento y psicólogo persuasivo. 
 El usuario está en una videollamada o llamada en directo con un cliente.
 Analizarás lo que el cliente y el vendedor dicen en la transcripción.
+${productContext ? `CONTEXTO DE LO QUE EL VENDEDOR OFRECE Y SUS CONDICIONES:\n${productContext}\n` : ''}
 Tu respuesta debe ser MUY concisa, directa y estructurada en viñetas cortas. Max 3-4 viñetas.
-Da consejos accionables inmediatamente sobre qué responder, qué objeción tratar o qué pregunta de cierre hacer.
+Da consejos accionables inmediatamente sobre qué responder, qué objeción tratar o qué pregunta de cierre hacer de acuerdo al producto que ofrece.
 Evita introducciones o conclusiones largas. Ve directo al grano.`;
 
   return await callGemini(`Transcripción actual de la llamada:\n"${transcript}"\n\n¿Qué consejos rápidos y frases específicas de cierre me das para responder ahora mismo?`, systemInstruction);

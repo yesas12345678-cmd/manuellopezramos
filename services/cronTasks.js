@@ -141,36 +141,32 @@ export async function runSecurityScanAll() {
  */
 export async function runLeadGeneration() {
   console.log('[Cron] Iniciando captador de clientes y lluvia de ideas...');
-  try {
-    const db = await readDB();
-    
-    // 1. Brainstorming neurodivergente con contexto de ideas anteriores
-    const prevIdeasText = db.leads.productIdeas.slice(-5).map(i => i.title).join(', ');
-    const newIdeas = await brainstormProductIdeas(prevIdeasText);
-    
-    newIdeas.forEach(idea => {
-      idea.id = 'i_' + Math.random().toString(36).substr(2, 9);
-      idea.createdAt = new Date().toISOString();
-      db.leads.productIdeas.push(idea);
-    });
+  const db = await readDB();
+  
+  // 1. Brainstorming neurodivergente con contexto de ideas anteriores
+  const prevIdeasText = db.leads.productIdeas.slice(-5).map(i => i.title).join(', ');
+  const newIdeas = await brainstormProductIdeas(prevIdeasText);
+  
+  newIdeas.forEach(idea => {
+    idea.id = 'i_' + Math.random().toString(36).substr(2, 9);
+    idea.createdAt = new Date().toISOString();
+    db.leads.productIdeas.push(idea);
+  });
 
-    // 2. Captación de clientes (leads)
-    const niches = ['gimnasios locales', 'restaurantes de comida rápida', 'asesorías contables', 'dentistas', 'tiendas online locales'];
-    const selectedNiche = niches[Math.floor(Math.random() * niches.length)];
-    const newLeads = await generateClientLeads(selectedNiche);
+  // 2. Captación de clientes (leads)
+  const niches = ['gimnasios locales', 'restaurantes de comida rápida', 'asesorías contables', 'dentistas', 'tiendas online locales'];
+  const selectedNiche = niches[Math.floor(Math.random() * niches.length)];
+  const newLeads = await generateClientLeads(selectedNiche);
 
-    newLeads.forEach(lead => {
-      lead.id = 'l_' + Math.random().toString(36).substr(2, 9);
-      lead.status = 'Nuevo';
-      lead.foundAt = new Date().toISOString();
-      db.leads.leadsList.push(lead);
-    });
+  newLeads.forEach(lead => {
+    lead.id = 'l_' + Math.random().toString(36).substr(2, 9);
+    lead.status = 'Nuevo';
+    lead.foundAt = new Date().toISOString();
+    db.leads.leadsList.push(lead);
+  });
 
-    await writeDB(db);
-    console.log('[Cron] Captación completada. Creadas', newIdeas.length, 'ideas y', newLeads.length, 'leads.');
-  } catch (error) {
-    console.error('[Cron] Error en tarea de captación:', error.message);
-  }
+  await writeDB(db);
+  console.log('[Cron] Captación completada. Creadas', newIdeas.length, 'ideas y', newLeads.length, 'leads.');
 }
 
 /**
@@ -183,19 +179,31 @@ export function initCronTasks() {
   // '0 0 * * 0'
   // Para pruebas rápidas o simulación, también se puede forzar manualmente.
   cron.schedule('0 0 * * 0', async () => {
-    await runSitemapAuditAll();
+    try {
+      await runSitemapAuditAll();
+    } catch (err) {
+      console.error('[Cron] Error en sitemaps automático:', err.message);
+    }
   });
 
   // 2. Escaneo de vulnerabilidades: Diario (ej: a las 02:00 am)
   // '0 2 * * *'
   cron.schedule('0 2 * * *', async () => {
-    await runSecurityScanAll();
+    try {
+      await runSecurityScanAll();
+    } catch (err) {
+      console.error('[Cron] Error en pentesting automático:', err.message);
+    }
   });
 
   // 3. Captador de leads y lluvia de ideas: Cada 6 horas
   // '0 */6 * * *'
   cron.schedule('0 */6 * * *', async () => {
-    await runLeadGeneration();
+    try {
+      await runLeadGeneration();
+    } catch (err) {
+      console.error('[Cron] Error en captación automática:', err.message);
+    }
   });
 
   console.log('[Cron] Tareas programadas configuradas con éxito.');

@@ -335,9 +335,13 @@ function setupLeadsModule() {
       if (res.ok) {
         const data = await res.json();
         renderLeads(data.productIdeas, data.leadsList);
+      } else {
+        const data = await res.json();
+        alert('⚠️ Error: ' + (data.message || 'No se pudo iniciar la captación. Verifica tu clave de Gemini en Ajustes.'));
       }
     } catch (e) {
       console.error(e);
+      alert('⚠️ Error de conexión con el servidor.');
     }
     
     btnTriggerLeads.disabled = false;

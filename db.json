@@ -33,8 +33,26 @@
   ],
   "sitemaps": [],
   "security": {
-    "targets": [],
-    "logs": []
+    "targets": [
+      {
+        "id": "t_70mj9rhl9",
+        "url": "https://mihogarasegurado.com",
+        "lastScanDate": "2026-08-02T09:02:28.704Z",
+        "lastScanStatus": "Vulnerable"
+      }
+    ],
+    "logs": [
+      {
+        "id": "v_ncolc63je",
+        "url": "https://mihogarasegurado.com",
+        "title": "Puertos de servicio expuestos al público",
+        "description": "Se detectaron los siguientes puertos abiertos: SSH (22). Tener estos servicios expuestos públicamente aumenta la superficie de ataque y puede permitir intentos de fuerza bruta.",
+        "severity": "Medium",
+        "type": "Network Port Exposure",
+        "status": "Open",
+        "foundAt": "2026-08-02T09:02:28.704Z"
+      }
+    ]
   },
   "leads": {
     "productIdeas": [],

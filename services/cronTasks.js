@@ -98,6 +98,7 @@ export async function runSecurityScanAll() {
           url: target.url,
           title: vuln.title,
           description: vuln.description,
+          solution: vuln.solution,
           severity: vuln.severity,
           type: vuln.type,
           status: 'Open',

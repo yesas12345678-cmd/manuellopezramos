@@ -1026,7 +1026,13 @@ function renderSecurityLogs(logs) {
       </div>
       <div class="vuln-target"><i class="fa-solid fa-link"></i> ${escapeHTML(vuln.url)}</div>
       <p>${escapeHTML(vuln.description)}</p>
-      <div class="text-muted" style="margin-top:10px; font-size:0.75rem;"><i class="fa-regular fa-clock"></i> Detectada el ${new Date(vuln.foundAt).toLocaleString()}</div>
+      ${vuln.solution ? `
+        <div class="vuln-solution">
+          <strong><i class="fa-solid fa-screwdriver-wrench"></i> Solución Recomendada:</strong>
+          <span>${escapeHTML(vuln.solution)}</span>
+        </div>
+      ` : ''}
+      <div class="text-muted" style="margin-top:12px; font-size:0.75rem;"><i class="fa-regular fa-clock"></i> Detectada el ${new Date(vuln.foundAt).toLocaleString()}</div>
     </div>
   `).join('');
 }

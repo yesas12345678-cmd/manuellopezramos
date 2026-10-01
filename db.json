@@ -91,6 +91,78 @@
         "techStack": "Python (FastAPI), React, Selenium/Playwright (para automatización en portales de delivery sin API abierta), PostgreSQL, cron jobs para chequeo de precios.",
         "id": "i_7id1kinrs",
         "createdAt": "2026-08-04T06:35:42.862Z"
+      },
+      {
+        "title": "StockSombra",
+        "description": "Herramienta de control de micro-merma y 'inventario fantasma' para pequeños comercios y hostelería. En lugar de complejos sistemas de inventariado, utiliza plantillas de códigos QR impresas y pegadas en zonas estratégicas de la tienda o cocina. El personal de trabajo solo tiene que escanear un QR con su móvil (sin necesidad de iniciar sesión) y seleccionar en dos toques qué se ha roto, consumido internamente o detectado como defectuoso. Centraliza estas fugas silenciosas de dinero en un reporte financiero mensual sumamente fácil de entender.",
+        "marketNeeds": "Las pequeñas tiendas de alimentación, cafeterías y bazares pierden entre un 5% y un 15% de su margen en mermas no registradas porque reportarlas en el software de punto de venta (TPV) tradicional es lento y tedioso para los empleados durante la jornada laboral.",
+        "techStack": "Next.js, TailwindCSS, Supabase para base de datos y backend rápido, biblioteca de generación de códigos QR y una PWA (Progressive Web App) ultra ligera.",
+        "id": "i_t31lbiol0",
+        "createdAt": "2026-08-04T10:00:14.493Z"
+      },
+      {
+        "title": "TurnoAlerta Lite",
+        "description": "Extensión de navegador para pequeños negocios que gestionan sus citas directamente en Google Calendar (peluquerías, centros de estética, consultas médicas). La extensión inyecta un botón visual al lado de cada evento que permite enviar un recordatorio personalizado por WhatsApp Web en un clic, incluyendo un enlace de confirmación único. Si el cliente pulsa 'Confirmar' o 'Cancelar' en su móvil, el evento de Google Calendar cambia de color automáticamente en la pantalla del negocio.",
+        "marketNeeds": "Los sistemas de reservas automáticos y centralizados son caros y obligan a los negocios locales a cambiar su flujo de trabajo. Prefieren seguir usando la interfaz familiar de Google Calendar pero necesitan mitigar el 20% de pérdidas que provocan los clientes olvidadizos ('no-shows').",
+        "techStack": "Chrome Extension API, JavaScript (React integrado en la extensión), Node.js (Vercel Serverless) para gestionar los webhooks de confirmación y conectar con la API de Google Calendar.",
+        "id": "i_vwz1q4v36",
+        "createdAt": "2026-08-04T10:00:14.493Z"
+      },
+      {
+        "title": "VitrinaCheck IA",
+        "description": "Aplicación web móvil para la auditoría visual instantánea de vitrinas, estanterías y limpieza en comercios locales o franquicias. Al abrir el negocio, el empleado toma una foto del escaparate o de la barra. Una IA compara la imagen con la 'plantilla de referencia' establecida por el dueño y genera un checklist automático de correcciones en segundos (ej: 'El cartel de oferta no está visible', 'Falta stock del producto estrella en el estante central').",
+        "marketNeeds": "Los propietarios de tiendas físicas y restaurantes pequeños sufren para mantener los estándares de orden, limpieza y marketing visual cuando no están presentes. Esta herramienta sustituye las costosas auditorías físicas por una autoevaluación diaria asistida por IA que toma 15 segundos.",
+        "techStack": "HTML5/JS con acceso a cámara (Web-App), FastAPI (Python), OpenAI GPT-4o API para análisis de imagen comparativo estructurado por JSON, y PostgreSQL.",
+        "id": "i_lywptxl3q",
+        "createdAt": "2026-08-04T10:00:14.493Z"
+      },
+      {
+        "title": "ClimaCarta Dynamic",
+        "description": "Micro-SaaS que vincula la carta digital QR de un restaurante y sus pantallas locales con el clima en tiempo real de su ubicación. Si la temperatura sube repentinamente de 30°C, el software prioriza y destaca platos frescos, ensaladas y bebidas heladas en el menú. Si empieza a llover o baja la temperatura, reordena la interfaz automáticamente para sugerir sopas, cafés o postres calientes, generando además copys automatizados para sus redes sociales.",
+        "marketNeeds": "Los restaurantes pierden hasta un 18% de facturación diaria por no adaptar su oferta al clima del momento. Cambiar menús impresos es inviable y los gerentes no tienen tiempo de editar menús digitales manualmente ante cambios climáticos repentinos.",
+        "techStack": "Next.js, OpenWeatherMap API, TailwindCSS, Supabase, OpenAI API (para generación de copys promocionales basados en clima).",
+        "id": "i_mgnt20kb6",
+        "createdAt": "2026-08-04T16:00:24.808Z"
+      },
+      {
+        "title": "RebroteLocal",
+        "description": "CRM de retención invisible y predictivo para negocios de servicios recurrentes (barberías, estéticas, adiestradores caninos, clínicas dentales). En lugar de enviar recordatorios masivos de spam, calcula la desviación estándar de la frecuencia de visita de cada cliente individual. Si el cliente 'X' suele ir cada 24 días y ya va por el día 31, el sistema dispara un mensaje de WhatsApp automatizado, hiper-personalizado y ultra-específico ofreciendo un hueco libre con su profesional de preferencia.",
+        "marketNeeds": "Retener un cliente local es 5 veces más barato que conseguir uno nuevo. La mayoría de los negocios locales pierden clientes simplemente porque estos olvidan agendar su siguiente cita debido al ritmo del día a día.",
+        "techStack": "SvelteKit, PostgreSQL (para algoritmos de frecuencia y desviación), API de WhatsApp (Evolution API o Twilio), Cron Jobs para evaluación diaria de alertas.",
+        "id": "i_zryvs0s5z",
+        "createdAt": "2026-08-04T16:00:24.809Z"
+      },
+      {
+        "title": "TicketVoz Pyme",
+        "description": "Aplicación web móvil optimizada para operarios de talleres mecánicos, instaladores o carpinteros que trabajan con las manos ocupadas o sucias. Con un solo botón de voz gigante, el operario describe el trabajo realizado mientras lo hace (ej: 'Terminé cambio de pastillas en el Toyota gris, usé el kit de frenos Bendix y tardé 45 minutos'). El software transcribe, extrae los repuestos e ingresa las horas directamente en una orden de trabajo estructurada lista para facturar.",
+        "marketNeeds": "Los técnicos detestan usar ordenadores o escribir reportes al final del día. Esto provoca que se olviden de registrar materiales pequeños o minutos de mano de obra, causando fugas de dinero silenciosas de hasta un 20% en la facturación del negocio.",
+        "techStack": "PWA (React), Whisper API para transcripción, GPT-4o-mini para estructuración de datos de audio a formato JSON, integración vía Webhooks con ERPs locales.",
+        "id": "i_5jwegddti",
+        "createdAt": "2026-08-04T16:00:24.809Z"
+      },
+      {
+        "title": "AudioParte Express",
+        "description": "Una herramienta micro-SaaS que elimina el papeleo para técnicos de campo (fontaneros, electricistas, técnicos de aire acondicionado). El técnico envía un audio de WhatsApp sin estructura explicando el trabajo realizado ('Cambié la llave de paso de latón, estuve hora y media y usé teflón'). La IA procesa el audio, extrae los materiales, calcula las horas, busca los precios en su catálogo y genera automáticamente un parte de trabajo en PDF limpio y listo para enviar al cliente, actualizando un Google Sheet de control al mismo tiempo.",
+        "marketNeeds": "Los profesionales técnicos pierden miles de euros al año en materiales no cobrados o retrasos en facturación porque odian rellenar formularios después de una jornada física. Compran esto porque les ahorra 5 horas semanales de administración y acelera el flujo de caja utilizando solo su voz.",
+        "techStack": "Twilio (WhatsApp Business API), Whisper API (OpenAI) para transcripción, GPT-4o para estructuración de datos, Node.js, PDFKit para la generación del reporte y Google Sheets API.",
+        "id": "i_47bmgr3u2",
+        "createdAt": "2026-10-01T16:00:14.542Z"
+      },
+      {
+        "title": "S.O.S Despensa B2B",
+        "description": "Red de auxilio hiperlocal y anónima para hostelería. Permite a restaurantes, cafeterías y bares de un mismo barrio intercambiar, comprar o prestarse insumos de emergencia durante picos de servicio (ej. quedarse sin hielo, barriles de cerveza específicos, limones o envases de take-away un sábado por la noche). Funciona con un radar de geolocalización de 1 km y alertas rápidas por WhatsApp.",
+        "marketNeeds": "Quedarse sin stock clave en hora punta arruina la facturación de la noche y los proveedores tradicionales no atienden fines de semana. Los hosteleros prefieren comprarle de urgencia al restaurante de al lado con un pequeño recargo antes que perder clientes.",
+        "techStack": "Next.js, Supabase (con extensión PostGIS para cálculo de distancias en tiempo real), Tailwind CSS y WhatsApp Cloud API para alertas push instantáneas.",
+        "id": "i_f38gi9x6k",
+        "createdAt": "2026-10-01T16:00:14.542Z"
+      },
+      {
+        "title": "StatusVenta",
+        "description": "Generador y programador automatizado de catálogos para 'Estados de WhatsApp'. Diseñado para tiendas locales (fruterías, boutiques, panaderías) que venden por este canal. El comerciante sube fotos rápidas de sus productos del día; la IA elimina el fondo, optimiza los colores, redacta un gancho persuasivo con el precio y genera un carrusel de imágenes verticales de alta conversión con un enlace de pago/reserva integrado, listas para subir en un clic.",
+        "marketNeeds": "El comercio de barrio vende un volumen altísimo a través de los Estados de WhatsApp, pero las fotos suelen ser de baja calidad y pierden horas diseñando. Pagan por esto porque profesionaliza su vitrina digital diaria en menos de 2 minutos sin necesidad de saber de diseño.",
+        "techStack": "FastAPI (Python), Cloudinary API (remoción de fondos e imágenes), OpenAI (copys de venta), Remotion o Canvas API para plantillas dinámicas y una extensión de Chrome ligera para automatizar la subida.",
+        "id": "i_28068n8sm",
+        "createdAt": "2026-10-01T16:00:14.542Z"
       }
     ],
     "leadsList": [
@@ -123,6 +195,96 @@
         "id": "l_46878itom",
         "status": "Nuevo",
         "foundAt": "2026-08-04T06:35:49.861Z"
+      },
+      {
+        "name": "Pastelería Artesanal Miel y Canela",
+        "website": "www.mielycanela-artesanal.es",
+        "phone": "+34 912 345 678 / info@mielycanela-artesanal.es",
+        "industry": "Alimentación / Pastelería",
+        "whyTheyNeedWebDev": "Su sitio web actual es puramente informativo y tiene la carta en un formato PDF no optimizado para móviles. Para hacer pedidos obligan al usuario a usar WhatsApp de forma manual. Propuesta: Implementar una tienda online local autogestionable con pasarela de pago (Redsys/Stripe) y un sistema de selección de franjas horarias para la recogida en tienda o reparto local a domicilio.",
+        "id": "l_aiqd1pnja",
+        "status": "Nuevo",
+        "foundAt": "2026-08-04T10:00:22.585Z"
+      },
+      {
+        "name": "Boutique Moda Urbana Sora",
+        "website": "www.soramoda-boutique.com",
+        "phone": "+34 611 223 344 / contacto@soramoda-boutique.com",
+        "industry": "Moda y Complementos",
+        "whyTheyNeedWebDev": "La tienda online tiene un tiempo de carga superior a los 5 segundos debido a imágenes sin optimizar, lo que provoca una alta tasa de rebote. Además, no cuenta con sincronización de stock en tiempo real con su tienda física, vendiendo a veces productos agotados. Propuesta: Rediseño enfocado en rendimiento 'Mobile-First' y desarrollo de una integración entre su software de punto de venta (TPV) físico y la plataforma e-commerce.",
+        "id": "l_gxuwf3jwn",
+        "status": "Nuevo",
+        "foundAt": "2026-08-04T10:00:22.585Z"
+      },
+      {
+        "name": "EcoMercado VerdeSano",
+        "website": "www.verdesanomercado.com",
+        "phone": "+34 931 888 999 / pedidos@verdesanomercado.com",
+        "industry": "Supermercado Orgánico Local",
+        "whyTheyNeedWebDev": "El proceso de pago (checkout) no valida los códigos postales para envíos locales, lo que genera pedidos fuera de su radio de reparto que deben reembolsar manualmente. El SEO local es inexistente. Propuesta: Reestructurar el túnel de compra añadiendo un validador de cobertura de envío, optimizar el SEO local mediante marcado de datos estructurados Schema y mejorar la velocidad de carga general.",
+        "id": "l_yttjhyvzc",
+        "status": "Nuevo",
+        "foundAt": "2026-08-04T10:00:22.585Z"
+      },
+      {
+        "name": "Garrido & Asociados Consultores",
+        "website": "www.garridoasesorescontables.es",
+        "phone": "+34 914 230 456 / contacto@garridoasesorescontables.es",
+        "industry": "Asesoría Contable y Fiscal",
+        "whyTheyNeedWebDev": "Su sitio web actual fue construido hace más de 8 años con tecnología obsoleta, no es responsivo y carece de certificado SSL activo. Los clientes tienen que enviar sus documentos fiscales altamente confidenciales por correo electrónico no cifrado. Proponemos un rediseño completo de la web con un área de clientes segura (portal web) donde los usuarios puedan subir y descargar facturas y documentos contables de forma encriptada, cumpliendo estrictamente con el RGPD, además de integrar un sistema de reserva de citas para consultas iniciales.",
+        "id": "l_doktdd0f4",
+        "status": "Nuevo",
+        "foundAt": "2026-08-04T16:00:39.336Z"
+      },
+      {
+        "name": "Sánchez-Medina Gestoría",
+        "website": "www.sanchezmedinagestores.com",
+        "phone": "+34 932 154 987 / info@sanchezmedinagestores.com",
+        "industry": "Gestoría y Contabilidad para Autónomos",
+        "whyTheyNeedWebDev": "Su web funciona como una tarjeta de presentación estática sin llamadas a la acción ni optimización SEO local, lo que les hace perder clientes frente a neobancos y asesorías digitales. No disponen de calculadora de tarifas para autónomos ni formulario interactivo de captación. Proponemos el desarrollo de una landing page optimizada para conversión, integración de un cotizador automático de servicios contables en tiempo real y la automatización del proceso de onboarding de nuevos clientes mediante formularios inteligentes integrados con su CRM.",
+        "id": "l_zl3wut78x",
+        "status": "Nuevo",
+        "foundAt": "2026-08-04T16:00:39.336Z"
+      },
+      {
+        "name": "Contabilidad Integral Express",
+        "website": "www.contabilidadintegralexpress.cl",
+        "phone": "+56 2 2456 7890 / contacto@contabilidadintegralexpress.cl",
+        "industry": "Asesoría Contable y Tributaria",
+        "whyTheyNeedWebDev": "La velocidad de carga de la web supera los 6 segundos debido a imágenes no optimizadas y scripts antiguos, lo que provoca una alta tasa de rebote. Además, no cuenta con un sistema de chat en vivo o chatbot de IA para resolver dudas frecuentes sobre la declaración de renta, saturando sus líneas telefónicas. Proponemos la optimización del rendimiento web (WPO) para bajar la carga a menos de 1.5 segundos, y el desarrollo de un chatbot conversacional integrado que califique leads y agende llamadas de asesoramiento estratégico automáticamente.",
+        "id": "l_geqzwbpm5",
+        "status": "Nuevo",
+        "foundAt": "2026-08-04T16:00:39.336Z"
+      },
+      {
+        "name": "Pastelería Artesanal Miel y Canela",
+        "website": "www.milycanelapasteleria.es",
+        "phone": "+34 910 111 222 / contacto@milycanelapasteleria.es",
+        "industry": "Alimentación y Repostería",
+        "whyTheyNeedWebDev": "Su tienda online basada en WooCommerce tiene un tiempo de carga superior a los 5 segundos y el proceso de pago no está optimizado para móviles, perdiendo más del 60% de compras impulsivas de clientes locales. Propuesta: Optimización de velocidad (Core Web Vitals), rediseño del checkout para móviles y pasarela de pago simplificada con integración nativa de Bizum y Apple Pay.",
+        "id": "l_v0jtjki7j",
+        "status": "Nuevo",
+        "foundAt": "2026-10-01T16:00:22.364Z"
+      },
+      {
+        "name": "Boutique Nerea Moda",
+        "website": "www.nereamodaboutique.com",
+        "phone": "+34 932 334 455 / info@nereamodaboutique.com",
+        "industry": "Moda y Accesorios",
+        "whyTheyNeedWebDev": "Utilizan una versión obsoleta de PrestaShop que presenta fallos de seguridad y, lo más crítico, no está sincronizada con el stock real de su tienda física. Esto provoca que vendan online productos agotados, dañando su reputación. Propuesta: Migración a Shopify o actualización de PrestaShop e integración de un sistema ERP/TPV automático que sincronice el stock físico y online en tiempo real.",
+        "id": "l_8j5bz62qv",
+        "status": "Nuevo",
+        "foundAt": "2026-10-01T16:00:22.364Z"
+      },
+      {
+        "name": "Gourmet Ibéricos & Vinos",
+        "website": "www.ibericosyvinosgourmet.co",
+        "phone": "+57 312 456 7890 / pedidos@ibericosyvinosgourmet.co",
+        "industry": "Alimentación Gourmet",
+        "whyTheyNeedWebDev": "El sitio web carece de optimización SEO Local, por lo que no captan clientes de su ciudad que buscan productos delicatessen. Además, el catálogo no tiene Schema Markup para mostrar precios y stock en Google, y el checkout es complejo para su cliente objetivo de edad avanzada. Propuesta: Reestructuración de SEO Local, implementación de microdatos de producto, simplificación de la interfaz de usuario (UI) y adición de un botón de compra rápida por WhatsApp.",
+        "id": "l_91y5z2k5q",
+        "status": "Nuevo",
+        "foundAt": "2026-10-01T16:00:22.364Z"
       }
     ]
   },
@@ -151,6 +313,34 @@
         "timestamp": "2026-08-04T06:35:00.133Z",
         "actionTaken": null,
         "details": null
+      }
+    ]
+  },
+  "grades": {
+    "subjects": [
+      "Matemáticas",
+      "FyQ",
+      "Dibujo Técnico",
+      "Filosofía",
+      "Tecnología",
+      "Lengua"
+    ],
+    "entries": [
+      {
+        "id": "g_1790782175701_b8d4m",
+        "subject": "Filosofía",
+        "value": 9.2,
+        "label": "Comentario de Texto Platon",
+        "date": "2026-09-30",
+        "createdAt": "2026-09-30T15:29:35.701Z"
+      },
+      {
+        "id": "g_1790781946093_xf3un",
+        "subject": "Matemáticas",
+        "value": 8.5,
+        "label": "Examen Examen Algebra Tema 1",
+        "date": "2026-09-30",
+        "createdAt": "2026-09-30T15:25:46.093Z"
       }
     ]
   }

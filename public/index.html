@@ -134,6 +134,24 @@
             <p>Pruebas de vulnerabilidad automáticas: busca puertos abiertos, SSL seguro, archivos .env expuestos y cabeceras.</p>
             <button class="btn btn-card">Abrir Módulo</button>
           </div>
+
+          <!-- Tarjeta 7: StudySync ARCADE -->
+          <div class="dash-card dash-card-arcade" data-target="panel-studysync">
+            <div class="card-status status-arcade"><span class="pulse"></span>Arcade</div>
+            <div class="card-icon arcade-icon"><i class="fa-solid fa-graduation-cap"></i></div>
+            <h3>StudySync <span class="arcade-label">ARCADE</span></h3>
+            <p>Planifica tus exámenes y jornadas de pesca con Google Calendar. Time Blocking inteligente con estilo Cyber-Arcade.</p>
+            <button class="btn btn-card btn-arcade-card">Abrir Módulo</button>
+          </div>
+
+          <!-- Tarjeta 8: Calificaciones -->
+          <div class="dash-card dash-card-grades" data-target="panel-grades">
+            <div class="card-status status-grades"><i class="fa-solid fa-star"></i> Curso 2026</div>
+            <div class="card-icon grades-icon"><i class="fa-solid fa-chart-bar"></i></div>
+            <h3>Mis Calificaciones</h3>
+            <p>Registra y sigue la evolución de tus notas por asignatura a lo largo del curso. Media automática en tiempo real.</p>
+            <button class="btn btn-card btn-grades-card">Abrir Módulo</button>
+          </div>
         </div>
       </section>
 
@@ -483,6 +501,266 @@
               <div id="config-status-msg" class="status-msg"></div>
             </form>
           </div>
+        </div>
+      </section>
+
+      <!-- ================= SECCIÓN 7: STUDYSYNC ARCADE ================= -->
+      <section id="panel-studysync" class="panel">
+        <div class="section-title-bar">
+          <button class="btn-back btn-back-home"><i class="fa-solid fa-chevron-left"></i> Volver</button>
+          <h2 class="arcade-heading">StudySync <span class="arcade-label-lg">ARCADE</span></h2>
+        </div>
+
+        <!-- Banner de Estado -->
+        <div id="studysync-status-banner" class="studysync-banner hidden"></div>
+
+        <!-- Conexión Google -->
+        <div id="studysync-auth-card" class="arcade-card arcade-card-connect">
+          <div class="arcade-card-header">
+            <div class="arcade-icon-sm"><i class="fa-brands fa-google"></i></div>
+            <div>
+              <h3>Conexión Google Calendar</h3>
+              <p id="studysync-google-status-text">Verificando estado de conexión...</p>
+            </div>
+          </div>
+          <button id="btn-connect-google" class="btn btn-arcade-connect">
+            <i class="fa-brands fa-google"></i> Conectar con Google
+          </button>
+          <button id="btn-reload-calendar" class="btn btn-secondary" style="display:none">
+            <i class="fa-solid fa-rotate-right"></i> Recargar Calendario
+          </button>
+        </div>
+
+        <!-- Grid Principal ARCADE -->
+        <div class="arcade-grid" id="studysync-main-grid">
+
+          <!-- Izquierda: Tabs + Formularios -->
+          <div class="arcade-left">
+
+            <!-- Tab Switcher -->
+            <div class="arcade-tabs">
+              <button id="tab-exam" class="arcade-tab active" data-tab="exam">
+                <i class="fa-solid fa-book-open"></i> Exámenes
+              </button>
+              <button id="tab-fishing" class="arcade-tab" data-tab="fishing">
+                <i class="fa-solid fa-fish"></i> Jornada Pesca
+              </button>
+            </div>
+
+            <!-- Formulario Examen -->
+            <div id="form-exam" class="arcade-form-panel">
+              <div class="arcade-form-header">
+                <div class="arcade-form-icon yellow"><i class="fa-solid fa-gamepad"></i></div>
+                <div>
+                  <h4>Configuración del Examen</h4>
+                  <p>Define tu misión de estudio para agendar tus bloques</p>
+                </div>
+              </div>
+              <div class="arcade-field">
+                <label>Nombre del Examen <span class="req">*</span></label>
+                <input type="text" id="exam-name" placeholder="Ej: Cálculo Multivariable, Redes...">
+              </div>
+              <div class="arcade-field">
+                <label><i class="fa-solid fa-calendar"></i> Fecha del Examen <span class="req">*</span></label>
+                <input type="date" id="exam-date">
+              </div>
+              <div class="arcade-field">
+                <label><i class="fa-solid fa-fire"></i> Horas de Estudio Requeridas <span class="req">*</span></label>
+                <select id="exam-hours">
+                  <option value="1">1 Hora de estudio</option>
+                  <option value="2" selected>2 Horas de estudio</option>
+                  <option value="3">3 Horas de estudio</option>
+                  <option value="4">4 Horas de estudio</option>
+                  <option value="5">5 Horas de estudio</option>
+                  <option value="6">6 Horas de estudio</option>
+                  <option value="7">7 Horas de estudio</option>
+                  <option value="8">8 Horas de estudio</option>
+                </select>
+              </div>
+              <div class="arcade-hint">
+                <i class="fa-solid fa-bolt"></i>
+                <p><strong>Selección Libre (1 a 1):</strong> Elige cuántas horas estudiarás. Luego selecciona los bloques de 1h libremente en el visor. Si escoges horas seguidas, se combinarán automáticamente en tu Google Calendar.</p>
+              </div>
+            </div>
+
+            <!-- Formulario Pesca -->
+            <div id="form-fishing" class="arcade-form-panel hidden">
+              <div class="arcade-form-header">
+                <div class="arcade-form-icon red"><i class="fa-solid fa-fish"></i></div>
+                <div>
+                  <h4>Jornada de Pesca <span class="badge-weekend">Sáb / Dom</span></h4>
+                  <p>Reorganiza y programa tu tiempo libre el fin de semana</p>
+                </div>
+              </div>
+              <div class="arcade-field">
+                <label><i class="fa-solid fa-calendar"></i> Seleccionar Fin de Semana</label>
+                <div id="weekend-picker" class="weekend-picker"></div>
+                <input type="date" id="fishing-date" class="arcade-date-input">
+                <p id="fishing-weekend-warning" class="fishing-warning hidden">⚠️ La fecha elegida no es sábado ni domingo.</p>
+              </div>
+              <div class="arcade-field">
+                <label><i class="fa-solid fa-clock"></i> Horario de Pesca</label>
+                <div class="time-row">
+                  <div>
+                    <span class="time-label">Hora Inicio</span>
+                    <input type="time" id="fishing-start" value="08:00">
+                  </div>
+                  <div>
+                    <span class="time-label">Hora Fin</span>
+                    <input type="time" id="fishing-end" value="13:00">
+                  </div>
+                </div>
+              </div>
+              <div class="arcade-hint red-hint">
+                <i class="fa-solid fa-sparkles" style="color:#f43f5e"></i>
+                <div>
+                  <p class="hint-title">Automatización Inteligente</p>
+                  <ul class="hint-list">
+                    <li><i class="fa-solid fa-repeat" style="color:#fbbf24"></i> Sábado ➞ Domingo / Domingo ➞ Sábado: Las tareas normales se reasignan al mismo horario.</li>
+                    <li><i class="fa-solid fa-trash" style="color:#f43f5e"></i> Eliminación directa: Tareas <code>getupp</code> o <code>artefactos a mano</code> se eliminan.</li>
+                    <li><i class="fa-solid fa-anchor" style="color:#f43f5e"></i> Se crea un evento horario en rojo + evento All-Day de jornada de pesca.</li>
+                  </ul>
+                </div>
+              </div>
+              <button id="btn-submit-fishing" class="btn btn-fishing-submit">
+                <i class="fa-solid fa-fish"></i> Programar Jornada de Pesca
+              </button>
+            </div>
+
+          </div>
+
+          <!-- Derecha: Visor Calendario -->
+          <div class="arcade-right">
+            <div class="arcade-calendar-card">
+              <div class="arcade-calendar-header">
+                <div class="arcade-form-icon yellow"><i class="fa-solid fa-gamepad"></i></div>
+                <div>
+                  <h4>Visor de Time Blocking</h4>
+                  <p>Selección libre de bloques individuales (1 a 1)</p>
+                </div>
+                <button id="btn-refresh-calendar" class="btn-icon-sm" title="Recargar eventos">
+                  <i class="fa-solid fa-rotate-right" id="calendar-refresh-icon"></i>
+                </button>
+              </div>
+
+              <div id="calendar-mission-bar" class="calendar-mission-bar">
+                <div><i class="fa-solid fa-trophy" style="color:#facc15"></i> Misión: <strong id="mission-hours">2</strong> horas de estudio</div>
+                <div id="mission-progress">Completado: <strong>0 / 2</strong> horas</div>
+              </div>
+
+              <div id="calendar-slots" class="calendar-slots-area">
+                <div class="calendar-empty">
+                  <i class="fa-solid fa-circle-info"></i>
+                  <p>Conecta tu Google Calendar para ver los bloques disponibles.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Barra de Acción Flotante (Tab Examen) -->
+        <div id="studysync-action-bar" class="studysync-action-bar hidden">
+          <div class="action-bar-info">
+            <span class="pulse-dot"></span>
+            Examen: <strong id="action-bar-exam-name">Sin nombre</strong>
+            <span class="sep">|</span>
+            Bloques: <strong id="action-bar-slots">0 seleccionados</strong>
+          </div>
+          <button id="btn-save-sync" class="btn btn-arcade-primary">
+            <i class="fa-solid fa-paper-plane"></i> Guardar y Sincronizar Examen
+          </button>
+        </div>
+
+      </section>
+
+      <!-- ================= SECCIÓN 8: CALIFICACIONES ================= -->
+      <section id="panel-grades" class="panel">
+        <div class="section-title-bar">
+          <button class="btn-back btn-back-home"><i class="fa-solid fa-chevron-left"></i> Volver</button>
+          <h2><i class="fa-solid fa-chart-bar" style="color:#a78bfa"></i> Mis Calificaciones</h2>
+        </div>
+
+        <!-- Banner -->
+        <div id="grades-banner" class="grades-banner hidden"></div>
+
+        <!-- Resumen general -->
+        <div id="grades-overview" class="grades-overview-grid"></div>
+
+        <!-- Grid principal -->
+        <div class="grades-main-grid">
+
+          <!-- Izquierda: Formulario -->
+          <div class="grades-left">
+            <div class="grades-form-card">
+              <div class="grades-form-header">
+                <div class="grades-icon-box"><i class="fa-solid fa-plus"></i></div>
+                <div>
+                  <h4>Registrar Nota</h4>
+                  <p>Añade una nueva calificación al registro del curso</p>
+                </div>
+              </div>
+
+              <div class="grades-field">
+                <label><i class="fa-solid fa-book"></i> Asignatura <span class="req">*</span></label>
+                <select id="grade-subject"></select>
+              </div>
+
+              <div class="grades-field">
+                <label><i class="fa-solid fa-star"></i> Nota (0–10) <span class="req">*</span></label>
+                <div class="grade-input-row">
+                  <input type="number" id="grade-value" min="0" max="10" step="0.1" placeholder="Ej: 8.5">
+                  <div id="grade-preview-badge" class="grade-badge-lg">—</div>
+                </div>
+              </div>
+
+              <div class="grades-field">
+                <label><i class="fa-solid fa-tag"></i> Descripción (opcional)</label>
+                <input type="text" id="grade-label" placeholder="Ej: Examen Tema 1, Control, Práctica...">
+              </div>
+
+              <div class="grades-field">
+                <label><i class="fa-solid fa-calendar"></i> Fecha</label>
+                <input type="date" id="grade-date">
+              </div>
+
+              <button id="btn-add-grade" class="btn btn-grades-submit">
+                <i class="fa-solid fa-plus"></i> Añadir Nota
+              </button>
+
+              <!-- Añadir asignatura personalizada -->
+              <div class="grades-divider">O Añade una Asignatura</div>
+              <div class="grade-add-subject-row">
+                <input type="text" id="new-subject-name" placeholder="Nueva asignatura...">
+                <button id="btn-add-subject" class="btn-icon-sm" title="Añadir asignatura">
+                  <i class="fa-solid fa-plus"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Derecha: Tabla de notas por asignatura -->
+          <div class="grades-right">
+            <div class="grades-table-card">
+              <div class="grades-table-header">
+                <div class="grades-icon-box blue"><i class="fa-solid fa-list"></i></div>
+                <div>
+                  <h4>Historial de Notas</h4>
+                  <p>Todas las calificaciones registradas este curso</p>
+                </div>
+                <select id="grades-filter-subject" class="grades-filter-select">
+                  <option value="all">Todas las asignaturas</option>
+                </select>
+              </div>
+              <div id="grades-table-body" class="grades-table-body">
+                <div class="grades-empty">
+                  <i class="fa-solid fa-inbox"></i>
+                  <p>Aún no hay notas registradas.<br>Añade tu primera calificación.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
         </div>
       </section>
 

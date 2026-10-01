@@ -51,27 +51,37 @@ export async function fetchRecentEmails(limit = 5) {
     host: 'imap.gmail.com',
     port: 993,
     secure: true,
-    logger: false, // Desactivar logs ruidosos
+    logger: false,
     auth: {
       user: email,
       pass: password
-    }
+    },
+    socketTimeout: 15000,
+    connectionTimeout: 15000
   });
 
-  await client.connect();
+  // Capturar errores de socket para que no maten el proceso
+  client.on('error', (err) => {
+    console.error('[IMAP] Error de conexión capturado:', err.message);
+  });
+
+  try {
+    await client.connect();
+  } catch (connErr) {
+    console.error('[IMAP] No se pudo conectar a Gmail:', connErr.message);
+    return [];
+  }
+
   const lock = await client.getMailboxLock('INBOX');
   const emails = [];
 
   try {
-    // Obtener información del buzón actual de ImapFlow
     const totalMessages = client.mailbox.exists;
     
     if (totalMessages > 0) {
-      // Calcular rango para los últimos 'limit' mensajes
       const startRange = Math.max(1, totalMessages - limit + 1);
       const range = `${startRange}:${totalMessages}`;
       
-      // Buscar mensajes con sus cabeceras (envelope) y parte de su contenido
       for await (let message of client.fetch(range, { envelope: true, bodyStructure: true })) {
         emails.push({
           uid: message.uid,
@@ -87,8 +97,12 @@ export async function fetchRecentEmails(limit = 5) {
     lock.release();
   }
 
-  await client.logout();
-  // Ordenar del más reciente al más antiguo
+  try {
+    await client.logout();
+  } catch (e) {
+    // Ignorar errores en logout
+  }
+
   return emails.reverse();
 }
 

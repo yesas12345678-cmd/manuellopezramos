@@ -27,6 +27,8 @@ document.addEventListener('DOMContentLoaded', async () => {
   setupGmailModule();
   setupConfigModule();
   setupLeadsModule();
+  setupStudySyncModule();
+  setupGradesModule();
 });
 
 // Verificar si hay sesión activa
@@ -96,6 +98,7 @@ function loadDashboardData() {
   loadSitemapsData();
   loadSecurityData();
   loadGmailInbox();
+  loadGradesData();
 }
 
 // Ruteador del Single Page Application
@@ -173,6 +176,7 @@ function showPanel(panelId) {
       loadGmailChatHistory();
     }
     if (panelId === 'panel-config') loadConfigData();
+    if (panelId === 'panel-grades') loadGradesData();
   }
 }
 
@@ -1123,3 +1127,727 @@ function escapeHTML(str) {
 function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
+
+// ================= STUDYSYNC ARCADE MODULE =================
+
+function setupStudySyncModule() {
+  // State
+  let ssEvents = [];
+  let ssSelectedSlotIds = [];
+  let ssActiveTab = 'exam';
+  let ssIsLoadingCalendar = false;
+  let ssIsGoogleConnected = false;
+
+  // DOM refs
+  const statusBanner    = document.getElementById('studysync-status-banner');
+  const googleStatusTxt = document.getElementById('studysync-google-status-text');
+  const btnConnect      = document.getElementById('btn-connect-google');
+  const btnReload       = document.getElementById('btn-reload-calendar');
+  const tabExam         = document.getElementById('tab-exam');
+  const tabFishing      = document.getElementById('tab-fishing');
+  const formExam        = document.getElementById('form-exam');
+  const formFishing     = document.getElementById('form-fishing');
+  const calendarSlots   = document.getElementById('calendar-slots');
+  const missionHours    = document.getElementById('mission-hours');
+  const missionProgress = document.getElementById('mission-progress');
+  const actionBar       = document.getElementById('studysync-action-bar');
+  const actionBarName   = document.getElementById('action-bar-exam-name');
+  const actionBarSlots  = document.getElementById('action-bar-slots');
+  const btnSaveSync     = document.getElementById('btn-save-sync');
+  const btnRefreshCal   = document.getElementById('btn-refresh-calendar');
+  const refreshIcon     = document.getElementById('calendar-refresh-icon');
+  const examName        = document.getElementById('exam-name');
+  const examDate        = document.getElementById('exam-date');
+  const examHours       = document.getElementById('exam-hours');
+  const weekendPicker   = document.getElementById('weekend-picker');
+  const fishingDate     = document.getElementById('fishing-date');
+  const fishingStart    = document.getElementById('fishing-start');
+  const fishingEnd      = document.getElementById('fishing-end');
+  const fishingWarning  = document.getElementById('fishing-weekend-warning');
+  const btnSubmitFish   = document.getElementById('btn-submit-fishing');
+
+  if (!statusBanner) return; // Module not rendered yet
+
+  // Set default date for exam
+  examDate.value = new Date().toISOString().split('T')[0];
+
+  // === BANNER ===
+  function showBanner(type, message) {
+    statusBanner.className = `studysync-banner ${type}`;
+    statusBanner.innerHTML = `<i class="fa-solid fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'circle-xmark' : 'triangle-exclamation'}"></i> ${message}`;
+    statusBanner.classList.remove('hidden');
+    setTimeout(() => statusBanner.classList.add('hidden'), 7000);
+  }
+
+  // === GOOGLE CONNECTION STATUS ===
+  async function checkGoogleStatus() {
+    try {
+      const res = await fetch('/api/studysync/status');
+      const data = await res.json();
+      ssIsGoogleConnected = data.connected;
+      if (ssIsGoogleConnected) {
+        googleStatusTxt.textContent = '✓ Conectado a Google Calendar';
+        googleStatusTxt.style.color = '#00db8b';
+        btnConnect.style.display = 'none';
+        btnReload.style.display = 'inline-flex';
+        loadCalendarEvents();
+      } else {
+        googleStatusTxt.textContent = 'No conectado. Haz clic para conectar tu cuenta.';
+        googleStatusTxt.style.color = '';
+        btnConnect.style.display = 'inline-flex';
+        btnReload.style.display = 'none';
+      }
+    } catch (e) {
+      googleStatusTxt.textContent = 'Error al verificar conexión.';
+    }
+  }
+
+  // Only check status when the panel becomes visible
+  const studySyncSection = document.getElementById('panel-studysync');
+  const observer = new MutationObserver((mutations) => {
+    for (const m of mutations) {
+      if (m.target === studySyncSection && studySyncSection.classList.contains('active') && !ssIsGoogleConnected) {
+        checkGoogleStatus();
+        observer.disconnect();
+        break;
+      }
+    }
+  });
+  if (studySyncSection) observer.observe(studySyncSection, { attributes: true, attributeFilter: ['class'] });
+
+  // === GOOGLE AUTH ===
+  btnConnect.addEventListener('click', async () => {
+    try {
+      const res = await fetch('/api/studysync/oauth/start');
+      const data = await res.json();
+      if (data.url) {
+        const popup = window.open(data.url, 'google-oauth', 'width=500,height=620,top=100,left=200');
+        const handler = async (e) => {
+          if (e.data?.type === 'GOOGLE_AUTH_SUCCESS') {
+            window.removeEventListener('message', handler);
+            await checkGoogleStatus();
+            showBanner('success', '¡Cuenta de Google conectada correctamente!');
+          } else if (e.data?.type === 'GOOGLE_AUTH_ERROR') {
+            window.removeEventListener('message', handler);
+            showBanner('error', `Error al autenticar: ${e.data.error}`);
+          }
+        };
+        window.addEventListener('message', handler);
+      }
+    } catch (e) {
+      showBanner('error', 'Error iniciando la autenticación con Google.');
+    }
+  });
+
+  btnReload.addEventListener('click', () => loadCalendarEvents());
+  btnRefreshCal.addEventListener('click', () => loadCalendarEvents());
+
+  // === LOAD CALENDAR EVENTS ===
+  async function loadCalendarEvents() {
+    if (ssIsLoadingCalendar) return;
+    ssIsLoadingCalendar = true;
+    refreshIcon.classList.add('fa-spin');
+    btnRefreshCal.disabled = true;
+    calendarSlots.innerHTML = '<div class="calendar-empty"><i class="fa-solid fa-rotate-right fa-spin" style="color:#facc15;font-size:1.5rem"></i><p>Cargando eventos de Google Calendar...</p></div>';
+
+    try {
+      const res = await fetch('/api/studysync/calendar/events');
+      const json = await res.json();
+      if (json.success && json.data) {
+        ssEvents = json.data;
+        ssSelectedSlotIds = [];
+        renderCalendarSlots();
+      } else {
+        calendarSlots.innerHTML = `<div class="calendar-empty"><i class="fa-solid fa-circle-xmark" style="color:#ff4757"></i><p>${json.error || 'Error al cargar eventos.'}</p></div>`;
+        if (json.error?.includes('autenticado') || json.error?.includes('No autenticado')) {
+          ssIsGoogleConnected = false;
+          googleStatusTxt.textContent = 'Sesión expirada. Vuelve a conectar tu cuenta.';
+          googleStatusTxt.style.color = '#ff4757';
+          btnConnect.style.display = 'inline-flex';
+          btnReload.style.display = 'none';
+        }
+      }
+    } catch (e) {
+      calendarSlots.innerHTML = '<div class="calendar-empty"><i class="fa-solid fa-wifi" style="color:#ff4757"></i><p>Error de conexión al cargar el calendario.</p></div>';
+    } finally {
+      ssIsLoadingCalendar = false;
+      refreshIcon.classList.remove('fa-spin');
+      btnRefreshCal.disabled = false;
+    }
+  }
+
+  // === RENDER CALENDAR ===
+  function renderCalendarSlots() {
+    const maxSlots = parseInt(examHours.value, 10) || 2;
+    missionHours.textContent = maxSlots;
+    const prog = ssSelectedSlotIds.length;
+    missionProgress.innerHTML = `Completado: <strong style="color:${prog === maxSlots ? '#facc15' : '#fbbf24'}">${prog} / ${maxSlots} horas</strong>${prog === maxSlots ? ' <i class="fa-solid fa-check-circle" style="color:#facc15"></i>' : ''}`;
+
+    // Update action bar
+    if (ssActiveTab === 'exam') {
+      actionBar.classList.remove('hidden');
+      actionBarName.textContent = examName.value || 'Sin nombre';
+      actionBarSlots.textContent = `${ssSelectedSlotIds.length} seleccionados`;
+    } else {
+      actionBar.classList.add('hidden');
+    }
+
+    if (!ssEvents.length) {
+      calendarSlots.innerHTML = '<div class="calendar-empty"><i class="fa-solid fa-calendar-xmark"></i><p>Sin bloques libres disponibles. Asegúrate de tener espacio libre en tu Google Calendar en los próximos 14 días.</p></div>';
+      return;
+    }
+
+    // Group by date
+    const grouped = {};
+    for (const ev of ssEvents) {
+      if (!ev.start) continue;
+      const dateKey = ev.start.split('T')[0];
+      if (!grouped[dateKey]) grouped[dateKey] = [];
+      grouped[dateKey].push(ev);
+    }
+
+    const days = ['domingo','lunes','martes','miércoles','jueves','viernes','sábado'];
+    const months = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+
+    let html = '';
+    for (const [dateStr, daySlots] of Object.entries(grouped)) {
+      const d = new Date(dateStr + 'T12:00:00');
+      const dayName = days[d.getDay()];
+      const label = `${dayName.charAt(0).toUpperCase()+dayName.slice(1)} ${d.getDate()} de ${months[d.getMonth()]}`;
+
+      html += `<div class="calendar-day-group">`;
+      html += `<div class="calendar-day-label"><span class="dot"></span>${label}</div>`;
+      html += `<div class="calendar-slots-grid">`;
+
+      for (const slot of daySlots) {
+        const startT = slot.start.split('T')[1]?.substring(0,5) || '';
+        const endT   = slot.end.split('T')[1]?.substring(0,5) || '';
+        const isSelected = ssSelectedSlotIds.includes(slot.id);
+
+        if (slot.isFishing) {
+          html += `<div class="slot-fishing-card">
+            <div class="slot-fishing-time"><i class="fa-solid fa-fish"></i> ${startT} - ${endT}</div>
+            <span class="slot-fishing-badge">Pesca 🎣</span>
+          </div>`;
+          continue;
+        }
+
+        const nightBadge = slot.isDefaultNightSlot
+          ? `<span class="slot-night-badge"><i class="fa-solid fa-moon"></i>Noche</span>` : '';
+
+        html += `<button class="slot-btn${slot.isDefaultNightSlot ? ' night' : ''}${isSelected ? ' selected' : ''}" data-slot-id="${slot.id}">
+          <div>
+            <div class="slot-time"><i class="fa-solid fa-clock"></i>${startT} - ${endT} ${nightBadge}</div>
+            <div class="slot-summary">${slot.summary}</div>
+          </div>
+          <div class="slot-check">${isSelected ? '<i class="fa-solid fa-check"></i>' : '+'}</div>
+        </button>`;
+      }
+
+      html += `</div></div>`;
+    }
+
+    calendarSlots.innerHTML = html;
+
+    // Attach slot click handlers
+    calendarSlots.querySelectorAll('.slot-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const slotId = btn.dataset.slotId;
+        const maxSlots = parseInt(examHours.value, 10) || 2;
+        const isAlready = ssSelectedSlotIds.includes(slotId);
+        if (isAlready) {
+          ssSelectedSlotIds = ssSelectedSlotIds.filter(id => id !== slotId);
+        } else {
+          if (ssSelectedSlotIds.length >= maxSlots) {
+            ssSelectedSlotIds = [...ssSelectedSlotIds.slice(1), slotId];
+          } else {
+            ssSelectedSlotIds.push(slotId);
+          }
+        }
+        renderCalendarSlots();
+      });
+    });
+  }
+
+  // === TABS ===
+  tabExam.addEventListener('click', () => {
+    ssActiveTab = 'exam';
+    tabExam.classList.add('active');
+    tabFishing.classList.remove('active');
+    formExam.classList.remove('hidden');
+    formFishing.classList.add('hidden');
+    actionBar.classList.remove('hidden');
+    renderCalendarSlots();
+  });
+
+  tabFishing.addEventListener('click', () => {
+    ssActiveTab = 'fishing';
+    tabFishing.classList.add('active');
+    tabExam.classList.remove('active');
+    formFishing.classList.remove('hidden');
+    formExam.classList.add('hidden');
+    actionBar.classList.add('hidden');
+    buildWeekendPicker();
+  });
+
+  // Live update action bar & calendar as exam params change
+  examName.addEventListener('input', () => renderCalendarSlots());
+  examHours.addEventListener('change', () => { ssSelectedSlotIds = []; renderCalendarSlots(); });
+
+  // === WEEKEND PICKER ===
+  function buildWeekendPicker() {
+    const options = [];
+    const now = new Date();
+    for (let i = 0; i < 28; i++) {
+      const d = new Date(now.getFullYear(), now.getMonth(), now.getDate() + i);
+      const dow = d.getDay();
+      if (dow === 6 || dow === 0) {
+        const y = d.getFullYear(), m = String(d.getMonth()+1).padStart(2,'0'), day = String(d.getDate()).padStart(2,'0');
+        const dateStr = `${y}-${m}-${day}`;
+        const dayName = dow === 6 ? 'Sábado' : 'Domingo';
+        const months2 = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+        const label = `${d.getDate()} de ${months2[d.getMonth()]}`;
+        options.push({ dateStr, dayName, label, isSat: dow === 6 });
+      }
+    }
+
+    const currentDate = fishingDate.value || (options[0]?.dateStr || '');
+    if (!fishingDate.value && options[0]) fishingDate.value = options[0].dateStr;
+
+    weekendPicker.innerHTML = options.map(opt => `
+      <button type="button" class="weekend-btn${opt.dateStr === currentDate ? ' selected' : ''}" data-date="${opt.dateStr}">
+        <span class="day-name ${opt.isSat ? 'sat' : 'sun'}">${opt.dayName}</span>
+        ${opt.label}
+      </button>
+    `).join('');
+
+    weekendPicker.querySelectorAll('.weekend-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        fishingDate.value = btn.dataset.date;
+        buildWeekendPicker();
+        validateFishingDate();
+      });
+    });
+  }
+
+  function validateFishingDate() {
+    if (!fishingDate.value) return true;
+    const [y, m, d] = fishingDate.value.split('-').map(Number);
+    const dow = new Date(y, m-1, d).getDay();
+    const valid = dow === 6 || dow === 0;
+    fishingWarning.classList.toggle('hidden', valid);
+    return valid;
+  }
+
+  fishingDate.addEventListener('change', () => {
+    validateFishingDate();
+    buildWeekendPicker();
+  });
+
+  // === FISHING SUBMIT ===
+  btnSubmitFish.addEventListener('click', async () => {
+    if (!validateFishingDate()) return showBanner('error', 'La jornada de pesca solo puede programarse en Sábado o Domingo.');
+    if (!fishingDate.value || !fishingStart.value || !fishingEnd.value) return showBanner('error', 'Fecha, hora de inicio y hora de fin son obligatorios.');
+    if (fishingStart.value >= fishingEnd.value) return showBanner('error', 'La hora de inicio debe ser anterior a la hora de fin.');
+
+    btnSubmitFish.disabled = true;
+    btnSubmitFish.innerHTML = '<div class="loading-spinner"></div> Procesando Jornada...';
+
+    try {
+      const res = await fetch('/api/studysync/fishing', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ date: fishingDate.value, startTime: fishingStart.value, endTime: fishingEnd.value })
+      });
+      const json = await res.json();
+      if (json.success) {
+        showBanner('success', json.message);
+        loadCalendarEvents();
+      } else {
+        showBanner('error', json.error || 'Error al programar la jornada de pesca.');
+      }
+    } catch (e) {
+      showBanner('error', 'Error de conexión con el servidor.');
+    } finally {
+      btnSubmitFish.disabled = false;
+      btnSubmitFish.innerHTML = '<i class="fa-solid fa-fish"></i> Programar Jornada de Pesca';
+    }
+  });
+
+  // === EXAM SAVE & SYNC ===
+  btnSaveSync.addEventListener('click', async () => {
+    if (!examName.value.trim()) return showBanner('error', 'El nombre del examen es obligatorio.');
+    const reqSlots = parseInt(examHours.value, 10) || 2;
+    if (ssSelectedSlotIds.length !== reqSlots) return showBanner('error', `Debes seleccionar exactamente ${reqSlots} horas. Tienes ${ssSelectedSlotIds.length} seleccionadas.`);
+
+    btnSaveSync.disabled = true;
+    btnSaveSync.innerHTML = '<div class="loading-spinner" style="border-color:rgba(0,0,0,0.2);border-top-color:#000"></div> Sincronizando...';
+
+    try {
+      const res = await fetch('/api/studysync/sync', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          exam: { name: examName.value, date: examDate.value, effortLevel: examHours.value },
+          selectedSlotIds: ssSelectedSlotIds,
+          allSlots: ssEvents
+        })
+      });
+      const json = await res.json();
+      if (json.success) {
+        showBanner('success', json.message);
+        ssSelectedSlotIds = [];
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        loadCalendarEvents();
+      } else {
+        showBanner('error', json.error || 'Error al sincronizar el examen.');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    } catch (e) {
+      showBanner('error', 'Error de conexión al sincronizar.');
+    } finally {
+      btnSaveSync.disabled = false;
+      btnSaveSync.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Guardar y Sincronizar Examen';
+    }
+  });
+}
+
+// ================= CALIFICACIONES MODULE =================
+
+let gradesList = [];
+let gradesSubjects = [
+  'Matemáticas',
+  'FyQ',
+  'Dibujo Técnico',
+  'Filosofía',
+  'Tecnología',
+  'Lengua'
+];
+let currentGradeFilter = 'all';
+
+function getGradeTier(val) {
+  const n = parseFloat(val);
+  if (isNaN(n)) return { label: '—', class: '', avgClass: '' };
+  if (n >= 8.5) return { label: 'Sobresaliente', class: 'grade-excellent', avgClass: 'avg-excellent' };
+  if (n >= 6.5) return { label: 'Notable',       class: 'grade-good',      avgClass: 'avg-good' };
+  if (n >= 5.0) return { label: 'Aprobado',      class: 'grade-pass',      avgClass: 'avg-pass' };
+  return               { label: 'Suspenso',      class: 'grade-fail',      avgClass: 'avg-fail' };
+}
+
+function showGradesBanner(type, message) {
+  const banner = document.getElementById('grades-banner');
+  if (!banner) return;
+  banner.className = `grades-banner ${type}`;
+  banner.innerHTML = `<i class="fa-solid ${type === 'success' ? 'fa-circle-check' : 'fa-triangle-exclamation'}"></i> <span>${escapeHTML(message)}</span>`;
+  banner.classList.remove('hidden');
+  setTimeout(() => {
+    banner.classList.add('hidden');
+  }, 4500);
+}
+
+async function loadGradesData() {
+  try {
+    const res = await fetch('/api/grades');
+    if (!res.ok) return;
+    const data = await res.json();
+    if (data.success) {
+      if (Array.isArray(data.subjects) && data.subjects.length > 0) {
+        gradesSubjects = data.subjects;
+      }
+      gradesList = Array.isArray(data.entries) ? data.entries : [];
+      renderSubjectDropdowns();
+      renderGradesOverview();
+      renderGradesTable();
+    }
+  } catch (err) {
+    console.error('Error cargando calificaciones:', err);
+  }
+}
+
+function renderSubjectDropdowns() {
+  const selectSubject = document.getElementById('grade-subject');
+  const filterSubject = document.getElementById('grades-filter-subject');
+
+  if (selectSubject) {
+    const curVal = selectSubject.value;
+    selectSubject.innerHTML = gradesSubjects
+      .map(s => `<option value="${escapeHTML(s)}">${escapeHTML(s)}</option>`)
+      .join('');
+    if (curVal && gradesSubjects.includes(curVal)) {
+      selectSubject.value = curVal;
+    }
+  }
+
+  if (filterSubject) {
+    const curFilter = filterSubject.value || currentGradeFilter;
+    filterSubject.innerHTML = `<option value="all">Todas las asignaturas</option>` +
+      gradesSubjects.map(s => `<option value="${escapeHTML(s)}">${escapeHTML(s)}</option>`).join('');
+    if (gradesSubjects.includes(curFilter) || curFilter === 'all') {
+      filterSubject.value = curFilter;
+      currentGradeFilter = curFilter;
+    }
+  }
+}
+
+function renderGradesOverview() {
+  const overview = document.getElementById('grades-overview');
+  if (!overview) return;
+
+  // Media global
+  let globalAvgHtml = '—';
+  let globalCount = gradesList.length;
+  let globalTierClass = '';
+
+  if (globalCount > 0) {
+    const sum = gradesList.reduce((acc, g) => acc + (parseFloat(g.value) || 0), 0);
+    const avg = sum / globalCount;
+    const tier = getGradeTier(avg);
+    globalAvgHtml = avg.toFixed(2);
+    globalTierClass = tier.avgClass;
+  }
+
+  let html = `
+    <div class="grades-overview-card" style="border-color: rgba(167,139,250,0.4); cursor: pointer;" onclick="filterGradesSubject('all')">
+      <div class="grades-overview-subject"><i class="fa-solid fa-calculator"></i> MEDIA GLOBAL</div>
+      <div class="grades-overview-avg ${globalTierClass}">${globalAvgHtml}</div>
+      <div class="grades-overview-count">${globalCount} nota${globalCount === 1 ? '' : 's'} en total</div>
+    </div>
+  `;
+
+  // Medias por cada asignatura
+  gradesSubjects.forEach(sub => {
+    const subGrades = gradesList.filter(g => g.subject === sub);
+    const count = subGrades.length;
+    let avgText = '—';
+    let avgClass = '';
+
+    if (count > 0) {
+      const sum = subGrades.reduce((acc, g) => acc + (parseFloat(g.value) || 0), 0);
+      const avg = sum / count;
+      avgText = avg.toFixed(2);
+      avgClass = getGradeTier(avg).avgClass;
+    }
+
+    const isActive = currentGradeFilter === sub ? 'style="border-color:#a78bfa; background:rgba(167,139,250,0.15);"' : '';
+
+    html += `
+      <div class="grades-overview-card" ${isActive} style="cursor: pointer;" onclick="filterGradesSubject('${escapeHTML(sub)}')">
+        <div class="grades-overview-subject" title="${escapeHTML(sub)}">${escapeHTML(sub)}</div>
+        <div class="grades-overview-avg ${avgClass}">${avgText}</div>
+        <div class="grades-overview-count">${count} nota${count === 1 ? '' : 's'}</div>
+      </div>
+    `;
+  });
+
+  overview.innerHTML = html;
+}
+
+window.filterGradesSubject = function(sub) {
+  currentGradeFilter = sub;
+  const filterSelect = document.getElementById('grades-filter-subject');
+  if (filterSelect) filterSelect.value = sub;
+  renderGradesOverview();
+  renderGradesTable();
+};
+
+function renderGradesTable() {
+  const container = document.getElementById('grades-table-body');
+  if (!container) return;
+
+  const filtered = currentGradeFilter === 'all'
+    ? gradesList
+    : gradesList.filter(g => g.subject === currentGradeFilter);
+
+  if (filtered.length === 0) {
+    const subMsg = currentGradeFilter === 'all'
+      ? 'Aún no hay notas registradas.<br>Añade tu primera calificación en el formulario.'
+      : `No hay notas registradas para <strong>${escapeHTML(currentGradeFilter)}</strong>.`;
+
+    container.innerHTML = `
+      <div class="grades-empty">
+        <i class="fa-solid fa-inbox"></i>
+        <p>${subMsg}</p>
+      </div>
+    `;
+    return;
+  }
+
+  container.innerHTML = filtered.map(g => {
+    const tier = getGradeTier(g.value);
+    const numDisplay = Number(g.value).toFixed(1);
+    const labelText = g.label ? escapeHTML(g.label) : 'Calificación';
+    const dateFormatted = g.date ? escapeHTML(g.date) : 'Sin fecha';
+
+    return `
+      <div class="grade-row" id="grade-row-${g.id}">
+        <div class="grade-badge ${tier.class}" title="${tier.label}">${numDisplay}</div>
+        <div class="grade-row-info">
+          <div class="grade-row-subject">${escapeHTML(g.subject)}</div>
+          <div class="grade-row-label">${labelText}</div>
+          <div class="grade-row-date"><i class="fa-regular fa-calendar"></i> ${dateFormatted} · ${tier.label}</div>
+        </div>
+        <button class="btn-del-grade" onclick="deleteGrade('${g.id}')" title="Eliminar nota">
+          <i class="fa-solid fa-trash-can"></i>
+        </button>
+      </div>
+    `;
+  }).join('');
+}
+
+window.deleteGrade = async function(id) {
+  if (!confirm('¿Seguro que deseas eliminar esta calificación?')) return;
+  try {
+    const res = await fetch(`/api/grades/${id}`, { method: 'DELETE' });
+    const data = await res.json();
+    if (data.success) {
+      gradesList = gradesList.filter(g => g.id !== id);
+      renderGradesOverview();
+      renderGradesTable();
+      showGradesBanner('success', 'Calificación eliminada.');
+    } else {
+      showGradesBanner('error', data.error || 'Error al eliminar');
+    }
+  } catch (err) {
+    showGradesBanner('error', 'Error de conexión.');
+  }
+};
+
+function setupGradesModule() {
+  const valInput = document.getElementById('grade-value');
+  const previewBadge = document.getElementById('grade-preview-badge');
+  const btnAdd = document.getElementById('btn-add-grade');
+  const subjectSelect = document.getElementById('grade-subject');
+  const labelInput = document.getElementById('grade-label');
+  const dateInput = document.getElementById('grade-date');
+  const newSubjectInput = document.getElementById('new-subject-name');
+  const btnAddSubject = document.getElementById('btn-add-subject');
+  const filterSubject = document.getElementById('grades-filter-subject');
+
+  // Inicializar fecha con hoy
+  if (dateInput && !dateInput.value) {
+    dateInput.value = new Date().toISOString().slice(0, 10);
+  }
+
+  // Preview dinámico de la nota al escribir
+  if (valInput && previewBadge) {
+    valInput.addEventListener('input', () => {
+      const val = parseFloat(valInput.value);
+      if (isNaN(val) || valInput.value === '') {
+        previewBadge.textContent = '—';
+        previewBadge.className = 'grade-badge-lg';
+      } else {
+        const tier = getGradeTier(val);
+        previewBadge.textContent = val.toFixed(1);
+        previewBadge.className = `grade-badge-lg ${tier.class}`;
+      }
+    });
+  }
+
+  // Añadir nota
+  if (btnAdd) {
+    btnAdd.addEventListener('click', async () => {
+      const subject = subjectSelect ? subjectSelect.value : '';
+      const rawVal = valInput ? valInput.value : '';
+      const label = labelInput ? labelInput.value.trim() : '';
+      const date = dateInput ? dateInput.value : '';
+
+      if (!subject) return showGradesBanner('error', 'Selecciona una asignatura.');
+      if (rawVal === '') return showGradesBanner('error', 'Introduce una nota.');
+
+      const numVal = parseFloat(rawVal);
+      if (isNaN(numVal) || numVal < 0 || numVal > 10) {
+        return showGradesBanner('error', 'La nota debe estar entre 0 y 10.');
+      }
+
+      btnAdd.disabled = true;
+      btnAdd.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Guardando...';
+
+      try {
+        const res = await fetch('/api/grades', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ subject, value: numVal, label, date })
+        });
+        const data = await res.json();
+        if (data.success) {
+          showGradesBanner('success', `¡Nota de ${subject} guardada correctamente!`);
+          if (data.entry) {
+            gradesList.unshift(data.entry);
+          }
+          if (valInput) {
+            valInput.value = '';
+            if (previewBadge) {
+              previewBadge.textContent = '—';
+              previewBadge.className = 'grade-badge-lg';
+            }
+          }
+          if (labelInput) labelInput.value = '';
+          renderGradesOverview();
+          renderGradesTable();
+        } else {
+          showGradesBanner('error', data.error || 'Error al guardar calificación.');
+        }
+      } catch (err) {
+        showGradesBanner('error', 'Error de conexión con el servidor.');
+      } finally {
+        btnAdd.disabled = false;
+        btnAdd.innerHTML = '<i class="fa-solid fa-plus"></i> Añadir Nota';
+      }
+    });
+  }
+
+  // Añadir asignatura personalizada
+  async function handleAddCustomSubject() {
+    if (!newSubjectInput) return;
+    const name = newSubjectInput.value.trim();
+    if (!name) return showGradesBanner('error', 'Escribe el nombre de la asignatura.');
+
+    try {
+      const res = await fetch('/api/grades/subject', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name })
+      });
+      const data = await res.json();
+      if (data.success) {
+        if (Array.isArray(data.subjects)) {
+          gradesSubjects = data.subjects;
+        } else if (!gradesSubjects.includes(name)) {
+          gradesSubjects.push(name);
+        }
+        newSubjectInput.value = '';
+        renderSubjectDropdowns();
+        renderGradesOverview();
+        if (subjectSelect) subjectSelect.value = name;
+        showGradesBanner('success', `Asignatura "${name}" añadida.`);
+      } else {
+        showGradesBanner('error', data.error || 'Error al añadir asignatura.');
+      }
+    } catch (e) {
+      showGradesBanner('error', 'Error al comunicar con el servidor.');
+    }
+  }
+
+  if (btnAddSubject) {
+    btnAddSubject.addEventListener('click', handleAddCustomSubject);
+  }
+  if (newSubjectInput) {
+    newSubjectInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        handleAddCustomSubject();
+      }
+    });
+  }
+
+  // Filtrar notas
+  if (filterSubject) {
+    filterSubject.addEventListener('change', () => {
+      currentGradeFilter = filterSubject.value;
+      renderGradesOverview();
+      renderGradesTable();
+    });
+  }
+}
+
+

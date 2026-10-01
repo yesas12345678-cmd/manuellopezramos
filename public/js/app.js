@@ -563,13 +563,21 @@ Web: https://manuellopezramos.com`.trim();
 
     const cleanSite = lead.website.replace(/^https?:\/\//, '');
 
+    const mapsQuery = lead.address 
+      ? `${lead.name}, ${lead.address}`
+      : `${lead.name}`;
+    const directMapsUrl = (lead.mapsUrl && lead.mapsUrl.startsWith('http'))
+      ? lead.mapsUrl
+      : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(mapsQuery)}`;
+
     return `
       <tr>
         <td>
-          <div style="display:flex; flex-direction:column; gap:6px;">
-            <strong style="font-size:0.95rem;">${escapeHTML(lead.name)}</strong>
-            <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(lead.name)}" target="_blank" rel="noopener noreferrer" class="lead-maps-link" title="Buscar ${escapeHTML(lead.name)} en Google Maps">
-              <i class="fa-solid fa-location-dot"></i> Google Maps
+          <div style="display:flex; flex-direction:column; gap:5px;">
+            <strong style="font-size:0.95rem; line-height:1.3;">${escapeHTML(lead.name)}</strong>
+            ${lead.address ? `<span style="font-size:0.74rem; color:var(--text-muted);"><i class="fa-solid fa-map-pin" style="font-size:0.7rem;margin-right:4px;color:#ff6b81;"></i>${escapeHTML(lead.address)}</span>` : ''}
+            <a href="${directMapsUrl}" target="_blank" rel="noopener noreferrer" class="lead-maps-link" title="Abrir ficha exacta de ${escapeHTML(lead.name)} en Google Maps">
+              <i class="fa-solid fa-location-dot"></i> Abrir en Maps
             </a>
           </div>
         </td>

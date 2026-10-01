@@ -37,7 +37,7 @@
       {
         "id": "t_70mj9rhl9",
         "url": "https://mihogarasegurado.com",
-        "lastScanDate": "2026-08-02T17:27:54.847Z",
+        "lastScanDate": "2026-10-01T21:19:50.553Z",
         "lastScanStatus": "Vulnerable"
       }
     ],
@@ -63,6 +63,17 @@
         "type": "Network Port Exposure",
         "status": "Open",
         "foundAt": "2026-08-02T17:27:54.847Z"
+      },
+      {
+        "id": "v_kvurtfnlj",
+        "url": "https://mihogarasegurado.com",
+        "title": "Puertos de servicio expuestos al público",
+        "description": "Se detectaron los siguientes puertos abiertos: SSH (22). Tener estos servicios expuestos públicamente aumenta la superficie de ataque y puede permitir intentos de fuerza bruta.",
+        "solution": "Cerrar los puertos innecesarios en el cortafuegos (Firewall) de tu servidor. Si requieres acceso a SSH (22) o MySQL (3306), utiliza una VPN, limita el acceso mediante una lista blanca de IPs permitidas o cambia el puerto por defecto.",
+        "severity": "Medium",
+        "type": "Network Port Exposure",
+        "status": "Open",
+        "foundAt": "2026-10-01T21:19:50.553Z"
       }
     ]
   },
@@ -163,128 +174,212 @@
         "techStack": "FastAPI (Python), Cloudinary API (remoción de fondos e imágenes), OpenAI (copys de venta), Remotion o Canvas API para plantillas dinámicas y una extensión de Chrome ligera para automatizar la subida.",
         "id": "i_28068n8sm",
         "createdAt": "2026-10-01T16:00:14.542Z"
+      },
+      {
+        "title": "GestoTaller Link",
+        "description": "Una aplicación web diseñada para talleres mecánicos, carpinterías o cocinas, donde los operarios tienen las manos sucias o mojadas y no pueden tocar pantallas. El sistema utiliza una cámara web barata y algoritmos ligeros de visión computacional para detectar gestos simples (como levantar el pulgar o pasar la mano) o comandos de voz cortos. Al detectar el gesto, el sistema cambia automáticamente el estado del trabajo en el flujo de producción y envía un WhatsApp automatizado de actualización al cliente (ej. 'Tu coche ya está en fase de pintura').",
+        "marketNeeds": "Los talleres mecánicos y manufacturas locales pierden horas llamando a clientes para dar actualizaciones, pero los mecánicos no registran el progreso porque daña los dispositivos o interrumpe su flujo de trabajo físico. Esto resuelve la fricción sin contacto físico.",
+        "techStack": "Mediapipe (para detección de gestos en navegador), Vue/Nuxt.js, Node.js, Twilio WhatsApp API.",
+        "id": "i_jtxhym0ch",
+        "createdAt": "2026-10-01T21:08:26.865Z"
+      },
+      {
+        "title": "PizarraVoz AI",
+        "description": "Un bot de WhatsApp ultra-enfocado para restaurantes de menú diario. El dueño graba una nota de voz de 10 segundos diciendo el menú del día: 'Hoy tenemos lentejas, pollo asado de segundo y tarta de tres leches'. El sistema procesa el audio, extrae el texto, genera automáticamente una imagen atractiva usando plantillas de la marca del restaurante, actualiza el PDF del menú QR dinámico y publica el diseño en Google My Business e Instagram Stories de un solo golpe.",
+        "marketNeeds": "Los restaurantes pequeños no tienen tiempo para diseñar menús diarios en Canva ni para publicarlos manualmente en múltiples redes, perdiendo clientes del sector oficinas que buscan qué comer cada mañana.",
+        "techStack": "OpenAI Whisper API, Node.js, Canvas/Puppeteer (para generación de imágenes automáticas), APIs de Instagram Graph y Google Business Profile.",
+        "id": "i_620pgrdf0",
+        "createdAt": "2026-10-01T21:08:26.865Z"
+      },
+      {
+        "title": "PactoRápido B2B",
+        "description": "Herramienta de micro-registro de acuerdos verbales para distribuidores mayoristas que venden a pie de calle o desde camiones de reparto. En lugar de rellenar albaranes a mano o teclear en ERPs complejos móviles, el repartidor graba un audio al cerrar la entrega: 'Le dejo a Manuel de Frutería Paqui 5 cajas de tomates a 10 euros en lugar de 12 porque dos cajas estaban algo maduras'. La IA procesa el acuerdo, ajusta el precio en el software de facturación y envía un mini-comprobante interactivo por WhatsApp a Manuel para que acepte con un clic.",
+        "marketNeeds": "En la distribución local se hacen decenas de micro-negociaciones y descuentos informales al día que se olvidan, no se facturan correctamente o generan disputas de cobro a fin de mes por falta de registro inmediato.",
+        "techStack": "React Native, OpenAI GPT-4o, Node.js",
+        "id": "i_yhgiqnyod",
+        "createdAt": "2026-10-01T21:08:26.865Z"
       }
     ],
     "leadsList": [
       {
-        "name": "Hamburguesería Búfalo Real",
-        "website": "www.burgersbufaloreal.com",
-        "phone": "+34 910 112 233 / contacto@burgersbufaloreal.com",
-        "industry": "Restauración / Comida Rápida (Hamburgueserías)",
-        "whyTheyNeedWebDev": "Su sitio web actual es una página estática que solo muestra un menú en formato PDF no optimizado para móviles. Dependen al 100% de plataformas de delivery externas (Glovo/UberEats) perdiendo hasta un 30% de comisión por pedido. Se propone el desarrollo de una plataforma de pedidos online propia (PWA) con pasarela de pago integrada, sistema de cupones y diseño enfocado en la conversión móvil para captar clientes directos.",
-        "id": "l_u79o2ddoq",
+        "id": "l_1_burnout",
+        "name": "Burnout Burgers Fuencarral",
+        "address": "Calle de Fuencarral, 148, 28010 Madrid",
+        "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Burnout+Burgers+Calle+de+Fuencarral+148+Madrid",
+        "website": "www.burnoutburgers.com",
+        "phone": "+34 910 58 10 98 / info@burnoutburgers.com",
+        "industry": "Restauración / Hamburguesería Gourmet",
+        "whyTheyNeedWebDev": "Su carta digital depende de visualizadores externos y el proceso de checkout móvil presenta fricción al cobrar con Apple Pay y Google Pay. Se propone el desarrollo de una PWA de pedidos directos 'one-click' con sistema de fidelización propio para evitar el 30% de comisión de agregadores como Glovo o UberEats.",
         "status": "Nuevo",
-        "foundAt": "2026-08-04T06:35:49.861Z"
+        "foundAt": "2026-10-01T22:00:00.000Z"
       },
       {
-        "name": "Pizzería Bella Nápoles Express",
-        "website": "www.bellanapolesexpress.es",
-        "phone": "+34 934 567 890 / pedidos@bellanapolesexpress.es",
-        "industry": "Restauración / Comida Rápida (Pizzerías)",
-        "whyTheyNeedWebDev": "La web sufre de tiempos de carga extremadamente lentos (más de 6 segundos en redes 4G) debido a imágenes de menú sin optimizar, lo que provoca una tasa de abandono del carrito del 45%. Además, el proceso de checkout da errores recurrentes al pagar con Apple Pay o Google Pay. Se propone una reestructuración del front-end con tecnologías modernas (Next.js), optimización de recursos multimedia y una pasarela de pago integrada 'One-Click' para maximizar las ventas desde smartphones.",
-        "id": "l_y9a9cikyh",
+        "id": "l_2_figurato",
+        "name": "Fratelli Figurato - Pizzeria Popolare",
+        "address": "Calle de Alonso Cano, 37, 28003 Madrid",
+        "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Fratelli+Figurato+Calle+de+Alonso+Cano+37+Madrid",
+        "website": "www.fratellifigurato.es",
+        "phone": "+34 914 85 79 93 / info@fratellifigurato.es",
+        "industry": "Restauración / Pizzería Napolitana",
+        "whyTheyNeedWebDev": "Tienen un volumen de reservas altísimo pero el sistema actual no está integrado con su TPV físico ni ofrece confirmación automática interactiva vía WhatsApp, provocando no-shows en horas punta. Se propone automatización de confirmaciones y optimización de carga de la web para reservas móviles en menos de 2 segundos.",
         "status": "Nuevo",
-        "foundAt": "2026-08-04T06:35:49.861Z"
+        "foundAt": "2026-10-01T22:00:00.000Z"
       },
       {
-        "name": "Wok & Go Oriental Fast",
-        "website": "www.wokandgo-fast.com",
-        "phone": "+34 963 888 999 / franquicias@wokandgo-fast.com",
-        "industry": "Restauración / Comida Rápida (Comida Asiática)",
-        "whyTheyNeedWebDev": "El negocio cuenta con 3 locales físicos pero su web no tiene integrado un localizador de tiendas con Google Maps ni permite la opción de 'Click & Collect' (pedir online y recoger en tienda física seleccionada). Carecen de una base de datos centralizada de clientes. Se propone desarrollar un portal unificado con geolocalización avanzada, opción de programación de recogida horaria y un CRM sencillo integrado para enviar ofertas personalizadas por email/SMS según los hábitos de consumo.",
-        "id": "l_46878itom",
+        "id": "l_3_duquesita",
+        "name": "La Duquesita Pastelería",
+        "address": "Calle de Fernando VI, 2, 28004 Madrid",
+        "mapsUrl": "https://www.google.com/maps/search/?api=1&query=La+Duquesita+Pasteleria+Calle+de+Fernando+VI+2+Madrid",
+        "website": "www.laduquesita.es",
+        "phone": "+34 913 08 02 31 / contacto@laduquesita.es",
+        "industry": "Alimentación / Pastelería Artesanal",
+        "whyTheyNeedWebDev": "La tienda online de productos de temporada sufre caídas de rendimiento en campañas clave (Navidad, Reyes) por falta de optimización en servidores y caché. Se propone migración de infraestructura a arquitectura Jamstack (Next.js en Vercel) y pasarela de pago instantánea con Bizum y recogida programada en tienda (Click & Collect).",
         "status": "Nuevo",
-        "foundAt": "2026-08-04T06:35:49.861Z"
+        "foundAt": "2026-10-01T22:00:00.000Z"
       },
       {
-        "name": "Pastelería Artesanal Miel y Canela",
-        "website": "www.mielycanela-artesanal.es",
-        "phone": "+34 912 345 678 / info@mielycanela-artesanal.es",
-        "industry": "Alimentación / Pastelería",
-        "whyTheyNeedWebDev": "Su sitio web actual es puramente informativo y tiene la carta en un formato PDF no optimizado para móviles. Para hacer pedidos obligan al usuario a usar WhatsApp de forma manual. Propuesta: Implementar una tienda online local autogestionable con pasarela de pago (Redsys/Stripe) y un sistema de selección de franjas horarias para la recogida en tienda o reparto local a domicilio.",
-        "id": "l_aiqd1pnja",
+        "id": "l_4_tuktuk",
+        "name": "Tuk Tuk Asian Street Food Barquillo",
+        "address": "Calle del Barquillo, 26, 28004 Madrid",
+        "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Tuk+Tuk+Asian+Street+Food+Calle+del+Barquillo+26+Madrid",
+        "website": "www.tuktukstreetfood.es",
+        "phone": "+34 915 23 25 56 / hola@tuktukstreetfood.es",
+        "industry": "Restauración / Comida Asiática",
+        "whyTheyNeedWebDev": "Al tener varios locales en Madrid, su web no detecta la geolocalización del usuario para redirigir automáticamente al restaurante más cercano con disponibilidad de mesa o reparto local. Se propone un localizador interactivo con mapa dinámico y sistema unificado de pedidos directos.",
         "status": "Nuevo",
-        "foundAt": "2026-08-04T10:00:22.585Z"
+        "foundAt": "2026-10-01T22:00:00.000Z"
       },
       {
-        "name": "Boutique Moda Urbana Sora",
-        "website": "www.soramoda-boutique.com",
-        "phone": "+34 611 223 344 / contacto@soramoda-boutique.com",
-        "industry": "Moda y Complementos",
-        "whyTheyNeedWebDev": "La tienda online tiene un tiempo de carga superior a los 5 segundos debido a imágenes sin optimizar, lo que provoca una alta tasa de rebote. Además, no cuenta con sincronización de stock en tiempo real con su tienda física, vendiendo a veces productos agotados. Propuesta: Rediseño enfocado en rendimiento 'Mobile-First' y desarrollo de una integración entre su software de punto de venta (TPV) físico y la plataforma e-commerce.",
-        "id": "l_gxuwf3jwn",
+        "id": "l_5_gymage",
+        "name": "Gymage Lounge Resort",
+        "address": "Calle de la Luna, 2, 28004 Madrid",
+        "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Gymage+Lounge+Resort+Calle+de+la+Luna+2+Madrid",
+        "website": "www.gymage.es",
+        "phone": "+34 915 32 09 74 / info@gymage.es",
+        "industry": "Fitness & Lifestyle / Gimnasio Boutique",
+        "whyTheyNeedWebDev": "El proceso de alta de nuevos socios y reserva de clases colectivas requiere demasiados pasos manuales. Se propone un portal de membresías simplificado con cobro recurrente automático (Stripe Billing) y app web de reserva de espacios con calendario en tiempo real.",
         "status": "Nuevo",
-        "foundAt": "2026-08-04T10:00:22.585Z"
+        "foundAt": "2026-10-01T22:00:00.000Z"
       },
       {
-        "name": "EcoMercado VerdeSano",
-        "website": "www.verdesanomercado.com",
-        "phone": "+34 931 888 999 / pedidos@verdesanomercado.com",
-        "industry": "Supermercado Orgánico Local",
-        "whyTheyNeedWebDev": "El proceso de pago (checkout) no valida los códigos postales para envíos locales, lo que genera pedidos fuera de su radio de reparto que deben reembolsar manualmente. El SEO local es inexistente. Propuesta: Reestructurar el túnel de compra añadiendo un validador de cobertura de envío, optimizar el SEO local mediante marcado de datos estructurados Schema y mejorar la velocidad de carga general.",
-        "id": "l_yttjhyvzc",
+        "id": "l_6_bacoa",
+        "name": "Bacoa Burger Universitat",
+        "address": "Ronda de la Universitat, 31, 08007 Barcelona",
+        "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Bacoa+Burger+Ronda+de+la+Universitat+31+Barcelona",
+        "website": "www.bacoaburger.com",
+        "phone": "+34 932 50 72 90 / info@bacoaburger.com",
+        "industry": "Restauración / Hamburguesería",
+        "whyTheyNeedWebDev": "La versión móvil del menú web tarda más de 5 segundos en renderizar imágenes pesadas. Se propone compresión moderna en formato WebP con CDN y pasarela de take-away optimizada para smartphones.",
         "status": "Nuevo",
-        "foundAt": "2026-08-04T10:00:22.585Z"
+        "foundAt": "2026-10-01T21:00:00.000Z"
       },
       {
-        "name": "Garrido & Asociados Consultores",
-        "website": "www.garridoasesorescontables.es",
-        "phone": "+34 914 230 456 / contacto@garridoasesorescontables.es",
-        "industry": "Asesoría Contable y Fiscal",
-        "whyTheyNeedWebDev": "Su sitio web actual fue construido hace más de 8 años con tecnología obsoleta, no es responsivo y carece de certificado SSL activo. Los clientes tienen que enviar sus documentos fiscales altamente confidenciales por correo electrónico no cifrado. Proponemos un rediseño completo de la web con un área de clientes segura (portal web) donde los usuarios puedan subir y descargar facturas y documentos contables de forma encriptada, cumpliendo estrictamente con el RGPD, además de integrar un sistema de reserva de citas para consultas iniciales.",
-        "id": "l_doktdd0f4",
+        "id": "l_7_grosso",
+        "name": "Grosso Napoletano Hermosilla",
+        "address": "Calle de Hermosilla, 85, 28001 Madrid",
+        "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Grosso+Napoletano+Calle+de+Hermosilla+85+Madrid",
+        "website": "www.grossonapoletano.com",
+        "phone": "+34 911 08 43 45 / ciao@grossonapoletano.com",
+        "industry": "Restauración / Pizzería Artesanal",
+        "whyTheyNeedWebDev": "El checkout para pedidos a domicilio carece de integración directa con Bizum, perdiendo ventas en público joven. Se propone rediseño de pasarela de pago 'Click to Pay' con Bizum y Apple Pay nativo.",
         "status": "Nuevo",
-        "foundAt": "2026-08-04T16:00:39.336Z"
+        "foundAt": "2026-10-01T21:00:00.000Z"
       },
       {
-        "name": "Sánchez-Medina Gestoría",
-        "website": "www.sanchezmedinagestores.com",
-        "phone": "+34 932 154 987 / info@sanchezmedinagestores.com",
-        "industry": "Gestoría y Contabilidad para Autónomos",
-        "whyTheyNeedWebDev": "Su web funciona como una tarjeta de presentación estática sin llamadas a la acción ni optimización SEO local, lo que les hace perder clientes frente a neobancos y asesorías digitales. No disponen de calculadora de tarifas para autónomos ni formulario interactivo de captación. Proponemos el desarrollo de una landing page optimizada para conversión, integración de un cotizador automático de servicios contables en tiempo real y la automatización del proceso de onboarding de nuevos clientes mediante formularios inteligentes integrados con su CRM.",
-        "id": "l_zl3wut78x",
+        "id": "l_8_mallorca",
+        "name": "Pastelería Mallorca Serrano",
+        "address": "Calle de Serrano, 6, 28001 Madrid",
+        "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Pasteleria+Mallorca+Calle+de+Serrano+6+Madrid",
+        "website": "www.pasteleria-mallorca.com",
+        "phone": "+34 915 77 18 56 / atencionalcliente@pasteleria-mallorca.com",
+        "industry": "Alimentación / Pastelería y Delicatessen",
+        "whyTheyNeedWebDev": "Carece de un sistema de recomendación inteligente de maridajes de productos gourmet en el carrito, reduciendo el ticket medio. Se propone algoritmo de cross-selling automatizado en el carrito.",
         "status": "Nuevo",
-        "foundAt": "2026-08-04T16:00:39.336Z"
+        "foundAt": "2026-10-01T21:00:00.000Z"
       },
       {
-        "name": "Contabilidad Integral Express",
-        "website": "www.contabilidadintegralexpress.cl",
-        "phone": "+56 2 2456 7890 / contacto@contabilidadintegralexpress.cl",
-        "industry": "Asesoría Contable y Tributaria",
-        "whyTheyNeedWebDev": "La velocidad de carga de la web supera los 6 segundos debido a imágenes no optimizadas y scripts antiguos, lo que provoca una alta tasa de rebote. Además, no cuenta con un sistema de chat en vivo o chatbot de IA para resolver dudas frecuentes sobre la declaración de renta, saturando sus líneas telefónicas. Proponemos la optimización del rendimiento web (WPO) para bajar la carga a menos de 1.5 segundos, y el desarrollo de un chatbot conversacional integrado que califique leads y agende llamadas de asesoramiento estratégico automáticamente.",
-        "id": "l_geqzwbpm5",
+        "id": "l_9_metropolitan",
+        "name": "Club Metropolitan Abascal",
+        "address": "Calle de José Abascal, 46, 28003 Madrid",
+        "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Club+Metropolitan+Calle+de+Jose+Abascal+46+Madrid",
+        "website": "www.clubmetropolitan.net",
+        "phone": "+34 915 94 34 00 / abascal@clubmetropolitan.net",
+        "industry": "Salud y Fitness / Club Deportivo",
+        "whyTheyNeedWebDev": "La web pública no cuenta con un tour virtual interactivo 360° optimizado para captar leads que buscan instalaciones premium desde Google. Se propone landing page interactiva con tour virtual de alta conversión.",
         "status": "Nuevo",
-        "foundAt": "2026-08-04T16:00:39.336Z"
+        "foundAt": "2026-10-01T21:00:00.000Z"
       },
       {
-        "name": "Pastelería Artesanal Miel y Canela",
-        "website": "www.milycanelapasteleria.es",
-        "phone": "+34 910 111 222 / contacto@milycanelapasteleria.es",
-        "industry": "Alimentación y Repostería",
-        "whyTheyNeedWebDev": "Su tienda online basada en WooCommerce tiene un tiempo de carga superior a los 5 segundos y el proceso de pago no está optimizado para móviles, perdiendo más del 60% de compras impulsivas de clientes locales. Propuesta: Optimización de velocidad (Core Web Vitals), rediseño del checkout para móviles y pasarela de pago simplificada con integración nativa de Bizum y Apple Pay.",
-        "id": "l_v0jtjki7j",
+        "id": "l_10_tapas24",
+        "name": "Tapas 24 Carles Abellan",
+        "address": "Carrer de la Diputació, 269, 08007 Barcelona",
+        "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Tapas+24+Carrer+de+la+Diputacio+269+Barcelona",
+        "website": "www.tapas24.ca",
+        "phone": "+34 934 88 09 77 / reservas@tapas24.ca",
+        "industry": "Restauración / Gastrobar",
+        "whyTheyNeedWebDev": "Carta web solo disponible en PDF descargable que no se indexa correctamente en motores de búsqueda ni traduce al idioma del turista. Se propone menú interactivo multi-idioma (ES/EN/FR/CAT) adaptado a móviles con microdatos Schema.",
         "status": "Nuevo",
-        "foundAt": "2026-10-01T16:00:22.364Z"
+        "foundAt": "2026-10-01T21:00:00.000Z"
       },
       {
-        "name": "Boutique Nerea Moda",
-        "website": "www.nereamodaboutique.com",
-        "phone": "+34 932 334 455 / info@nereamodaboutique.com",
-        "industry": "Moda y Accesorios",
-        "whyTheyNeedWebDev": "Utilizan una versión obsoleta de PrestaShop que presenta fallos de seguridad y, lo más crítico, no está sincronizada con el stock real de su tienda física. Esto provoca que vendan online productos agotados, dañando su reputación. Propuesta: Migración a Shopify o actualización de PrestaShop e integración de un sistema ERP/TPV automático que sincronice el stock físico y online en tiempo real.",
-        "id": "l_8j5bz62qv",
+        "id": "l_11_garrigues",
+        "name": "Garrigues Asesores y Abogados",
+        "address": "Calle de Hermosilla, 3, 28001 Madrid",
+        "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Garrigues+Calle+de+Hermosilla+3+Madrid",
+        "website": "www.garrigues.com",
+        "phone": "+34 915 14 52 00 / info@garrigues.com",
+        "industry": "Servicios Jurídicos y Asesoría Fiscal",
+        "whyTheyNeedWebDev": "Portal corporativo con estructura rígida que dificulta a clientes pymes agendar consultas rápidas. Se propone portal de onboarding digital con agenda inteligente y pasarela de consultas express.",
         "status": "Nuevo",
-        "foundAt": "2026-10-01T16:00:22.364Z"
+        "foundAt": "2026-10-01T20:00:00.000Z"
       },
       {
-        "name": "Gourmet Ibéricos & Vinos",
-        "website": "www.ibericosyvinosgourmet.co",
-        "phone": "+57 312 456 7890 / pedidos@ibericosyvinosgourmet.co",
-        "industry": "Alimentación Gourmet",
-        "whyTheyNeedWebDev": "El sitio web carece de optimización SEO Local, por lo que no captan clientes de su ciudad que buscan productos delicatessen. Además, el catálogo no tiene Schema Markup para mostrar precios y stock en Google, y el checkout es complejo para su cliente objetivo de edad avanzada. Propuesta: Reestructuración de SEO Local, implementación de microdatos de producto, simplificación de la interfaz de usuario (UI) y adición de un botón de compra rápida por WhatsApp.",
-        "id": "l_91y5z2k5q",
+        "id": "l_12_cuatrecasas",
+        "name": "Cuatrecasas Abogados",
+        "address": "Avinguda Diagonal, 191, 08018 Barcelona",
+        "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Cuatrecasas+Avinguda+Diagonal+191+Barcelona",
+        "website": "www.cuatrecasas.com",
+        "phone": "+34 932 90 55 00 / info@cuatrecasas.com",
+        "industry": "Asesoría Legal y Fiscal B2B",
+        "whyTheyNeedWebDev": "Área de eventos y webinars para clientes no automatizada, requiriendo registro manual vía email. Se propone integración de sistema de tickets y webinars con sincronización automática a CRM.",
         "status": "Nuevo",
-        "foundAt": "2026-10-01T16:00:22.364Z"
+        "foundAt": "2026-10-01T20:00:00.000Z"
+      },
+      {
+        "id": "l_13_baviera",
+        "name": "Clínica Baviera Oftalmología",
+        "address": "Paseo de la Castellana, 20, 28046 Madrid",
+        "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Clinica+Baviera+Paseo+de+la+Castellana+20+Madrid",
+        "website": "www.clinicabaviera.com",
+        "phone": "+34 900 18 01 00 / atencion@clinicabaviera.com",
+        "industry": "Salud y Clínicas Médicas",
+        "whyTheyNeedWebDev": "El formulario de primera cita gratuita no incluye recordatorios SMS automáticos pre-cita, provocando ausencias. Se propone integración de webhooks con SMS/WhatsApp para confirmación en un clic.",
+        "status": "Nuevo",
+        "foundAt": "2026-10-01T20:00:00.000Z"
+      },
+      {
+        "id": "l_14_santaeulalia",
+        "name": "Santa Eulalia Moda",
+        "address": "Passeig de Gràcia, 93, 08008 Barcelona",
+        "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Santa+Eulalia+Passeig+de+Gracia+93+Barcelona",
+        "website": "www.santaeulalia.com",
+        "phone": "+34 932 15 06 74 / info@santaeulalia.com",
+        "industry": "Moda y Lujo / Comercio Retail",
+        "whyTheyNeedWebDev": "El e-commerce internacional tiene tiempos de respuesta elevados en servidores de EE.UU. y Asia. Se propone implementación de Edge Rendering (Cloudflare Workers) para reducir latencia a menos de 50ms globalmente.",
+        "status": "Nuevo",
+        "foundAt": "2026-10-01T20:00:00.000Z"
+      },
+      {
+        "id": "l_15_midas",
+        "name": "Midas Taller Mecánico",
+        "address": "Paseo de Santa María de la Cabeza, 43, 28045 Madrid",
+        "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Midas+Paseo+de+Santa+Maria+de+la+Cabeza+43+Madrid",
+        "website": "www.midas.es",
+        "phone": "+34 915 28 88 56 / contacto@midas.es",
+        "industry": "Automoción / Talleres Mecánicos",
+        "whyTheyNeedWebDev": "El cotizador de revisiones y neumáticos online es complejo en pantallas pequeñas. Se propone rediseño paso a paso (wizard conversacional) enfocado en conversión móvil para talleres locales.",
+        "status": "Nuevo",
+        "foundAt": "2026-10-01T20:00:00.000Z"
       }
     ]
   },
@@ -326,6 +421,30 @@
       "Lengua"
     ],
     "entries": [
+      {
+        "id": "g_1790889878091_fx1s7",
+        "subject": "Dibujo Técnico",
+        "value": 10,
+        "label": "dfg",
+        "date": "2026-10-01",
+        "createdAt": "2026-10-01T21:24:38.091Z"
+      },
+      {
+        "id": "g_1790889868122_uelbi",
+        "subject": "Dibujo Técnico",
+        "value": 9,
+        "label": "sdsd",
+        "date": "2026-10-01",
+        "createdAt": "2026-10-01T21:24:28.122Z"
+      },
+      {
+        "id": "g_1790889852349_9jmz3",
+        "subject": "Tecnología",
+        "value": 10,
+        "label": "dsd",
+        "date": "2026-10-01",
+        "createdAt": "2026-10-01T21:24:12.349Z"
+      },
       {
         "id": "g_1790782175701_b8d4m",
         "subject": "Filosofía",

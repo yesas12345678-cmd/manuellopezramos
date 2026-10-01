@@ -121,22 +121,34 @@ Formato de respuesta esperado (sin bloques de markdown de código, solo el texto
  * Genera leads de clientes potenciales buscando necesidades de desarrollo web.
  */
 export async function generateClientLeads(niche = 'restaurantes locales, clínicas, bufetes de abogados') {
-  const systemInstruction = `Eres un captador de clientes automático y estratega B2B.
-Tu tarea es simular la recolección y análisis de negocios reales que necesiten mejoras web o software (ej. web desactualizada, sin reservas online, carga lenta, falta de SEO).
-Genera exactamente 5 leads de negocios realistas con problemas específicos en su presencia digital.
-Devuelve el resultado estrictamente en formato JSON válido.
-Formato de respuesta esperado (sin bloques de markdown de código, solo el texto JSON):
+  const systemInstruction = `Eres un captador de clientes B2B y consultor técnico de desarrollo web para negocios en España.
+Tu tarea es identificar NEGOCIOS REALES Y EXISTENTES en ciudades de España (Madrid, Barcelona, Valencia, Sevilla, etc.) que cuenten con local físico en Google Maps.
+MUY IMPORTANTE: NO inventes nombres ficticios ni simulados. Deben ser negocios auténticos y reconocibles.
+Para cada negocio, debes proporcionar:
+1. "name": Nombre comercial real y exacto del negocio tal como aparece en Google Maps y en su marquesina.
+2. "address": Dirección postal real con calle, número y ciudad en España (ej: "Calle de Fuencarral, 148, Madrid").
+3. "mapsUrl": URL directa a Google Maps para abrir la ficha de ese negocio exacto. Formato: "https://www.google.com/maps/search/?api=1&query=" seguido del nombre del negocio, calle y ciudad codificados. Al incluir el nombre exacto con la calle y ciudad, Google Maps abrirá directamente la ficha del local sin mostrar listas de búsqueda.
+4. "website": Su sitio web real o dominio.
+5. "phone": Su teléfono real o de contacto / email si está disponible.
+6. "industry": Sector o tipo de negocio.
+7. "whyTheyNeedWebDev": Auditoría de un problema real o mejora técnica necesaria (velocidad móvil, falta de reservas online, menú en PDF no adaptado, pasarela de pago anticuada, dependencia de agregadores) y propuesta de valor como desarrollador de software.
+
+Genera exactamente 5 leads de negocios reales y existentes.
+Devuelve el resultado estrictamente en formato JSON válido (sin bloques de código markdown, solo el texto JSON puro).
+Formato esperado:
 [
   {
-    "name": "Nombre del Negocio Ejemplo",
-    "website": "www.ejemplonegocio.com",
-    "phone": "+34 600 000 000 / email@ejemplo.com",
-    "industry": "Categoría de negocio",
-    "whyTheyNeedWebDev": "Problema crítico detectado en su web (ej. no es responsiva, carga lenta, no tiene pasarela de pago) y propuesta de solución."
+    "name": "Nombre Real del Negocio",
+    "address": "Calle Real, 10, Ciudad",
+    "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Nombre+Real+del+Negocio+Calle+Real+10+Ciudad",
+    "website": "www.sitio-real.es",
+    "phone": "+34 912 345 678 / info@sitio-real.es",
+    "industry": "Restauración / Hamburgueserías",
+    "whyTheyNeedWebDev": "Problema detectado y propuesta técnica."
   }
 ]`;
 
-  const prompt = `Encuentra y analiza exactamente 5 negocios con fallos web en el sector de: ${niche}.`;
+  const prompt = `Identifica exactamente 5 negocios reales y existentes en España en el sector de: ${niche}, con sus direcciones exactas y problemas web que puedan mejorarse con desarrollo de software.`;
   const responseText = await callGemini(prompt, systemInstruction);
   
   let cleanJson = responseText.trim();

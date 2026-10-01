@@ -414,28 +414,145 @@ function renderLeads(ideas, leads) {
   if (leads.length === 0) {
     leadsTableBody.innerHTML = '<tr><td colspan="6" class="text-center">No hay clientes potenciales aún. Presiona "Forzar Ejecución".</td></tr>';
   } else {
+    currentLeadsMap = {};
     leadsTableBody.innerHTML = leads.map(lead => {
-      // Propuesta rápida de email a copiar
-      const emailSubject = encodeURIComponent(`Propuesta de mejora web para tu negocio - Desarrollo Web`);
-      const emailBody = encodeURIComponent(`Hola ${lead.name},\n\nHe estado revisando tu sitio web (${lead.website}) y he notado algunos puntos clave de mejora:\n\n- ${lead.whyTheyNeedWebDev}\n\nMe encantaría presentarte una propuesta rápida de software o rediseño para solucionar esto y ayudarte a conseguir más clientes.\n\n¿Te vendría bien una breve llamada de 5 minutos?\n\nUn saludo,\nzVaito`);
-      const mailtoUrl = `mailto:${lead.phone.includes('@') ? lead.phone : ''}?subject=${emailSubject}&body=${emailBody}`;
+      const contact = parseLeadContact(lead.phone);
+
+      const whatsappText = 
+`¡Hola, equipo de *${lead.name}*! 👋
+
+He estado analizando su sitio web (*${lead.website}*) y he detectado una oportunidad de mejora directa:
+👉 ${lead.whyTheyNeedWebDev}
+
+Nos especializamos en desarrollo web de alto rendimiento y soluciones digitales para negocios de su sector.
+
+He preparado una propuesta técnica rápida y sin compromiso para solucionar esto y ayudarles a captar más clientes. ¿Les vendría bien revisarla o comentar 5 minutos por aquí?
+
+Un saludo,
+Manuel López Ramos (zVaito)`.trim();
+
+      const emailSubject = `Propuesta de mejora técnica y captación para ${lead.name}`;
+      const emailBody = 
+`Hola, equipo de ${lead.name}:
+
+Espero que estéis teniendo una excelente semana.
+
+Me pongo en contacto con vosotros porque he estado auditando vuestra página web (${lead.website}) y he identificado un punto de mejora directo:
+
+▶ Diagnóstico y Propuesta:
+${lead.whyTheyNeedWebDev}
+
+Nos especializamos en desarrollo web de alto rendimiento, optimización de conversión y software a medida para negocios de vuestro sector.
+
+¿Tendríais 5 minutos estos días para comentar los detalles sin ningún tipo de compromiso?
+
+Quedo a vuestra disposición.
+
+Un cordial saludo,
+Manuel López Ramos (zVaito)
+Desarrollo Web & Soluciones Digitales
+Web: https://manuellopezramos.com`.trim();
+
+      const whatsappUrl = contact.cleanPhone 
+        ? `https://api.whatsapp.com/send?phone=${contact.cleanPhone}&text=${encodeURIComponent(whatsappText)}`
+        : `https://api.whatsapp.com/send?text=${encodeURIComponent(whatsappText)}`;
+
+      const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(contact.email || '')}&su=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`;
+
+      const fullProposalText = `ASUNTO: ${emailSubject}\n\n${emailBody}\n\n---\nVERSIÓN WHATSAPP:\n${whatsappText}`;
+      currentLeadsMap[lead.id] = { lead, proposalFull: fullProposalText, whatsappText, emailBody, emailSubject };
+
+      const cleanSite = lead.website.replace(/^https?:\/\//, '');
 
       return `
         <tr>
-          <td><strong>${lead.name}</strong></td>
-          <td><span class="lead-status">${lead.industry}</span></td>
-          <td><a href="https://${lead.website}" target="_blank" class="text-muted"><i class="fa-solid fa-earth-americas"></i> ${lead.website}</a></td>
-          <td><div style="max-width:320px; font-size:0.85rem; line-height:1.4;">${lead.whyTheyNeedWebDev}</div></td>
-          <td><span style="font-size:0.85rem;">${lead.phone}</span></td>
+          <td><strong>${escapeHTML(lead.name)}</strong></td>
+          <td><span class="lead-status">${escapeHTML(lead.industry)}</span></td>
+          <td><a href="https://${escapeHTML(cleanSite)}" target="_blank" class="text-muted"><i class="fa-solid fa-earth-americas"></i> ${escapeHTML(cleanSite)}</a></td>
+          <td><div style="max-width:320px; font-size:0.85rem; line-height:1.4;">${escapeHTML(lead.whyTheyNeedWebDev)}</div></td>
           <td>
-            <a href="${mailtoUrl}" class="btn btn-secondary btn-sm" title="Enviar Propuesta por Email">
-              <i class="fa-regular fa-envelope"></i> Contactar
-            </a>
+            <div style="font-size:0.84rem; display:flex; flex-direction:column; gap:4px;">
+              ${contact.phone ? `<span><i class="fa-solid fa-phone" style="color:var(--text-muted);font-size:0.75rem;"></i> ${escapeHTML(contact.phone)}</span>` : ''}
+              ${contact.email ? `<span><i class="fa-solid fa-envelope" style="color:var(--text-muted);font-size:0.75rem;"></i> ${escapeHTML(contact.email)}</span>` : ''}
+              ${!contact.phone && !contact.email ? `<span class="text-muted">${escapeHTML(lead.phone)}</span>` : ''}
+            </div>
+          </td>
+          <td>
+            <div class="leads-actions-group">
+              <a href="${whatsappUrl}" target="_blank" rel="noopener noreferrer" class="btn-lead-action btn-lead-whatsapp" title="Enviar Propuesta por WhatsApp (lista en el chat)">
+                <i class="fa-brands fa-whatsapp"></i> WhatsApp
+              </a>
+              <a href="${gmailUrl}" target="_blank" rel="noopener noreferrer" class="btn-lead-action btn-lead-email" title="Abrir en Gmail con la propuesta lista para enviar">
+                <i class="fa-solid fa-paper-plane"></i> Correo
+              </a>
+              <button type="button" class="btn-lead-action btn-lead-copy" onclick="copyLeadProposal('${lead.id}')" title="Copiar propuesta al portapapeles">
+                <i class="fa-regular fa-copy"></i> Copiar
+              </button>
+            </div>
           </td>
         </tr>
       `;
     }).join('');
   }
+}
+
+// Helpers para Contacto y Portapapeles en Leads
+let currentLeadsMap = {};
+
+function parseLeadContact(contactStr) {
+  const s = (contactStr || '').trim();
+  const emailMatch = s.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/);
+  const email = emailMatch ? emailMatch[0] : '';
+  const withoutEmail = s.replace(email, '');
+  const phoneMatch = withoutEmail.match(/(\+?\d[\d\s\-.()]{6,}\d)/);
+  const phone = phoneMatch ? phoneMatch[0].trim() : '';
+  let cleanPhone = phone.replace(/[^\d]/g, '');
+  if (cleanPhone.length === 9) cleanPhone = '34' + cleanPhone;
+  return { email, phone, cleanPhone };
+}
+
+window.copyLeadProposal = function(leadId) {
+  const item = currentLeadsMap[leadId];
+  if (!item) return;
+  const text = item.proposalFull;
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(() => {
+      showToast(`¡Propuesta para ${item.lead.name} copiada!`);
+    }).catch(() => {
+      fallbackCopyText(text);
+      showToast(`¡Propuesta para ${item.lead.name} copiada!`);
+    });
+  } else {
+    fallbackCopyText(text);
+    showToast(`¡Propuesta para ${item.lead.name} copiada!`);
+  }
+};
+
+function fallbackCopyText(text) {
+  const ta = document.createElement('textarea');
+  ta.value = text;
+  ta.style.position = 'fixed';
+  ta.style.opacity = '0';
+  document.body.appendChild(ta);
+  ta.select();
+  document.execCommand('copy');
+  document.body.removeChild(ta);
+}
+
+function showToast(message) {
+  let toast = document.getElementById('global-toast');
+  if (!toast) {
+    toast = document.createElement('div');
+    toast.id = 'global-toast';
+    toast.className = 'toast-notification';
+    document.body.appendChild(toast);
+  }
+  toast.innerHTML = `<i class="fa-solid fa-circle-check" style="color:#00db8b;"></i> <span>${escapeHTML(message)}</span>`;
+  toast.style.display = 'flex';
+  clearTimeout(toast._timeout);
+  toast._timeout = setTimeout(() => {
+    toast.style.display = 'none';
+  }, 3500);
 }
 
 

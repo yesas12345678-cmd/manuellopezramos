@@ -350,31 +350,85 @@ function setupSalesModule() {
 }
 
 
-// ================= MODULO 2: CAPTADOR B2B =================
+// ================= MODULO 2: CAPTADOR B2B & IDEAS =================
+let allProductIdeas = [];
+let allLeadsList = [];
+let ideasBatchIndex = 0;
+let leadsBatchIndex = 0;
+const BATCH_SIZE = 5;
+
 function setupLeadsModule() {
   const btnTriggerLeads = document.getElementById('btn-trigger-leads');
-  
-  btnTriggerLeads.addEventListener('click', async () => {
-    btnTriggerLeads.disabled = true;
-    btnTriggerLeads.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Buscando...';
-    
-    try {
-      const res = await fetch('/api/leads/trigger', { method: 'POST' });
-      if (res.ok) {
-        const data = await res.json();
-        renderLeads(data.productIdeas, data.leadsList);
-      } else {
-        const data = await res.json();
-        alert('⚠️ Error: ' + (data.message || 'No se pudo iniciar la captación. Verifica tu clave de Gemini en Ajustes.'));
+  const btnPrevIdeas = document.getElementById('btn-prev-ideas');
+  const btnNextIdeas = document.getElementById('btn-next-ideas');
+  const btnPrevLeads = document.getElementById('btn-prev-leads');
+  const btnNextLeads = document.getElementById('btn-next-leads');
+
+  if (btnTriggerLeads) {
+    btnTriggerLeads.addEventListener('click', async () => {
+      btnTriggerLeads.disabled = true;
+      btnTriggerLeads.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Generando 5 con IA...';
+      
+      try {
+        const res = await fetch('/api/leads/trigger', { method: 'POST' });
+        if (res.ok) {
+          const data = await res.json();
+          allProductIdeas = Array.isArray(data.productIdeas) ? data.productIdeas : [];
+          allLeadsList = Array.isArray(data.leadsList) ? data.leadsList : [];
+          ideasBatchIndex = 0;
+          leadsBatchIndex = 0;
+          renderIdeasBatch();
+          renderLeadsBatch();
+          showToast('¡Se han generado 5 nuevos clientes y 5 nuevas ideas con IA!');
+        } else {
+          const data = await res.json();
+          alert('⚠️ Error: ' + (data.message || 'No se pudo iniciar la captación.'));
+        }
+      } catch (e) {
+        console.error(e);
+        alert('⚠️ Error de conexión con el servidor.');
+      } finally {
+        btnTriggerLeads.disabled = false;
+        btnTriggerLeads.innerHTML = '<i class="fa-solid fa-wand-magic-sparkles"></i> Generar 5 Nuevos con IA';
       }
-    } catch (e) {
-      console.error(e);
-      alert('⚠️ Error de conexión con el servidor.');
-    }
-    
-    btnTriggerLeads.disabled = false;
-    btnTriggerLeads.innerHTML = '<i class="fa-solid fa-rotate"></i> Forzar Ejecución 24/7';
-  });
+    });
+  }
+
+  if (btnPrevIdeas) {
+    btnPrevIdeas.addEventListener('click', () => {
+      if (ideasBatchIndex > 0) {
+        ideasBatchIndex--;
+        renderIdeasBatch();
+      }
+    });
+  }
+  if (btnNextIdeas) {
+    btnNextIdeas.addEventListener('click', () => {
+      const maxPages = Math.ceil(allProductIdeas.length / BATCH_SIZE);
+      if (ideasBatchIndex < maxPages - 1) {
+        ideasBatchIndex++;
+        renderIdeasBatch();
+      }
+    });
+  }
+
+  if (btnPrevLeads) {
+    btnPrevLeads.addEventListener('click', () => {
+      if (leadsBatchIndex > 0) {
+        leadsBatchIndex--;
+        renderLeadsBatch();
+      }
+    });
+  }
+  if (btnNextLeads) {
+    btnNextLeads.addEventListener('click', () => {
+      const maxPages = Math.ceil(allLeadsList.length / BATCH_SIZE);
+      if (leadsBatchIndex < maxPages - 1) {
+        leadsBatchIndex++;
+        renderLeadsBatch();
+      }
+    });
+  }
 }
 
 async function loadLeadsData() {
@@ -382,43 +436,88 @@ async function loadLeadsData() {
     const res = await fetch('/api/leads');
     if (res.ok) {
       const data = await res.json();
-      renderLeads(data.productIdeas, data.leadsList);
+      allProductIdeas = Array.isArray(data.productIdeas) ? data.productIdeas : [];
+      allLeadsList = Array.isArray(data.leadsList) ? data.leadsList : [];
+      renderIdeasBatch();
+      renderLeadsBatch();
     }
   } catch (err) {
     console.error('Error cargando leads:', err);
   }
 }
 
-function renderLeads(ideas, leads) {
-  const ideasContainer = document.getElementById('ideas-list-container');
-  const leadsTableBody = document.getElementById('leads-table-body');
+function renderIdeasBatch() {
+  const container = document.getElementById('ideas-list-container');
+  const pageInfo = document.getElementById('ideas-page-info');
+  const btnPrev = document.getElementById('btn-prev-ideas');
+  const btnNext = document.getElementById('btn-next-ideas');
 
-  // 1. Renderizar Ideas
-  if (ideas.length === 0) {
-    ideasContainer.innerHTML = '<div class="empty-state"><p>Aún no hay ideas creadas. Presiona "Forzar Ejecución" para iniciar.</p></div>';
-  } else {
-    ideasContainer.innerHTML = ideas.map(idea => `
-      <div class="idea-card">
-        <h4>${idea.title}</h4>
-        <p>${idea.description}</p>
-        <div class="idea-details">
-          <div><strong>Mercado:</strong> ${idea.marketNeeds}</div>
-          <div><strong>Stack:</strong> ${idea.techStack}</div>
-          <div class="text-muted" style="margin-top:8px; font-size:0.75rem;"><i class="fa-regular fa-clock"></i> ${new Date(idea.createdAt).toLocaleString()}</div>
-        </div>
-      </div>
-    `).join('');
+  if (!container) return;
+
+  const total = allProductIdeas.length;
+  const totalPages = Math.max(1, Math.ceil(total / BATCH_SIZE));
+  if (ideasBatchIndex >= totalPages) ideasBatchIndex = totalPages - 1;
+  if (ideasBatchIndex < 0) ideasBatchIndex = 0;
+
+  if (pageInfo) {
+    pageInfo.textContent = `Lote ${ideasBatchIndex + 1} de ${totalPages} (${total} ideas)`;
+  }
+  if (btnPrev) btnPrev.disabled = ideasBatchIndex <= 0;
+  if (btnNext) btnNext.disabled = ideasBatchIndex >= totalPages - 1;
+
+  if (total === 0) {
+    container.innerHTML = '<div class="empty-state"><p>Aún no hay ideas creadas. Presiona "Generar 5 Nuevos con IA" para iniciar.</p></div>';
+    return;
   }
 
-  // 2. Renderizar Clientes Potenciales
-  if (leads.length === 0) {
-    leadsTableBody.innerHTML = '<tr><td colspan="6" class="text-center">No hay clientes potenciales aún. Presiona "Forzar Ejecución".</td></tr>';
-  } else {
-    currentLeadsMap = {};
-    leadsTableBody.innerHTML = leads.map(lead => {
-      const contact = parseLeadContact(lead.phone);
+  const start = ideasBatchIndex * BATCH_SIZE;
+  const slice = allProductIdeas.slice(start, start + BATCH_SIZE);
 
-      const whatsappText = 
+  container.innerHTML = slice.map(idea => `
+    <div class="idea-card">
+      <h4>${escapeHTML(idea.title)}</h4>
+      <p>${escapeHTML(idea.description)}</p>
+      <div class="idea-details">
+        <div><strong>Mercado:</strong> ${escapeHTML(idea.marketNeeds)}</div>
+        <div><strong>Stack:</strong> ${escapeHTML(idea.techStack)}</div>
+        <div class="text-muted" style="margin-top:8px; font-size:0.75rem;"><i class="fa-regular fa-clock"></i> ${new Date(idea.createdAt).toLocaleString()}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function renderLeadsBatch() {
+  const leadsTableBody = document.getElementById('leads-table-body');
+  const pageInfo = document.getElementById('leads-page-info');
+  const btnPrev = document.getElementById('btn-prev-leads');
+  const btnNext = document.getElementById('btn-next-leads');
+
+  if (!leadsTableBody) return;
+
+  const total = allLeadsList.length;
+  const totalPages = Math.max(1, Math.ceil(total / BATCH_SIZE));
+  if (leadsBatchIndex >= totalPages) leadsBatchIndex = totalPages - 1;
+  if (leadsBatchIndex < 0) leadsBatchIndex = 0;
+
+  if (pageInfo) {
+    pageInfo.textContent = `Lote ${leadsBatchIndex + 1} de ${totalPages} (${total} clientes)`;
+  }
+  if (btnPrev) btnPrev.disabled = leadsBatchIndex <= 0;
+  if (btnNext) btnNext.disabled = leadsBatchIndex >= totalPages - 1;
+
+  if (total === 0) {
+    leadsTableBody.innerHTML = '<tr><td colspan="6" class="text-center">No hay clientes potenciales aún. Presiona "Generar 5 Nuevos con IA".</td></tr>';
+    return;
+  }
+
+  const start = leadsBatchIndex * BATCH_SIZE;
+  const slice = allLeadsList.slice(start, start + BATCH_SIZE);
+
+  currentLeadsMap = {};
+  leadsTableBody.innerHTML = slice.map(lead => {
+    const contact = parseLeadContact(lead.phone);
+
+    const whatsappText = 
 `¡Hola, equipo de *${lead.name}*! 👋
 
 He estado analizando su sitio web (*${lead.website}*) y he detectado una oportunidad de mejora directa:
@@ -431,8 +530,8 @@ He preparado una propuesta técnica rápida y sin compromiso para solucionar est
 Un saludo,
 Manuel López Ramos (zVaito)`.trim();
 
-      const emailSubject = `Propuesta de mejora técnica y captación para ${lead.name}`;
-      const emailBody = 
+    const emailSubject = `Propuesta de mejora técnica y captación para ${lead.name}`;
+    const emailBody = 
 `Hola, equipo de ${lead.name}:
 
 Espero que estéis teniendo una excelente semana.
@@ -453,54 +552,53 @@ Manuel López Ramos (zVaito)
 Desarrollo Web & Soluciones Digitales
 Web: https://manuellopezramos.com`.trim();
 
-      const whatsappUrl = contact.cleanPhone 
-        ? `https://api.whatsapp.com/send?phone=${contact.cleanPhone}&text=${encodeURIComponent(whatsappText)}`
-        : `https://api.whatsapp.com/send?text=${encodeURIComponent(whatsappText)}`;
+    const whatsappUrl = contact.cleanPhone 
+      ? `https://api.whatsapp.com/send?phone=${contact.cleanPhone}&text=${encodeURIComponent(whatsappText)}`
+      : `https://api.whatsapp.com/send?text=${encodeURIComponent(whatsappText)}`;
 
-      const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(contact.email || '')}&su=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`;
+    const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(contact.email || '')}&su=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`;
 
-      const fullProposalText = `ASUNTO: ${emailSubject}\n\n${emailBody}\n\n---\nVERSIÓN WHATSAPP:\n${whatsappText}`;
-      currentLeadsMap[lead.id] = { lead, proposalFull: fullProposalText, whatsappText, emailBody, emailSubject };
+    const fullProposalText = `ASUNTO: ${emailSubject}\n\n${emailBody}\n\n---\nVERSIÓN WHATSAPP:\n${whatsappText}`;
+    currentLeadsMap[lead.id] = { lead, proposalFull: fullProposalText, whatsappText, emailBody, emailSubject };
 
-      const cleanSite = lead.website.replace(/^https?:\/\//, '');
+    const cleanSite = lead.website.replace(/^https?:\/\//, '');
 
-      return `
-        <tr>
-          <td>
-            <div style="display:flex; flex-direction:column; gap:6px;">
-              <strong style="font-size:0.95rem;">${escapeHTML(lead.name)}</strong>
-              <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(lead.name)}" target="_blank" rel="noopener noreferrer" class="lead-maps-link" title="Buscar ${escapeHTML(lead.name)} en Google Maps">
-                <i class="fa-solid fa-location-dot"></i> Google Maps
-              </a>
-            </div>
-          </td>
-          <td><span class="lead-status">${escapeHTML(lead.industry)}</span></td>
-          <td><a href="https://${escapeHTML(cleanSite)}" target="_blank" class="text-muted"><i class="fa-solid fa-earth-americas"></i> ${escapeHTML(cleanSite)}</a></td>
-          <td><div style="max-width:320px; font-size:0.85rem; line-height:1.4;">${escapeHTML(lead.whyTheyNeedWebDev)}</div></td>
-          <td>
-            <div style="font-size:0.84rem; display:flex; flex-direction:column; gap:4px;">
-              ${contact.phone ? `<span><i class="fa-solid fa-phone" style="color:var(--text-muted);font-size:0.75rem;"></i> ${escapeHTML(contact.phone)}</span>` : ''}
-              ${contact.email ? `<span><i class="fa-solid fa-envelope" style="color:var(--text-muted);font-size:0.75rem;"></i> ${escapeHTML(contact.email)}</span>` : ''}
-              ${!contact.phone && !contact.email ? `<span class="text-muted">${escapeHTML(lead.phone)}</span>` : ''}
-            </div>
-          </td>
-          <td>
-            <div class="leads-actions-group">
-              <a href="${whatsappUrl}" target="_blank" rel="noopener noreferrer" class="btn-lead-action btn-lead-whatsapp" title="Enviar Propuesta por WhatsApp (lista en el chat)">
-                <i class="fa-brands fa-whatsapp"></i> WhatsApp
-              </a>
-              <a href="${gmailUrl}" target="_blank" rel="noopener noreferrer" class="btn-lead-action btn-lead-email" title="Abrir en Gmail con la propuesta lista para enviar">
-                <i class="fa-solid fa-paper-plane"></i> Correo
-              </a>
-              <button type="button" class="btn-lead-action btn-lead-copy" onclick="copyLeadProposal('${lead.id}')" title="Copiar propuesta al portapapeles">
-                <i class="fa-regular fa-copy"></i> Copiar
-              </button>
-            </div>
-          </td>
-        </tr>
-      `;
-    }).join('');
-  }
+    return `
+      <tr>
+        <td>
+          <div style="display:flex; flex-direction:column; gap:6px;">
+            <strong style="font-size:0.95rem;">${escapeHTML(lead.name)}</strong>
+            <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(lead.name)}" target="_blank" rel="noopener noreferrer" class="lead-maps-link" title="Buscar ${escapeHTML(lead.name)} en Google Maps">
+              <i class="fa-solid fa-location-dot"></i> Google Maps
+            </a>
+          </div>
+        </td>
+        <td><span class="lead-status">${escapeHTML(lead.industry)}</span></td>
+        <td><a href="https://${escapeHTML(cleanSite)}" target="_blank" class="text-muted"><i class="fa-solid fa-earth-americas"></i> ${escapeHTML(cleanSite)}</a></td>
+        <td><div style="max-width:320px; font-size:0.85rem; line-height:1.4;">${escapeHTML(lead.whyTheyNeedWebDev)}</div></td>
+        <td>
+          <div style="font-size:0.84rem; display:flex; flex-direction:column; gap:4px;">
+            ${contact.phone ? `<span><i class="fa-solid fa-phone" style="color:var(--text-muted);font-size:0.75rem;"></i> ${escapeHTML(contact.phone)}</span>` : ''}
+            ${contact.email ? `<span><i class="fa-solid fa-envelope" style="color:var(--text-muted);font-size:0.75rem;"></i> ${escapeHTML(contact.email)}</span>` : ''}
+            ${!contact.phone && !contact.email ? `<span class="text-muted">${escapeHTML(lead.phone)}</span>` : ''}
+          </div>
+        </td>
+        <td>
+          <div class="leads-actions-group">
+            <a href="${whatsappUrl}" target="_blank" rel="noopener noreferrer" class="btn-lead-action btn-lead-whatsapp" title="Enviar Propuesta por WhatsApp (lista en el chat)">
+              <i class="fa-brands fa-whatsapp"></i> WhatsApp
+            </a>
+            <a href="${gmailUrl}" target="_blank" rel="noopener noreferrer" class="btn-lead-action btn-lead-email" title="Abrir en Gmail con la propuesta lista para enviar">
+              <i class="fa-solid fa-paper-plane"></i> Correo
+            </a>
+            <button type="button" class="btn-lead-action btn-lead-copy" onclick="copyLeadProposal('${lead.id}')" title="Copiar propuesta al portapapeles">
+              <i class="fa-regular fa-copy"></i> Copiar
+            </button>
+          </div>
+        </td>
+      </tr>
+    `;
+  }).join('');
 }
 
 // Helpers para Contacto y Portapapeles en Leads

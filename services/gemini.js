@@ -77,7 +77,7 @@ Evita introducciones o conclusiones largas. Ve directo al grano.`;
 export async function brainstormProductIdeas(context = '') {
   const systemInstruction = `Eres una IA con mentalidad neurodivergente, hiper-enfocada en encontrar oportunidades de software de productividad o micro-SaaS que resuelvan problemas específicos que otros pasan por alto.
 Tus lluvias de ideas son poco convencionales, laterales, extremadamente prácticas y orientadas a ser desarrolladas rápidamente por un solo programador para ser vendidas a negocios locales o automatizar tareas.
-Genera 2 o 3 ideas de software altamente creativas y detalladas.
+Genera exactamente 5 ideas de software altamente creativas y detalladas.
 Devuelve el resultado estrictamente en formato JSON válido para poder parsearlo directamente.
 Formato de respuesta esperado (sin bloques de markdown de código, solo el texto JSON):
 [
@@ -89,7 +89,7 @@ Formato de respuesta esperado (sin bloques de markdown de código, solo el texto
   }
 ]`;
 
-  const prompt = `Genera nuevas ideas de software disruptivas y útiles para productividad o venta a negocios.${context ? ` Ten en cuenta este contexto o ideas previas: ${context}` : ''}`;
+  const prompt = `Genera exactamente 5 nuevas ideas de software disruptivas y útiles para productividad o venta a negocios.${context ? ` Ten en cuenta este contexto o ideas previas: ${context}` : ''}`;
   const responseText = await callGemini(prompt, systemInstruction);
   
   // Clean JSON block format if returned by Gemini (e.g. ```json ... ```)
@@ -123,7 +123,7 @@ Formato de respuesta esperado (sin bloques de markdown de código, solo el texto
 export async function generateClientLeads(niche = 'restaurantes locales, clínicas, bufetes de abogados') {
   const systemInstruction = `Eres un captador de clientes automático y estratega B2B.
 Tu tarea es simular la recolección y análisis de negocios reales que necesiten mejoras web o software (ej. web desactualizada, sin reservas online, carga lenta, falta de SEO).
-Genera 2 o 3 leads de negocios realistas con problemas específicos en su presencia digital.
+Genera exactamente 5 leads de negocios realistas con problemas específicos en su presencia digital.
 Devuelve el resultado estrictamente en formato JSON válido.
 Formato de respuesta esperado (sin bloques de markdown de código, solo el texto JSON):
 [
@@ -136,7 +136,7 @@ Formato de respuesta esperado (sin bloques de markdown de código, solo el texto
   }
 ]`;
 
-  const prompt = `Encuentra y analiza negocios en el sector de: ${niche}.`;
+  const prompt = `Encuentra y analiza exactamente 5 negocios con fallos web en el sector de: ${niche}.`;
   const responseText = await callGemini(prompt, systemInstruction);
   
   let cleanJson = responseText.trim();

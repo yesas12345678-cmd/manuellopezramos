@@ -705,6 +705,57 @@ body {
   grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
   gap: 20px;
 }
+
+.section-card-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.batch-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(0, 0, 0, 0.4);
+  padding: 6px 12px;
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+}
+
+.page-badge {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--color-secondary);
+  letter-spacing: 0.04em;
+  padding: 0 4px;
+}
+
+.btn-nav-batch {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-main);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: var(--transition-smooth);
+}
+.btn-nav-batch:hover:not(:disabled) {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  color: #fff;
+  transform: translateY(-1px);
+}
+.btn-nav-batch:disabled {
+  opacity: 0.25;
+  cursor: not-allowed;
+}
 .idea-card {
   background: rgba(255, 255, 255, 0.02);
   border: 1px solid var(--border-color);

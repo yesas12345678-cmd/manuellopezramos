@@ -218,14 +218,23 @@
         <div class="section-title-bar">
           <button class="btn-back btn-back-home"><i class="fa-solid fa-chevron-left"></i> Volver</button>
           <h2>Captador B2B & Ideas de Software</h2>
-          <button id="btn-trigger-leads" class="btn btn-primary"><i class="fa-solid fa-rotate"></i> Forzar Ejecución 24/7</button>
+          <button id="btn-trigger-leads" class="btn btn-primary"><i class="fa-solid fa-wand-magic-sparkles"></i> Generar 5 Nuevos con IA</button>
         </div>
 
         <div class="leads-workspace">
           <!-- Lluvia de ideas de Software (Neurodivergente) -->
           <div class="workspace-card">
-            <h3>💡 Ideas de Micro-SaaS (Hiper-creativo)</h3>
-            <p class="description">Lluvias de ideas creativas generadas por el bot en segundo plano para negocios locales o productividad.</p>
+            <div class="section-card-header-row">
+              <div>
+                <h3>💡 Ideas de Micro-SaaS (Hiper-creativo)</h3>
+                <p class="description">Lluvias de ideas creativas generadas por IA de 5 en 5.</p>
+              </div>
+              <div class="batch-controls">
+                <span id="ideas-page-info" class="page-badge">Lote 1 de 1</span>
+                <button id="btn-prev-ideas" class="btn-nav-batch" title="5 anteriores"><i class="fa-solid fa-chevron-left"></i></button>
+                <button id="btn-next-ideas" class="btn-nav-batch" title="5 siguientes"><i class="fa-solid fa-chevron-right"></i></button>
+              </div>
+            </div>
             <div id="ideas-list-container" class="grid-layout">
               <div class="empty-state"><p>Generando ideas...</p></div>
             </div>
@@ -233,8 +242,17 @@
 
           <!-- Tabla de Clientes Potenciales Scrapeados -->
           <div class="workspace-card">
-            <h3>🔍 Clientes Potenciales B2B Detectados</h3>
-            <p class="description">Negocios reales analizados con fallas en sus sitios web actuales que necesitan desarrollo de software.</p>
+            <div class="section-card-header-row">
+              <div>
+                <h3>🔍 Clientes Potenciales B2B Detectados</h3>
+                <p class="description">Negocios reales analizados con fallas en sus webs. Mostrando de 5 en 5.</p>
+              </div>
+              <div class="batch-controls">
+                <span id="leads-page-info" class="page-badge">Lote 1 de 1</span>
+                <button id="btn-prev-leads" class="btn-nav-batch" title="5 anteriores"><i class="fa-solid fa-chevron-left"></i></button>
+                <button id="btn-next-leads" class="btn-nav-batch" title="5 siguientes"><i class="fa-solid fa-chevron-right"></i></button>
+              </div>
+            </div>
             <div class="table-container">
               <table>
                 <thead>

@@ -141,33 +141,36 @@ export async function runSecurityScanAll() {
  * Ejecuta la tarea de captación de clientes y lluvia de ideas de software.
  */
 export async function runLeadGeneration() {
-  console.log('[Cron] Iniciando captador de clientes y lluvia de ideas...');
+  console.log('[Cron] Iniciando captador de clientes y lluvia de ideas (lote de 5)...');
   const db = await readDB();
   
   // 1. Brainstorming neurodivergente con contexto de ideas anteriores
-  const prevIdeasText = db.leads.productIdeas.slice(-5).map(i => i.title).join(', ');
+  const prevIdeasText = (db.leads.productIdeas || []).slice(0, 5).map(i => i.title).join(', ');
   const newIdeas = await brainstormProductIdeas(prevIdeasText);
   
+  if (!Array.isArray(db.leads.productIdeas)) db.leads.productIdeas = [];
   newIdeas.forEach(idea => {
     idea.id = 'i_' + Math.random().toString(36).substr(2, 9);
     idea.createdAt = new Date().toISOString();
-    db.leads.productIdeas.push(idea);
+    db.leads.productIdeas.unshift(idea);
   });
 
   // 2. Captación de clientes (leads)
-  const niches = ['gimnasios locales', 'restaurantes de comida rápida', 'asesorías contables', 'dentistas', 'tiendas online locales'];
+  const niches = ['gimnasios locales', 'restaurantes de comida rápida', 'asesorías contables', 'dentistas', 'tiendas online locales', 'clínicas veterinarias', 'inmobiliarias locales', 'talleres mecánicos'];
   const selectedNiche = niches[Math.floor(Math.random() * niches.length)];
   const newLeads = await generateClientLeads(selectedNiche);
 
+  if (!Array.isArray(db.leads.leadsList)) db.leads.leadsList = [];
   newLeads.forEach(lead => {
     lead.id = 'l_' + Math.random().toString(36).substr(2, 9);
     lead.status = 'Nuevo';
     lead.foundAt = new Date().toISOString();
-    db.leads.leadsList.push(lead);
+    db.leads.leadsList.unshift(lead);
   });
 
   await writeDB(db);
   console.log('[Cron] Captación completada. Creadas', newIdeas.length, 'ideas y', newLeads.length, 'leads.');
+  return { newIdeas, newLeads };
 }
 
 /**

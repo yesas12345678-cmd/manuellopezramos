@@ -774,6 +774,29 @@ tr:hover td {
   color: var(--color-secondary);
 }
 
+.lead-maps-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.74rem;
+  font-weight: 600;
+  color: #ff6b81;
+  text-decoration: none;
+  background: rgba(255, 107, 129, 0.08);
+  border: 1px solid rgba(255, 107, 129, 0.25);
+  padding: 3px 8px;
+  border-radius: 6px;
+  width: fit-content;
+  transition: var(--transition-smooth);
+}
+.lead-maps-link:hover {
+  background: rgba(255, 107, 129, 0.2);
+  border-color: #ff6b81;
+  color: #fff;
+  transform: translateY(-1px);
+  box-shadow: 0 0 10px rgba(255, 107, 129, 0.3);
+}
+
 /* Acciones de Leads (WhatsApp, Correo, Copiar) */
 .leads-actions-group {
   display: flex;

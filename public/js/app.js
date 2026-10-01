@@ -466,7 +466,14 @@ Web: https://manuellopezramos.com`.trim();
 
       return `
         <tr>
-          <td><strong>${escapeHTML(lead.name)}</strong></td>
+          <td>
+            <div style="display:flex; flex-direction:column; gap:6px;">
+              <strong style="font-size:0.95rem;">${escapeHTML(lead.name)}</strong>
+              <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(lead.name)}" target="_blank" rel="noopener noreferrer" class="lead-maps-link" title="Buscar ${escapeHTML(lead.name)} en Google Maps">
+                <i class="fa-solid fa-location-dot"></i> Google Maps
+              </a>
+            </div>
+          </td>
           <td><span class="lead-status">${escapeHTML(lead.industry)}</span></td>
           <td><a href="https://${escapeHTML(cleanSite)}" target="_blank" class="text-muted"><i class="fa-solid fa-earth-americas"></i> ${escapeHTML(cleanSite)}</a></td>
           <td><div style="max-width:320px; font-size:0.85rem; line-height:1.4;">${escapeHTML(lead.whyTheyNeedWebDev)}</div></td>

@@ -850,40 +850,54 @@ function setupGymModule() {
     document.getElementById('gym-day-name').value = '';
     exercisesInputsContainer.innerHTML = '';
     document.getElementById('gym-modal-title').textContent = 'Añadir Día de Entrenamiento';
+    const submitBtn = gymForm.querySelector('button[type="submit"]');
+    if (submitBtn) submitBtn.textContent = 'Crear Rutina';
     gymModal.classList.remove('hidden');
     addExerciseInputField(); // Campo inicial
   });
 
   btnAddExerciseField.addEventListener('click', () => addExerciseInputField());
 
-  function addExerciseInputField(nameValue = '') {
+  function addExerciseInputField(nameValue = '', exId = '', weight = 0, notes = '') {
     const rowId = 'ex_row_' + Math.random().toString(36).substr(2, 9);
     const row = document.createElement('div');
     row.className = 'exercise-field-row';
     row.id = rowId;
     row.innerHTML = `
-      <input type="text" class="exercise-name-input" required placeholder="Nombre del ejercicio (Ej: Sentadillas)" value="${nameValue}">
-      <button type="button" class="btn btn-danger btn-sm" onclick="document.getElementById('${rowId}').remove()"><i class="fa-solid fa-trash"></i></button>
+      <input type="hidden" class="exercise-id-input" value="${escapeHTML(exId)}">
+      <input type="hidden" class="exercise-weight-input" value="${weight || 0}">
+      <input type="hidden" class="exercise-notes-input" value="${escapeHTML(notes || '')}">
+      <input type="text" class="exercise-name-input" required placeholder="Nombre del ejercicio (Ej: Sentadillas)" value="${escapeHTML(nameValue)}">
+      <button type="button" class="btn btn-danger btn-sm" onclick="document.getElementById('${rowId}').remove()" title="Eliminar este ejercicio de la rutina"><i class="fa-solid fa-trash"></i></button>
     `;
     exercisesInputsContainer.appendChild(row);
   }
 
-  // Guardar Rutina
+  // Guardar Rutina (Crear o Editar)
   gymForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     const id = document.getElementById('gym-day-id').value;
     const dayName = document.getElementById('gym-day-name').value.trim();
     
-    // Obtener los nombres de los ejercicios
-    const exerciseInputs = document.querySelectorAll('.exercise-name-input');
-    const exercises = Array.from(exerciseInputs).map((input, idx) => {
+    // Obtener los ejercicios preservando pesos y notas existentes
+    const exerciseRows = exercisesInputsContainer.querySelectorAll('.exercise-field-row');
+    const exercises = Array.from(exerciseRows).map((row, idx) => {
+      const nameInput = row.querySelector('.exercise-name-input');
+      const idInput = row.querySelector('.exercise-id-input');
+      const weightInput = row.querySelector('.exercise-weight-input');
+      const notesInput = row.querySelector('.exercise-notes-input');
+
+      const existingId = idInput ? idInput.value : '';
+      const existingWeight = weightInput ? parseFloat(weightInput.value) || 0 : 0;
+      const existingNotes = notesInput ? notesInput.value : '';
+
       return {
-        id: 'e_' + idx + '_' + Math.random().toString(36).substr(2, 5),
-        name: input.value.trim(),
-        weight: 0,
-        notes: ''
+        id: existingId || ('e_' + idx + '_' + Math.random().toString(36).substr(2, 6)),
+        name: nameInput ? nameInput.value.trim() : '',
+        weight: existingWeight,
+        notes: existingNotes
       };
-    });
+    }).filter(ex => ex.name.length > 0);
 
     try {
       const res = await fetch('/api/gym', {
@@ -896,11 +910,159 @@ function setupGymModule() {
         const data = await res.json();
         renderGymDays(data.gym);
         gymModal.classList.add('hidden');
+        showToast(id ? '¡Rutina actualizada correctamente!' : '¡Nueva rutina creada con éxito!');
       }
     } catch (err) {
       console.error(err);
+      alert('Error al guardar la rutina.');
     }
   });
+
+  // Abrir Modal para Editar Rutina
+  window.editGymDay = async (dayId) => {
+    try {
+      const res = await fetch('/api/gym');
+      const gymData = await res.json();
+      const day = gymData.find(d => d.id === dayId);
+      if (!day) return;
+
+      document.getElementById('gym-day-id').value = day.id;
+      document.getElementById('gym-day-name').value = day.dayName;
+      document.getElementById('gym-modal-title').textContent = `Editar Rutina: ${day.dayName}`;
+      
+      const submitBtn = gymForm.querySelector('button[type="submit"]');
+      if (submitBtn) submitBtn.textContent = 'Guardar Cambios';
+
+      exercisesInputsContainer.innerHTML = '';
+      if (Array.isArray(day.exercises) && day.exercises.length > 0) {
+        day.exercises.forEach(ex => {
+          addExerciseInputField(ex.name, ex.id, ex.weight, ex.notes);
+        });
+      } else {
+        addExerciseInputField();
+      }
+
+      gymModal.classList.remove('hidden');
+    } catch (err) {
+      console.error('Error cargando rutina para editar:', err);
+    }
+  };
+
+  // Abrir y cerrar formulario inline de añadir ejercicio
+  window.openAddExerciseInline = (dayId) => {
+    const formContainer = document.getElementById(`inline-add-ex-${dayId}`);
+    if (!formContainer) return;
+    formContainer.classList.remove('hidden');
+    const input = formContainer.querySelector('input');
+    if (input) {
+      input.value = '';
+      input.focus();
+    }
+  };
+
+  window.closeAddExerciseInline = (dayId) => {
+    const formContainer = document.getElementById(`inline-add-ex-${dayId}`);
+    if (formContainer) formContainer.classList.add('hidden');
+  };
+
+  // Guardar nuevo ejercicio rápidamente desde la tarjeta
+  window.saveNewExerciseInline = async (dayId) => {
+    const formContainer = document.getElementById(`inline-add-ex-${dayId}`);
+    if (!formContainer) return;
+    const input = formContainer.querySelector('input');
+    const name = input ? input.value.trim() : '';
+    if (!name) return;
+
+    try {
+      const resGet = await fetch('/api/gym');
+      const gymData = await resGet.json();
+      const day = gymData.find(d => d.id === dayId);
+      if (!day) return;
+
+      if (!Array.isArray(day.exercises)) day.exercises = [];
+      day.exercises.push({
+        id: 'e_' + Date.now().toString(36) + '_' + Math.random().toString(36).substr(2, 4),
+        name,
+        weight: 0,
+        notes: ''
+      });
+
+      const resPost = await fetch('/api/gym', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(day)
+      });
+
+      if (resPost.ok) {
+        const data = await resPost.json();
+        renderGymDays(data.gym);
+        showToast(`¡Ejercicio "${name}" añadido a la rutina!`);
+      }
+    } catch (err) {
+      console.error(err);
+      alert('Error al añadir el ejercicio.');
+    }
+  };
+
+  // Renombrar un ejercicio específico
+  window.renameExercise = async (dayId, exId) => {
+    try {
+      const resGet = await fetch('/api/gym');
+      const gymData = await resGet.json();
+      const day = gymData.find(d => d.id === dayId);
+      if (!day) return;
+      const ex = day.exercises.find(e => e.id === exId);
+      if (!ex) return;
+
+      const newName = prompt('Nuevo nombre para el ejercicio:', ex.name);
+      if (!newName || !newName.trim() || newName.trim() === ex.name) return;
+
+      ex.name = newName.trim();
+
+      const resPost = await fetch('/api/gym', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(day)
+      });
+
+      if (resPost.ok) {
+        const data = await resPost.json();
+        renderGymDays(data.gym);
+        showToast(`Ejercicio renombrado a "${ex.name}"`);
+      }
+    } catch (err) {
+      console.error(err);
+      alert('Error al renombrar el ejercicio.');
+    }
+  };
+
+  // Eliminar un ejercicio específico de una rutina
+  window.deleteExerciseFromDay = async (dayId, exId) => {
+    if (!confirm('¿Deseas eliminar este ejercicio de la rutina?')) return;
+    try {
+      const resGet = await fetch('/api/gym');
+      const gymData = await resGet.json();
+      const day = gymData.find(d => d.id === dayId);
+      if (!day) return;
+
+      day.exercises = day.exercises.filter(e => e.id !== exId);
+
+      const resPost = await fetch('/api/gym', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(day)
+      });
+
+      if (resPost.ok) {
+        const data = await resPost.json();
+        renderGymDays(data.gym);
+        showToast('Ejercicio eliminado de la rutina.');
+      }
+    } catch (err) {
+      console.error(err);
+      alert('Error al eliminar el ejercicio.');
+    }
+  };
 
   // Escuchar cambios de peso y notas para auto-guardado
   const gridContainer = document.getElementById('gym-days-grid');
@@ -947,6 +1109,7 @@ function setupGymModule() {
         if (res.ok) {
           const data = await res.json();
           renderGymDays(data.gym);
+          showToast('Rutina eliminada.');
         }
       } catch (err) {
         console.error(err);
@@ -979,13 +1142,28 @@ function renderGymDays(gymDays) {
       <div class="gym-card-header">
         <h3>${escapeHTML(day.dayName)}</h3>
         <div class="gym-actions">
-          <button class="btn btn-danger-link" onclick="deleteGymDay('${day.id}')" title="Eliminar Rutina"><i class="fa-regular fa-trash-can"></i></button>
+          <button class="btn-edit-routine" onclick="editGymDay('${day.id}')" title="Editar Rutina (nombre y ejercicios)">
+            <i class="fa-solid fa-pen-to-square"></i> Editar
+          </button>
+          <button class="btn btn-danger-link" onclick="deleteGymDay('${day.id}')" title="Eliminar Rutina">
+            <i class="fa-regular fa-trash-can"></i>
+          </button>
         </div>
       </div>
       <div class="gym-exercises-list">
         ${day.exercises.map(ex => `
           <div class="gym-exercise-item">
-            <div class="gym-exercise-name">${escapeHTML(ex.name)}</div>
+            <div class="gym-exercise-header">
+              <span class="gym-exercise-name">${escapeHTML(ex.name)}</span>
+              <div class="gym-exercise-actions">
+                <button class="btn-icon-subtle" onclick="renameExercise('${day.id}', '${ex.id}')" title="Renombrar Ejercicio">
+                  <i class="fa-solid fa-pencil"></i>
+                </button>
+                <button class="btn-icon-subtle btn-delete-ex" onclick="deleteExerciseFromDay('${day.id}', '${ex.id}')" title="Eliminar este ejercicio">
+                  <i class="fa-solid fa-trash-can"></i>
+                </button>
+              </div>
+            </div>
             <div class="gym-exercise-inputs">
               <div class="gym-input-row">
                 <label>Peso:</label>
@@ -1001,6 +1179,16 @@ function renderGymDays(gymDays) {
             </div>
           </div>
         `).join('')}
+
+        <div id="inline-add-ex-${day.id}" class="gym-add-inline-form hidden">
+          <input type="text" placeholder="Nombre del ejercicio (Ej: Curl de bíceps)..." onkeypress="if(event.key==='Enter') saveNewExerciseInline('${day.id}')">
+          <button type="button" class="btn btn-primary btn-sm" onclick="saveNewExerciseInline('${day.id}')"><i class="fa-solid fa-check"></i> Añadir</button>
+          <button type="button" class="btn btn-secondary btn-sm" onclick="closeAddExerciseInline('${day.id}')"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+
+        <button class="btn-add-exercise-to-card" onclick="openAddExerciseInline('${day.id}')">
+          <i class="fa-solid fa-plus"></i> Añadir Ejercicio
+        </button>
       </div>
     </div>
   `).join('');

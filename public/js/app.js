@@ -701,6 +701,14 @@ function setupGmailModule() {
     gmailChatInput.value = '';
     appendUserMessage(message);
 
+    const chatOutput = document.getElementById('gmail-chat-output');
+    const loadingDiv = document.createElement('div');
+    loadingDiv.className = 'msg assistant';
+    loadingDiv.id = 'gmail-loading-indicator';
+    loadingDiv.innerHTML = `<div class="msg-bubble" style="opacity:0.85; display:flex; align-items:center; gap:8px;"><i class="fa-solid fa-spinner fa-spin"></i> <span>Consultando Gmail con IA...</span></div>`;
+    chatOutput.appendChild(loadingDiv);
+    chatOutput.scrollTop = chatOutput.scrollHeight;
+
     try {
       const res = await fetch('/api/gmail/chat', {
         method: 'POST',
@@ -708,14 +716,22 @@ function setupGmailModule() {
         body: JSON.stringify({ message })
       });
 
+      const loadingElem = document.getElementById('gmail-loading-indicator');
+      if (loadingElem) loadingElem.remove();
+
       if (res.ok) {
         const data = await res.json();
         renderGmailChat(data.chatHistory);
         loadGmailInbox(); // Recargar la bandeja por si cambió algo
+      } else {
+        const errData = await res.json().catch(() => ({}));
+        appendAssistantMessage(`⚠️ ${errData.message || 'No se pudo procesar la solicitud en el servidor.'}`);
       }
     } catch (err) {
+      const loadingElem = document.getElementById('gmail-loading-indicator');
+      if (loadingElem) loadingElem.remove();
       console.error(err);
-      appendAssistantMessage('❌ Error de red al comunicarse con el asistente de Gmail.');
+      appendAssistantMessage('❌ Error de conexión al comunicarse con el servidor. Comprueba que el servidor está en funcionamiento.');
     }
   }
 
@@ -733,7 +749,7 @@ function setupGmailModule() {
     const chatOutput = document.getElementById('gmail-chat-output');
     chatOutput.innerHTML += `
       <div class="msg assistant">
-        <div class="msg-bubble">${msg}</div>
+        <div class="msg-bubble">${formatGmailAssistantMessage(msg)}</div>
       </div>
     `;
     chatOutput.scrollTop = chatOutput.scrollHeight;
@@ -805,9 +821,13 @@ function renderGmailChat(chatHistory) {
 }
 
 function formatGmailAssistantMessage(text) {
-  // Conversión simple a listas y negritas del bot de Gmail
-  let formatted = text.replace(/\n/g, '<br>');
+  if (!text) return '';
+  // Conversión de Markdown a HTML seguro
+  let formatted = escapeHTML(text);
   formatted = formatted.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+  formatted = formatted.replace(/\*(.*?)\*/g, '<em>$1</em>');
+  formatted = formatted.replace(/\[(.*?)\]\((https?:\/\/[^\s\)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer" style="color:#00db8b; text-decoration:underline;">$1</a>');
+  formatted = formatted.replace(/\n/g, '<br>');
   return formatted;
 }
 

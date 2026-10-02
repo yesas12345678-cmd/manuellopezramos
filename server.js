@@ -401,11 +401,12 @@ app.get('/api/config', authMiddleware, (req, res) => {
 app.post('/api/config/save', authMiddleware, async (req, res) => {
   try {
     const { geminiApiKey, gmailUser, gmailAppPassword } = req.body;
+    const sanitizedAppPassword = gmailAppPassword !== undefined ? gmailAppPassword.replace(/\s+/g, '') : undefined;
     
     // Actualizar en memoria inmediatamente
-    if (geminiApiKey !== undefined) process.env.GEMINI_API_KEY = geminiApiKey;
-    if (gmailUser !== undefined) process.env.GMAIL_USER = gmailUser;
-    if (gmailAppPassword !== undefined) process.env.GMAIL_APP_PASSWORD = gmailAppPassword;
+    if (geminiApiKey !== undefined) process.env.GEMINI_API_KEY = geminiApiKey.trim();
+    if (gmailUser !== undefined) process.env.GMAIL_USER = gmailUser.trim();
+    if (sanitizedAppPassword !== undefined) process.env.GMAIL_APP_PASSWORD = sanitizedAppPassword;
 
     // Actualizar el archivo .env leyendo el archivo actual
     const envPath = path.resolve('.env');
@@ -421,9 +422,9 @@ app.post('/api/config/save', authMiddleware, async (req, res) => {
     const keysHandled = new Set();
 
     const updates = {
-      GEMINI_API_KEY: geminiApiKey,
-      GMAIL_USER: gmailUser,
-      GMAIL_APP_PASSWORD: gmailAppPassword
+      GEMINI_API_KEY: geminiApiKey ? geminiApiKey.trim() : undefined,
+      GMAIL_USER: gmailUser ? gmailUser.trim() : undefined,
+      GMAIL_APP_PASSWORD: sanitizedAppPassword
     };
 
     for (let line of lines) {

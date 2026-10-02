@@ -1475,6 +1475,76 @@ tr:hover td {
 .vuln-item.severity-Low .vuln-solution strong {
   color: var(--color-secondary);
 }
+.vuln-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin-bottom: 15px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  padding-bottom: 15px;
+}
+.vuln-filter-box {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.vuln-filter-box label {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+  font-weight: 600;
+}
+.security-filter-select {
+  background: rgba(18, 22, 40, 0.95);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  color: var(--text-main);
+  padding: 8px 14px;
+  font-size: 0.85rem;
+  font-family: var(--font-primary);
+  font-weight: 500;
+  cursor: pointer;
+  outline: none;
+  transition: var(--transition-smooth);
+  min-width: 220px;
+}
+.security-filter-select:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 10px rgba(140, 82, 255, 0.2);
+}
+.vuln-actions-bar {
+  margin-top: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  padding-top: 12px;
+}
+.btn-check-vuln {
+  background: rgba(0, 219, 139, 0.12);
+  border: 1px solid rgba(0, 219, 139, 0.35);
+  color: #00db8b;
+  font-size: 0.82rem;
+  font-weight: 600;
+  padding: 7px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  transition: all 0.2s ease;
+}
+.btn-check-vuln:hover:not(:disabled) {
+  background: rgba(0, 219, 139, 0.25);
+  border-color: #00db8b;
+  transform: translateY(-1px);
+}
+.btn-check-vuln:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
 .security-safe-icon {
   font-size: 3.5rem;
   color: var(--color-success);

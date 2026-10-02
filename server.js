@@ -277,6 +277,74 @@ app.post('/api/security/scan-now', authMiddleware, async (req, res) => {
   }
 });
 
+app.post('/api/security/recheck-vuln', authMiddleware, async (req, res) => {
+  try {
+    const { id } = req.body;
+    if (!id) {
+      return res.status(400).json({ success: false, message: 'Falta el ID de la vulnerabilidad.' });
+    }
+
+    const db = await readDB();
+    const vulnIndex = (db.security?.logs || []).findIndex(l => l.id === id);
+    if (vulnIndex === -1) {
+      return res.status(404).json({ success: false, message: 'Vulnerabilidad no encontrada o ya eliminada.' });
+    }
+
+    const vuln = db.security.logs[vulnIndex];
+
+    // Ejecutar escaneo en la URL específica
+    const { runSecurityScan } = await import('./services/pentest.js');
+    const scanResult = await runSecurityScan(vuln.url);
+
+    // Comprobar si esta vulnerabilidad concreta sigue presente
+    const stillPresent = scanResult.vulnerabilities.some(v => 
+      v.title.toLowerCase() === vuln.title.toLowerCase() || 
+      (v.type && vuln.type && v.type.toLowerCase() === vuln.type.toLowerCase())
+    );
+
+    if (!stillPresent) {
+      // ¡Solucionado! Eliminar de la bitácora
+      db.security.logs.splice(vulnIndex, 1);
+
+      // Comprobar si este objetivo tiene más vulnerabilidades pendientes
+      const remainingForTarget = db.security.logs.filter(l => l.url === vuln.url);
+      const target = (db.security.targets || []).find(t => t.url === vuln.url);
+      if (target) {
+        target.lastScanDate = new Date().toISOString();
+        if (remainingForTarget.length === 0) {
+          target.lastScanStatus = 'Seguro';
+        }
+      }
+
+      await writeDB(db);
+
+      return res.json({
+        success: true,
+        solved: true,
+        vulnTitle: vuln.title,
+        vulnUrl: vuln.url,
+        message: `¡Solucionado! "${vuln.title}" ha sido resuelto en ${vuln.url} y se ha eliminado de la bitácora.`,
+        targets: db.security.targets,
+        logs: db.security.logs
+      });
+    } else {
+      // Aún presente
+      return res.json({
+        success: true,
+        solved: false,
+        vulnTitle: vuln.title,
+        vulnUrl: vuln.url,
+        message: `La vulnerabilidad "${vuln.title}" sigue detectándose en ${vuln.url}.`,
+        targets: db.security.targets,
+        logs: db.security.logs
+      });
+    }
+  } catch (err) {
+    console.error('Error re-verificando vulnerabilidad:', err);
+    res.status(500).json({ success: false, message: err.message });
+  }
+});
+
 // ================= SALES CLOSING API =================
 
 app.post('/api/sales/advice', authMiddleware, async (req, res) => {

@@ -1295,9 +1295,22 @@ function renderSitemaps(sitemaps) {
 
 
 // ================= MODULO 6: PENTESTING BOT =================
+// ================= MODULO 6: PENTESTING BOT =================
+let allSecurityLogs = [];
+let allSecurityTargets = [];
+let selectedSecurityWebFilter = 'ALL';
+
 function setupSecurityModule() {
   const formAddTarget = document.getElementById('form-add-security-target');
   const btnRunPentest = document.getElementById('btn-run-pentest');
+  const selectWebFilter = document.getElementById('select-filter-security-web');
+
+  if (selectWebFilter) {
+    selectWebFilter.addEventListener('change', (e) => {
+      selectedSecurityWebFilter = e.target.value;
+      renderFilteredSecurityLogs();
+    });
+  }
 
   formAddTarget.addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -1312,8 +1325,11 @@ function setupSecurityModule() {
 
       if (res.ok) {
         const data = await res.json();
-        renderSecurityTargets(data.targets);
+        allSecurityTargets = data.targets;
+        renderSecurityTargets(allSecurityTargets);
+        updateSecurityFilterDropdown();
         formAddTarget.reset();
+        showToast('Web objetivo añadida al Pentesting Bot.');
       }
     } catch (e) {
       console.error(e);
@@ -1329,28 +1345,30 @@ function setupSecurityModule() {
     consoleBox.innerHTML = '';
     
     appendConsoleLine('[+] Iniciando Bot de Pentesting 24/7...', 'text-success');
-    await sleep(800);
-    appendConsoleLine('[+] Recuperando objetivos de auditoría activos...', 'text-success');
     await sleep(600);
+    appendConsoleLine('[+] Recuperando objetivos de auditoría activos...', 'text-success');
+    await sleep(500);
     
     // Iniciar escaneo en backend
     try {
       const res = await fetch('/api/security/scan-now', { method: 'POST' });
       if (res.ok) {
         const data = await res.json();
+        allSecurityTargets = data.targets;
+        allSecurityLogs = data.logs;
         
         // Simular salida interactiva en consola antes de mostrar resultados
         for (const target of data.targets) {
           appendConsoleLine(`[+] Cargando objetivo: ${target.url}`, 'text-success');
-          await sleep(500);
+          await sleep(400);
           appendConsoleLine(`[~] Escaneando puertos abiertos de ${target.url}...`, 'text-warn');
-          await sleep(700);
+          await sleep(500);
           appendConsoleLine(`[~] Comprobando HTTPS y certificados SSL...`, 'text-warn');
-          await sleep(600);
+          await sleep(400);
           appendConsoleLine(`[~] Solicitando cabeceras de respuesta HTTP y políticas CSP...`, 'text-warn');
-          await sleep(800);
+          await sleep(500);
           appendConsoleLine(`[~] Escaneando directorios y archivos sensibles (.env, .git, config)...`, 'text-warn');
-          await sleep(600);
+          await sleep(400);
           
           const logsOfTarget = data.logs.filter(l => l.url === target.url);
           if (logsOfTarget.length > 0) {
@@ -1361,14 +1379,15 @@ function setupSecurityModule() {
           } else {
             appendConsoleLine(`[+] Escaneo completado para ${target.url}: SIN VULNERABILIDADES CRÍTICAS.`, 'text-success');
           }
-          await sleep(500);
+          await sleep(300);
         }
         
         appendConsoleLine('[+] Todos los escaneos de vulnerabilidades han finalizado correctamente.', 'text-success');
         
-        // Renderizar datos finales
-        renderSecurityTargets(data.targets);
-        renderSecurityLogs(data.logs);
+        // Renderizar datos finales y actualizar selector
+        renderSecurityTargets(allSecurityTargets);
+        updateSecurityFilterDropdown();
+        renderFilteredSecurityLogs();
       }
     } catch (e) {
       appendConsoleLine('[x] Error al ejecutar el pentest de red.', 'text-err');
@@ -1378,37 +1397,86 @@ function setupSecurityModule() {
     btnRunPentest.innerHTML = '<i class="fa-solid fa-user-secret"></i> Lanzar Escaneo Completo';
   });
 
-  function appendConsoleLine(text, className = '') {
-    const consoleBox = document.getElementById('security-console');
-    const div = document.createElement('div');
-    div.className = `console-line ${className}`;
-    div.textContent = text;
-    consoleBox.appendChild(div);
-    consoleBox.scrollTop = consoleBox.scrollHeight;
-  }
-
   window.deleteSecurityTarget = async (id) => {
     if (confirm('¿Seguro que deseas eliminar esta web auditada? Se borrarán sus vulnerabilidades.')) {
       try {
         const res = await fetch(`/api/security/targets/${id}`, { method: 'DELETE' });
         if (res.ok) {
           const data = await res.json();
-          renderSecurityTargets(data.targets);
-          loadSecurityLogs(); // Recargar historial de fallos
+          allSecurityTargets = data.targets;
+          renderSecurityTargets(allSecurityTargets);
+          await loadSecurityLogs(); // Recargar historial de fallos
         }
       } catch (err) {
         console.error(err);
       }
     }
   };
+
+  // Función expuesta para comprobar si una vulnerabilidad se ha solucionado
+  window.recheckVulnerability = async (id) => {
+    const btn = document.getElementById(`btn-recheck-${id}`);
+    if (btn) {
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Comprobando solución...';
+    }
+
+    appendConsoleLine('[~] Auditando en tiempo real si el fallo de seguridad ha sido resuelto...', 'text-warn');
+
+    try {
+      const res = await fetch('/api/security/recheck-vuln', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id })
+      });
+
+      const data = await res.json();
+
+      if (res.ok && data.solved) {
+        allSecurityTargets = data.targets;
+        allSecurityLogs = data.logs;
+        renderSecurityTargets(allSecurityTargets);
+        updateSecurityFilterDropdown();
+        renderFilteredSecurityLogs();
+        appendConsoleLine(`[✔] ¡SOLUCIONADO! "${data.vulnTitle}" en ${data.vulnUrl}. Vulnerabilidad eliminada de la bitácora.`, 'text-success');
+        showToast('¡Vulnerabilidad solucionada con éxito! Se ha eliminado de la bitácora.');
+      } else {
+        if (btn) {
+          btn.disabled = false;
+          btn.innerHTML = '<i class="fa-solid fa-arrows-rotate"></i> Comprobar si se ha solucionado';
+        }
+        const errorMsg = data.message || 'La vulnerabilidad aún sigue activa.';
+        appendConsoleLine(`[!] ATENCIÓN: "${data.vulnTitle || 'Fallo'}" en ${data.vulnUrl || 'la web'} todavía no ha sido corregida.`, 'text-err');
+        showToast('⚠️ La vulnerabilidad sigue presente en la web. Revisa la solución recomendada.');
+      }
+    } catch (err) {
+      console.error(err);
+      if (btn) {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fa-solid fa-arrows-rotate"></i> Comprobar si se ha solucionado';
+      }
+      appendConsoleLine('[x] Error al conectar con el servidor para la comprobación.', 'text-err');
+      alert('Error al comprobar la vulnerabilidad.');
+    }
+  };
+}
+
+function appendConsoleLine(text, className = '') {
+  const consoleBox = document.getElementById('security-console');
+  if (!consoleBox) return;
+  const div = document.createElement('div');
+  div.className = `console-line ${className}`;
+  div.textContent = text;
+  consoleBox.appendChild(div);
+  consoleBox.scrollTop = consoleBox.scrollHeight;
 }
 
 async function loadSecurityData() {
   try {
     const resT = await fetch('/api/security/targets');
     if (resT.ok) {
-      const targets = await resT.json();
-      renderSecurityTargets(targets);
+      allSecurityTargets = await resT.json();
+      renderSecurityTargets(allSecurityTargets);
     }
     
     await loadSecurityLogs();
@@ -1421,16 +1489,51 @@ async function loadSecurityLogs() {
   try {
     const resL = await fetch('/api/security/logs');
     if (resL.ok) {
-      const logs = await resL.json();
-      renderSecurityLogs(logs);
+      allSecurityLogs = await resL.json();
+      updateSecurityFilterDropdown();
+      renderFilteredSecurityLogs();
     }
   } catch (e) {
     console.error(e);
   }
 }
 
+function updateSecurityFilterDropdown() {
+  const select = document.getElementById('select-filter-security-web');
+  if (!select) return;
+
+  const currentVal = select.value || selectedSecurityWebFilter;
+
+  // Extraer todas las URLs registradas o con logs
+  const urlSet = new Set();
+  allSecurityTargets.forEach(t => urlSet.add(t.url));
+  allSecurityLogs.forEach(l => urlSet.add(l.url));
+
+  const totalLogs = allSecurityLogs.length;
+
+  let optionsHtml = `<option value="ALL">Todas las webs (${totalLogs} ${totalLogs === 1 ? 'fallo' : 'fallos'})</option>`;
+
+  Array.from(urlSet).sort().forEach(url => {
+    const count = allSecurityLogs.filter(l => l.url === url).length;
+    const cleanUrl = url.replace(/^https?:\/\//i, '').replace(/\/$/, '');
+    optionsHtml += `<option value="${escapeHTML(url)}">${escapeHTML(cleanUrl)} (${count} ${count === 1 ? 'fallo' : 'fallos'})</option>`;
+  });
+
+  select.innerHTML = optionsHtml;
+
+  // Restaurar selección previa si aún existe
+  if (Array.from(urlSet).includes(currentVal) || currentVal === 'ALL') {
+    select.value = currentVal;
+    selectedSecurityWebFilter = currentVal;
+  } else {
+    select.value = 'ALL';
+    selectedSecurityWebFilter = 'ALL';
+  }
+}
+
 function renderSecurityTargets(targets) {
   const body = document.getElementById('security-targets-table-body');
+  if (!body) return;
   if (targets.length === 0) {
     body.innerHTML = '<tr><td colspan="4" class="text-center">No has añadido webs a auditar.</td></tr>';
     return;
@@ -1446,19 +1549,28 @@ function renderSecurityTargets(targets) {
         </span>
       </td>
       <td>
-        <button class="btn btn-danger-link" onclick="deleteSecurityTarget('${target.id}')"><i class="fa-regular fa-trash-can"></i></button>
+        <button class="btn btn-danger-link" onclick="deleteSecurityTarget('${target.id}')" title="Eliminar objetivo"><i class="fa-regular fa-trash-can"></i></button>
       </td>
     </tr>
   `).join('');
 }
 
-function renderSecurityLogs(logs) {
+function renderFilteredSecurityLogs() {
   const container = document.getElementById('vulnerability-list-container');
+  if (!container) return;
+
+  const logs = selectedSecurityWebFilter === 'ALL'
+    ? allSecurityLogs
+    : allSecurityLogs.filter(l => l.url === selectedSecurityWebFilter);
+
   if (logs.length === 0) {
+    const isSpecific = selectedSecurityWebFilter !== 'ALL';
+    const siteLabel = isSpecific ? selectedSecurityWebFilter.replace(/^https?:\/\//i, '') : '';
+
     container.innerHTML = `
       <div class="empty-state">
         <i class="fa-solid fa-circle-check security-safe-icon"></i>
-        <p>No se han encontrado vulnerabilidades en tus sitios. Todo parece estar seguro.</p>
+        <p>${isSpecific ? `No se han detectado vulnerabilidades en <strong>${escapeHTML(siteLabel)}</strong>. ¡El sitio está seguro!` : 'No se han encontrado vulnerabilidades en tus sitios. Todo parece estar seguro.'}</p>
       </div>
     `;
     return;
@@ -1478,7 +1590,12 @@ function renderSecurityLogs(logs) {
           <span>${escapeHTML(vuln.solution)}</span>
         </div>
       ` : ''}
-      <div class="text-muted" style="margin-top:12px; font-size:0.75rem;"><i class="fa-regular fa-clock"></i> Detectada el ${new Date(vuln.foundAt).toLocaleString()}</div>
+      <div class="vuln-actions-bar">
+        <span class="text-muted" style="font-size:0.75rem;"><i class="fa-regular fa-clock"></i> Detectada el ${new Date(vuln.foundAt).toLocaleString()}</span>
+        <button class="btn-check-vuln" id="btn-recheck-${vuln.id}" onclick="recheckVulnerability('${vuln.id}')" title="Comprobar en tiempo real si esta vulnerabilidad ha sido solucionada">
+          <i class="fa-solid fa-arrows-rotate"></i> Comprobar si se ha solucionado
+        </button>
+      </div>
     </div>
   `).join('');
 }

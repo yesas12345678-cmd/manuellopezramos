@@ -90,6 +90,13 @@ export async function runSecurityScanAll() {
       targets[i].lastScanDate = scanResult.scanDate;
       targets[i].lastScanStatus = scanResult.vulnerabilities.length > 0 ? 'Vulnerable' : 'Seguro';
 
+      // Limpiar logs anteriores de esta URL para refrescar con el nuevo estado sin duplicados
+      for (let j = logs.length - 1; j >= 0; j--) {
+        if (logs[j].url === target.url) {
+          logs.splice(j, 1);
+        }
+      }
+
       // Agregar vulnerabilidades encontradas a la bitácora
       scanResult.vulnerabilities.forEach(vuln => {
         const id = 'v_' + Math.random().toString(36).substr(2, 9);

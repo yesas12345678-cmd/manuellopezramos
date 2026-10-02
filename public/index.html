@@ -460,8 +460,18 @@
           <!-- Columna Derecha: Reporte e Historial -->
           <div class="workspace-right">
             <div class="workspace-card vulnerability-card">
-              <h3>Bitácora de Vulnerabilidades Encontradas</h3>
-              <p class="description">Historial de alertas y fallos de seguridad detectados por el Bot.</p>
+              <div class="vuln-header-row">
+                <div>
+                  <h3>Bitácora de Vulnerabilidades Encontradas</h3>
+                  <p class="description">Historial de alertas y fallos de seguridad detectados por el Bot.</p>
+                </div>
+                <div class="vuln-filter-box">
+                  <label for="select-filter-security-web"><i class="fa-solid fa-filter"></i> Filtrar Web:</label>
+                  <select id="select-filter-security-web" class="security-filter-select">
+                    <option value="ALL">Todas las webs auditadas</option>
+                  </select>
+                </div>
+              </div>
               <div id="vulnerability-list-container" class="vuln-list">
                 <div class="empty-state">
                   <i class="fa-solid fa-circle-check security-safe-icon"></i>

@@ -52,28 +52,6 @@
         "type": "Network Port Exposure",
         "status": "Open",
         "foundAt": "2026-08-02T09:02:28.704Z"
-      },
-      {
-        "id": "v_pdnj0n9cz",
-        "url": "https://mihogarasegurado.com",
-        "title": "Puertos de servicio expuestos al público",
-        "description": "Se detectaron los siguientes puertos abiertos: SSH (22). Tener estos servicios expuestos públicamente aumenta la superficie de ataque y puede permitir intentos de fuerza bruta.",
-        "solution": "Cerrar los puertos innecesarios en el cortafuegos (Firewall) de tu servidor. Si requieres acceso a SSH (22) o MySQL (3306), utiliza una VPN, limita el acceso mediante una lista blanca de IPs permitidas o cambia el puerto por defecto.",
-        "severity": "Medium",
-        "type": "Network Port Exposure",
-        "status": "Open",
-        "foundAt": "2026-08-02T17:27:54.847Z"
-      },
-      {
-        "id": "v_kvurtfnlj",
-        "url": "https://mihogarasegurado.com",
-        "title": "Puertos de servicio expuestos al público",
-        "description": "Se detectaron los siguientes puertos abiertos: SSH (22). Tener estos servicios expuestos públicamente aumenta la superficie de ataque y puede permitir intentos de fuerza bruta.",
-        "solution": "Cerrar los puertos innecesarios en el cortafuegos (Firewall) de tu servidor. Si requieres acceso a SSH (22) o MySQL (3306), utiliza una VPN, limita el acceso mediante una lista blanca de IPs permitidas o cambia el puerto por defecto.",
-        "severity": "Medium",
-        "type": "Network Port Exposure",
-        "status": "Open",
-        "foundAt": "2026-10-01T21:19:50.553Z"
       }
     ]
   },

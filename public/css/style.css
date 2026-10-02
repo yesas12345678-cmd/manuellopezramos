@@ -1785,7 +1785,7 @@ tr:hover td {
 }
 .arcade-form-header {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   gap: 12px;
   margin-bottom: 20px;
   padding-bottom: 16px;
@@ -1794,12 +1794,21 @@ tr:hover td {
 .arcade-form-icon {
   width: 42px;
   height: 42px;
+  min-width: 42px;
+  min-height: 42px;
   border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 1rem;
+  flex: 0 0 42px;
   flex-shrink: 0;
+}
+.arcade-form-icon i {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
 }
 .arcade-form-icon.yellow { background: rgba(250,204,21,0.12); color: #facc15; border: 1px solid rgba(250,204,21,0.3); box-shadow: 0 0 12px rgba(250,204,21,0.2); }
 .arcade-form-icon.red    { background: rgba(244,63,94,0.12);  color: #f43f5e; border: 1px solid rgba(244,63,94,0.3);  box-shadow: 0 0 12px rgba(244,63,94,0.2); }
@@ -1972,7 +1981,7 @@ tr:hover td {
 }
 .arcade-calendar-header {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: space-between;
   gap: 12px;
   padding-bottom: 16px;
@@ -1980,7 +1989,12 @@ tr:hover td {
   margin-bottom: 14px;
   flex-wrap: wrap;
 }
-.arcade-calendar-header > div { display: flex; align-items: flex-start; gap: 12px; flex: 1; }
+.arcade-calendar-header-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+}
 .arcade-calendar-header h4 { font-size: 0.9rem; font-weight: 800; color: #facc15; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 2px; }
 .arcade-calendar-header p  { font-size: 0.75rem; color: var(--text-muted); }
 .btn-icon-sm {
@@ -2310,7 +2324,7 @@ tr:hover td {
 }
 .grades-form-header {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   gap: 12px;
   margin-bottom: 18px;
   padding-bottom: 14px;
@@ -2320,13 +2334,20 @@ tr:hover td {
 .grades-form-header p  { font-size: 0.72rem; color: var(--text-muted); }
 .grades-icon-box {
   width: 40px; height: 40px;
+  min-width: 40px; min-height: 40px;
   border-radius: 12px;
   background: rgba(167,139,250,0.12);
   border: 1px solid rgba(167,139,250,0.3);
   color: #a78bfa;
   display: flex; align-items: center; justify-content: center;
-  font-size: 0.95rem; flex-shrink: 0;
+  font-size: 0.95rem; flex: 0 0 40px; flex-shrink: 0;
   box-shadow: 0 0 12px rgba(167,139,250,0.2);
+}
+.grades-icon-box i {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
 }
 .grades-icon-box.blue {
   background: rgba(96,165,250,0.12);
@@ -2466,15 +2487,20 @@ tr:hover td {
 }
 .grades-table-header {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: space-between;
-  gap: 10px;
+  gap: 12px;
   padding-bottom: 14px;
   border-bottom: 1px solid rgba(255,255,255,0.06);
   margin-bottom: 14px;
   flex-wrap: wrap;
 }
-.grades-table-header > div { display: flex; align-items: flex-start; gap: 10px; flex: 1; }
+.grades-table-header-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+}
 .grades-table-header h4 { font-size: 0.85rem; font-weight: 800; color: #60a5fa; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 2px; }
 .grades-table-header p  { font-size: 0.72rem; color: var(--text-muted); }
 

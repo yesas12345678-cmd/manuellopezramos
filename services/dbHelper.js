@@ -18,7 +18,7 @@ export async function readDB() {
       security: { targets: [], logs: [] },
       leads: { productIdeas: [], leadsList: [] },
       gmail: { chatHistory: [] },
-      grades: { subjects: ['Matemáticas', 'FyQ', 'Dibujo Técnico', 'Filosofía', 'Tecnología', 'Lengua'], entries: [] }
+      grades: { subjects: ['Matemáticas', 'FyQ', 'Dibujo Técnico', 'Filosofía', 'Tecnología', 'Lengua', 'Inglés'], entries: [] }
     };
     await writeDB(emptyDB);
     return emptyDB;

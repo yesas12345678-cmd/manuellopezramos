@@ -540,78 +540,7 @@ app.post('/api/config/save', authMiddleware, async (req, res) => {
   }
 });
 
-// ================= CALIFICACIONES API =================
 
-// GET /api/grades — Obtiene todas las notas y asignaturas
-app.get('/api/grades', authMiddleware, async (req, res) => {
-  try {
-    const db = await readDB();
-    if (!db.grades) db.grades = { subjects: ['Matemáticas','Física','Química','Dibujo Técnico','Filosofía','Tecnología','Lengua'], entries: [] };
-    res.json({ success: true, data: db.grades });
-  } catch (err) {
-    res.status(500).json({ success: false, message: err.message });
-  }
-});
-
-// POST /api/grades/entry — Añade una nueva nota
-app.post('/api/grades/entry', authMiddleware, async (req, res) => {
-  try {
-    const { subject, grade, label, date } = req.body;
-    if (!subject || grade === undefined || grade === null) return res.status(400).json({ success: false, message: 'Asignatura y nota son obligatorias.' });
-    const numGrade = parseFloat(grade);
-    if (isNaN(numGrade) || numGrade < 0 || numGrade > 10) return res.status(400).json({ success: false, message: 'La nota debe ser un número entre 0 y 10.' });
-
-    const db = await readDB();
-    if (!db.grades) db.grades = { subjects: [], entries: [] };
-    if (!db.grades.entries) db.grades.entries = [];
-
-    const entry = {
-      id: `g_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`,
-      subject,
-      grade: numGrade,
-      label: label || '',
-      date: date || new Date().toISOString().split('T')[0],
-      createdAt: new Date().toISOString()
-    };
-
-    db.grades.entries.push(entry);
-    await writeDB(db);
-    res.json({ success: true, data: entry });
-  } catch (err) {
-    res.status(500).json({ success: false, message: err.message });
-  }
-});
-
-// DELETE /api/grades/entry/:id — Elimina una nota
-app.delete('/api/grades/entry/:id', authMiddleware, async (req, res) => {
-  try {
-    const db = await readDB();
-    if (!db.grades?.entries) return res.status(404).json({ success: false, message: 'No hay notas.' });
-    const before = db.grades.entries.length;
-    db.grades.entries = db.grades.entries.filter(e => e.id !== req.params.id);
-    if (db.grades.entries.length === before) return res.status(404).json({ success: false, message: 'Nota no encontrada.' });
-    await writeDB(db);
-    res.json({ success: true });
-  } catch (err) {
-    res.status(500).json({ success: false, message: err.message });
-  }
-});
-
-// POST /api/grades/subjects — Añade una asignatura personalizada
-app.post('/api/grades/subjects', authMiddleware, async (req, res) => {
-  try {
-    const { name } = req.body;
-    if (!name || !name.trim()) return res.status(400).json({ success: false, message: 'El nombre de la asignatura es obligatorio.' });
-    const db = await readDB();
-    if (!db.grades) db.grades = { subjects: [], entries: [] };
-    if (db.grades.subjects.includes(name.trim())) return res.status(409).json({ success: false, message: 'La asignatura ya existe.' });
-    db.grades.subjects.push(name.trim());
-    await writeDB(db);
-    res.json({ success: true, data: db.grades.subjects });
-  } catch (err) {
-    res.status(500).json({ success: false, message: err.message });
-  }
-});
 
 // ================= STUDYSYNC ARCADE: GOOGLE OAUTH & CALENDAR API =================
 
@@ -796,7 +725,8 @@ const DEFAULT_SUBJECTS = [
   'Dibujo Técnico',
   'Filosofía',
   'Tecnología',
-  'Lengua'
+  'Lengua',
+  'Inglés'
 ];
 
 app.get('/api/grades', authMiddleware, async (req, res) => {
@@ -807,8 +737,17 @@ app.get('/api/grades', authMiddleware, async (req, res) => {
       await writeDB(db);
     }
     if (!Array.isArray(db.grades.subjects) || db.grades.subjects.length === 0) {
-      db.grades.subjects = DEFAULT_SUBJECTS;
+      db.grades.subjects = [...DEFAULT_SUBJECTS];
       await writeDB(db);
+    } else {
+      let changed = false;
+      for (const subj of DEFAULT_SUBJECTS) {
+        if (!db.grades.subjects.includes(subj)) {
+          db.grades.subjects.push(subj);
+          changed = true;
+        }
+      }
+      if (changed) await writeDB(db);
     }
     if (!Array.isArray(db.grades.entries)) {
       db.grades.entries = [];

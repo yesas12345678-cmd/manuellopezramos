@@ -2080,7 +2080,8 @@ let gradesSubjects = [
   'Dibujo Técnico',
   'Filosofía',
   'Tecnología',
-  'Lengua'
+  'Lengua',
+  'Inglés'
 ];
 let currentGradeFilter = 'all';
 

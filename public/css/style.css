@@ -309,30 +309,6 @@ body {
 .header-logo .dot {
   color: var(--color-secondary);
 }
-.status-bar {
-  display: flex;
-  gap: 20px;
-}
-.status-indicator {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 0.85rem;
-  background: rgba(255, 255, 255, 0.04);
-  padding: 6px 12px;
-  border-radius: 20px;
-  border: 1px solid var(--border-color);
-  color: var(--text-muted);
-}
-.status-indicator i {
-  color: var(--color-primary);
-}
-.status-indicator strong {
-  color: var(--color-success);
-}
-.status-indicator strong.err {
-  color: var(--color-danger);
-}
 .user-menu {
   display: flex;
   align-items: center;

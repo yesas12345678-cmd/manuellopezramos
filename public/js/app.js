@@ -70,20 +70,24 @@ async function loadGlobalStatus() {
     if (res.ok) {
       const config = await res.json();
       
-      if (config.geminiApiKey) {
-        statusGeminiVal.textContent = 'Activo';
-        statusGeminiVal.classList.remove('err');
-      } else {
-        statusGeminiVal.textContent = 'Sin config';
-        statusGeminiVal.classList.add('err');
+      if (statusGeminiVal) {
+        if (config.geminiApiKey) {
+          statusGeminiVal.textContent = 'Activo';
+          statusGeminiVal.classList.remove('err');
+        } else {
+          statusGeminiVal.textContent = 'Sin config';
+          statusGeminiVal.classList.add('err');
+        }
       }
 
-      if (config.gmailUser && config.gmailAppPassword) {
-        statusGmailVal.textContent = 'Conectado';
-        statusGmailVal.classList.remove('err');
-      } else {
-        statusGmailVal.textContent = 'Sin config';
-        statusGmailVal.classList.add('err');
+      if (statusGmailVal) {
+        if (config.gmailUser && config.gmailAppPassword) {
+          statusGmailVal.textContent = 'Conectado';
+          statusGmailVal.classList.remove('err');
+        } else {
+          statusGmailVal.textContent = 'Sin config';
+          statusGmailVal.classList.add('err');
+        }
       }
     }
   } catch (e) {

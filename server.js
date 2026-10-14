@@ -41,6 +41,9 @@ process.on('unhandledRejection', (reason) => {
 });
 
 
+// Configurar confianza en reverse proxy (Traefik en Dokploy / SSL)
+app.set('trust proxy', 1);
+
 // Middlewares
 app.use(cors({
   origin: true,
@@ -79,9 +82,11 @@ app.post('/api/login', (req, res) => {
     const token = jwt.sign({ username }, JWT_SECRET, { expiresIn: '7d' });
     
     // Cookie persistente por 7 días
+    const isProduction = process.env.NODE_ENV === 'production';
     res.cookie('token', token, {
       httpOnly: true,
-      secure: false, // Cambiar a true si se despliega en HTTPS
+      secure: isProduction,
+      sameSite: 'lax',
       maxAge: 7 * 24 * 60 * 60 * 1000 // 7 días
     });
 

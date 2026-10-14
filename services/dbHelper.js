@@ -1,7 +1,7 @@
 import fs from 'fs/promises';
 import path from 'path';
 
-const dbPath = path.resolve('db.json');
+const dbPath = process.env.DB_PATH ? path.resolve(process.env.DB_PATH) : path.resolve('db.json');
 
 /**
  * Lee la base de datos db.json de forma segura.

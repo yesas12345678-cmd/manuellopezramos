@@ -39,7 +39,6 @@ import {
 import { runSitemapAuditAll } from './services/cronTasks.js';
 import { runSecurityScanAll } from './services/cronTasks.js';
 import { runLeadGeneration } from './services/cronTasks.js';
-import { processGmailChat } from './services/gmailHelper.js';
 import { initCronTasks } from './services/cronTasks.js';
 import { google } from 'googleapis';
 import {
@@ -645,73 +644,6 @@ app.post('/api/leads/trigger', authMiddleware, async (req, res) => {
       productIdeas: db.leads.productIdeas,
       leadsList: db.leads.leadsList
     });
-  } catch (err) {
-    res.status(500).json({ success: false, message: err.message });
-  }
-});
-
-// ================= GMAIL ASSISTANT API =================
-
-app.get('/api/gmail/inbox', authMiddleware, async (req, res) => {
-  try {
-    const { fetchRecentEmails } = await import('./services/gmailHelper.js');
-    const emails = await fetchRecentEmails(8);
-    res.json(emails);
-  } catch (err) {
-    res.status(500).json({ success: false, message: err.message });
-  }
-});
-
-app.get('/api/gmail/chat', authMiddleware, async (req, res) => {
-  try {
-    const db = await readDB();
-    res.json(db.gmail?.chatHistory || []);
-  } catch (err) {
-    res.status(500).json({ success: false, message: err.message });
-  }
-});
-
-app.post('/api/gmail/chat', authMiddleware, async (req, res) => {
-  try {
-    const { message } = req.body;
-    if (!message) {
-      return res.status(400).json({ success: false, message: 'Falta el mensaje.' });
-    }
-
-    const db = await readDB();
-    
-    // Guardar el mensaje del usuario en la base de datos
-    db.gmail.chatHistory.push({
-      role: 'user',
-      content: message,
-      timestamp: new Date().toISOString()
-    });
-
-    // Llamar al procesador inteligente
-    const result = await processGmailChat(message);
-
-    // Guardar respuesta de la IA
-    db.gmail.chatHistory.push({
-      role: 'assistant',
-      content: result.response,
-      timestamp: new Date().toISOString(),
-      actionTaken: result.actionTaken || null,
-      details: result.details || null
-    });
-
-    await writeDB(db);
-    res.json({ success: true, chatHistory: db.gmail.chatHistory });
-  } catch (err) {
-    res.status(500).json({ success: false, message: err.message });
-  }
-});
-
-app.post('/api/gmail/clear', authMiddleware, async (req, res) => {
-  try {
-    const db = await readDB();
-    db.gmail.chatHistory = [];
-    await writeDB(db);
-    res.json({ success: true, chatHistory: [] });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
   }

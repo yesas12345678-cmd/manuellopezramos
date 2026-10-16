@@ -25,7 +25,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   setupSitemapsModule();
   setupSecurityModule();
   setupSalesModule();
-  setupGmailModule();
   setupConfigModule();
   setupLeadsModule();
   setupStudySyncModule();
@@ -103,7 +102,6 @@ function loadDashboardData() {
   loadGymData();
   loadSitemapsData();
   loadSecurityData();
-  loadGmailInbox();
   loadGradesData();
 }
 
@@ -227,10 +225,6 @@ function showPanel(panelId) {
     if (panelId === 'panel-gym') loadGymData();
     if (panelId === 'panel-sitemaps') loadSitemapsData();
     if (panelId === 'panel-security') loadSecurityData();
-    if (panelId === 'panel-gmail') {
-      loadGmailInbox();
-      loadGmailChatHistory();
-    }
     if (panelId === 'panel-config') loadConfigData();
     if (panelId === 'panel-grades') loadGradesData();
   }
@@ -1800,169 +1794,6 @@ function showToast(message) {
   toast._timeout = setTimeout(() => {
     toast.style.display = 'none';
   }, 3500);
-}
-
-
-// ================= MODULO 3: ASISTENTE GMAIL =================
-function setupGmailModule() {
-  const gmailChatInput = document.getElementById('gmail-chat-input');
-  const btnSendGmailChat = document.getElementById('btn-send-gmail-chat');
-  const btnClearGmailChat = document.getElementById('btn-clear-gmail-chat');
-
-  btnSendGmailChat.addEventListener('click', triggerGmailSendMessage);
-  gmailChatInput.addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') triggerGmailSendMessage();
-  });
-
-  btnClearGmailChat.addEventListener('click', async () => {
-    if (confirm('¿Seguro que deseas vaciar el historial de conversación?')) {
-      try {
-        const res = await fetch('/api/gmail/clear', { method: 'POST' });
-        if (res.ok) {
-          const data = await res.json();
-          renderGmailChat(data);
-        }
-      } catch (e) {
-        console.error(e);
-      }
-    }
-  });
-
-  async function triggerGmailSendMessage() {
-    const message = gmailChatInput.value.trim();
-    if (!message) return;
-
-    gmailChatInput.value = '';
-    appendUserMessage(message);
-
-    const chatOutput = document.getElementById('gmail-chat-output');
-    const loadingDiv = document.createElement('div');
-    loadingDiv.className = 'msg assistant';
-    loadingDiv.id = 'gmail-loading-indicator';
-    loadingDiv.innerHTML = `<div class="msg-bubble" style="opacity:0.85; display:flex; align-items:center; gap:8px;"><i class="fa-solid fa-spinner fa-spin"></i> <span>Consultando Gmail con IA...</span></div>`;
-    chatOutput.appendChild(loadingDiv);
-    chatOutput.scrollTop = chatOutput.scrollHeight;
-
-    try {
-      const res = await fetch('/api/gmail/chat', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message })
-      });
-
-      const loadingElem = document.getElementById('gmail-loading-indicator');
-      if (loadingElem) loadingElem.remove();
-
-      if (res.ok) {
-        const data = await res.json();
-        renderGmailChat(data.chatHistory);
-        loadGmailInbox(); // Recargar la bandeja por si cambió algo
-      } else {
-        const errData = await res.json().catch(() => ({}));
-        appendAssistantMessage(`⚠️ ${errData.message || 'No se pudo procesar la solicitud en el servidor.'}`);
-      }
-    } catch (err) {
-      const loadingElem = document.getElementById('gmail-loading-indicator');
-      if (loadingElem) loadingElem.remove();
-      console.error(err);
-      appendAssistantMessage('❌ Error de conexión al comunicarse con el servidor. Comprueba que el servidor está en funcionamiento.');
-    }
-  }
-
-  function appendUserMessage(msg) {
-    const chatOutput = document.getElementById('gmail-chat-output');
-    chatOutput.innerHTML += `
-      <div class="msg user">
-        <div class="msg-bubble">${escapeHTML(msg)}</div>
-      </div>
-    `;
-    chatOutput.scrollTop = chatOutput.scrollHeight;
-  }
-
-  function appendAssistantMessage(msg) {
-    const chatOutput = document.getElementById('gmail-chat-output');
-    chatOutput.innerHTML += `
-      <div class="msg assistant">
-        <div class="msg-bubble">${formatGmailAssistantMessage(msg)}</div>
-      </div>
-    `;
-    chatOutput.scrollTop = chatOutput.scrollHeight;
-  }
-}
-
-async function loadGmailInbox() {
-  const container = document.getElementById('inbox-list-container');
-  try {
-    const res = await fetch('/api/gmail/inbox');
-    if (res.ok) {
-      const emails = await res.json();
-      
-      if (emails.length === 0) {
-        container.innerHTML = '<div class="empty-state"><p>Bandeja de entrada vacía o sin leer.</p></div>';
-      } else {
-        container.innerHTML = emails.map(email => `
-          <div class="inbox-item">
-            <div class="inbox-item-header">
-              <span class="inbox-sender">${escapeHTML(email.from)}</span>
-              <span class="inbox-date">${new Date(email.date).toLocaleDateString()}</span>
-            </div>
-            <div class="inbox-subject">${escapeHTML(email.subject)}</div>
-          </div>
-        `).join('');
-      }
-    } else {
-      container.innerHTML = '<div class="empty-state"><p class="error-text">⚠️ No se pudo conectar al buzón IMAP. Verifica tu configuración en la pestaña de Ajustes.</p></div>';
-    }
-  } catch (err) {
-    container.innerHTML = '<div class="empty-state"><p>Error al cargar buzón.</p></div>';
-  }
-}
-
-async function loadGmailChatHistory() {
-  try {
-    const res = await fetch('/api/gmail/chat');
-    if (res.ok) {
-      const history = await res.json();
-      renderGmailChat(history);
-    }
-  } catch (e) {
-    console.error(e);
-  }
-}
-
-function renderGmailChat(chatHistory) {
-  const chatOutput = document.getElementById('gmail-chat-output');
-  if (chatHistory.length === 0) {
-    chatOutput.innerHTML = `
-      <div class="msg assistant">
-        <div class="msg-bubble">
-          Hola zVaito. Tengo acceso a tu Gmail. ¿Qué deseas gestionar?
-        </div>
-      </div>
-    `;
-    return;
-  }
-
-  chatOutput.innerHTML = chatHistory.map(msg => `
-    <div class="msg ${msg.role}">
-      <div class="msg-bubble">
-        ${msg.role === 'user' ? escapeHTML(msg.content) : formatGmailAssistantMessage(msg.content)}
-      </div>
-    </div>
-  `).join('');
-  
-  chatOutput.scrollTop = chatOutput.scrollHeight;
-}
-
-function formatGmailAssistantMessage(text) {
-  if (!text) return '';
-  // Conversión de Markdown a HTML seguro
-  let formatted = escapeHTML(text);
-  formatted = formatted.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-  formatted = formatted.replace(/\*(.*?)\*/g, '<em>$1</em>');
-  formatted = formatted.replace(/\[(.*?)\]\((https?:\/\/[^\s\)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer" style="color:#00db8b; text-decoration:underline;">$1</a>');
-  formatted = formatted.replace(/\n/g, '<br>');
-  return formatted;
 }
 
 

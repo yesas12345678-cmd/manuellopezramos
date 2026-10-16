@@ -509,22 +509,6 @@
         }
       },
       {
-        "id": "agent-copilot",
-        "name": "Inbox Copilot AI",
-        "role": "Asistente Ejecutivo Gmail",
-        "icon": "fa-robot",
-        "color": "#f59e0b",
-        "status": "active",
-        "cadence": "En tiempo real / Bajo demanda",
-        "description": "Gestiona el correo de yesas12345678@gmail.com, resume hilos de conversación complejos, redacta respuestas inteligentes y filtra el spam.",
-        "systemPrompt": "Eres Inbox Copilot AI. Gestionas las comunicaciones por correo de zVaito con tono profesional y resolutivo.",
-        "metrics": {
-          "tasksExecuted": 195,
-          "emailsAnalyzed": 420,
-          "lastRun": "2026-10-16T15:07:44.620Z"
-        }
-      },
-      {
         "id": "agent-studysync",
         "name": "StudySync & Life AI",
         "role": "Planificador de Vida, Estudio y Pesca",

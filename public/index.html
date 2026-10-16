@@ -54,7 +54,7 @@
         <button id="nav-btn-life" class="nav-pill-btn active" title="Ir al Panel de Vida">
           <i class="fa-solid fa-brain-circuit"></i>
           <span>Panel de Vida</span>
-          <span class="nav-badge" id="nav-active-agents-badge">7 IA</span>
+          <span class="nav-badge" id="nav-active-agents-badge">6 IA</span>
         </button>
         <button id="nav-btn-cabina" class="nav-pill-btn" title="Ir a Cabina Ventas">
           <i class="fa-solid fa-headset"></i>
@@ -87,10 +87,10 @@
               <span class="pulse green"></span> ENJAMBRE DE AGENTES IA ACTIVO
             </div>
             <h2>Panel de Vida & Centro de Mando IA</h2>
-            <p>7 agentes autónomos coordinando tu captación de clientes, cabina de ventas, ciberseguridad, sitemaps, correo, estudio y entrenamiento.</p>
+            <p>6 agentes autónomos coordinando tu captación de clientes, cabina de ventas, ciberseguridad, sitemaps, estudio y entrenamiento.</p>
             <div class="life-hero-stats">
               <div class="life-stat-item">
-                <span class="stat-num" id="stat-active-agents">7</span>
+                <span class="stat-num" id="stat-active-agents">6</span>
                 <span class="stat-lbl">Agentes Activos</span>
               </div>
               <div class="life-stat-item">
@@ -120,10 +120,10 @@
         <div class="dashboard-grid">
           <!-- Tarjeta 0: Panel de Vida & Agentes IA -->
           <div class="dash-card dash-card-life" data-target="panel-agents">
-            <div class="card-status status-ok"><span class="pulse green"></span>7 Agentes</div>
+            <div class="card-status status-ok"><span class="pulse green"></span>6 Agentes</div>
             <div class="card-icon life-icon"><i class="fa-solid fa-brain-circuit"></i></div>
             <h3>Panel de Vida & Agentes IA</h3>
-            <p>Supervisa tu enjambre de 7 agentes de IA. Dispara misiones manuales, añade nuevos agentes y coordina tu vida con el Orquestador.</p>
+            <p>Supervisa tu enjambre de 6 agentes de IA. Dispara misiones manuales, añade nuevos agentes y coordina tu vida con el Orquestador.</p>
             <button class="btn btn-card btn-life-card">Abrir Centro de Mando</button>
           </div>
 
@@ -146,16 +146,7 @@
             <button class="btn btn-card" style="background: rgba(140, 82, 255, 0.2); border-color: #8c52ff; color: #fff;">Abrir Agente Captador</button>
           </div>
 
-          <!-- Tarjeta 3: Asistente Gmail -->
-          <div class="dash-card" data-target="panel-gmail">
-            <div class="card-status status-ok">Disponible</div>
-            <div class="card-icon"><i class="fa-solid fa-robot"></i></div>
-            <h3>Asistente de Gmail</h3>
-            <p>Agente inteligente con total libertad para gestionar, resumir, buscar y enviar correos mediante comandos de chat.</p>
-            <button class="btn btn-card">Abrir Módulo</button>
-          </div>
-
-          <!-- Tarjeta 4: Gym App -->
+          <!-- Tarjeta 3: Gym App -->
           <div class="dash-card" data-target="panel-gym">
             <div class="card-status status-neutral">Seguimiento</div>
             <div class="card-icon"><i class="fa-solid fa-dumbbell"></i></div>
@@ -867,53 +858,7 @@
         </div>
       </section>
 
-      <!-- ================= SECCIÓN 3: ASISTENTE GMAIL ================= -->
-      <section id="panel-gmail" class="panel">
-        <div class="section-title-bar">
-          <button class="btn-back btn-back-home"><i class="fa-solid fa-chevron-left"></i> Volver</button>
-          <h2>Asistente Personal de Gestión de Correo (Gmail)</h2>
-        </div>
 
-        <div class="gmail-workspace">
-          <!-- Columna Izquierda: Chatbot con total libertad -->
-          <div class="workspace-card chat-card">
-            <div class="chat-header">
-              <h3>Chat de Instrucciones</h3>
-              <button id="btn-clear-gmail-chat" class="btn btn-danger-link" title="Limpiar chat"><i class="fa-solid fa-trash-can"></i></button>
-            </div>
-            
-            <div id="gmail-chat-output" class="chat-messages">
-              <!-- Mensajes iniciales -->
-              <div class="msg assistant">
-                <div class="msg-bubble">
-                  Hola zVaito. Tengo acceso de lectura y envío a tu Gmail. ¿Qué deseas hacer?
-                  <br><br>
-                  <em>Ejemplos de comandos:</em>
-                  <ul>
-                    <li>"¿Tengo correos importantes hoy?"</li>
-                    <li>"Redacta un correo a cliente@ejemplo.com disculpándote por el retraso y sugiriendo una reunión mañana a las 5pm"</li>
-                    <li>"Resume los últimos emails"</li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-
-            <div class="chat-input-area">
-              <input type="text" id="gmail-chat-input" placeholder="Escribe instrucciones en lenguaje natural para tu Gmail...">
-              <button id="btn-send-gmail-chat" class="btn btn-primary"><i class="fa-solid fa-paper-plane"></i> Enviar</button>
-            </div>
-          </div>
-
-          <!-- Columna Derecha: Buzón de Entrada Rápido -->
-          <div class="workspace-card inbox-card">
-            <h3>Buzón de Entrada Reciente</h3>
-            <p class="description">Últimos correos detectados por IMAP en tu bandeja de entrada.</p>
-            <div id="inbox-list-container" class="inbox-list">
-              <div class="loading-state"><i class="fa-solid fa-spinner fa-spin"></i> Cargando bandeja...</div>
-            </div>
-          </div>
-        </div>
-      </section>
 
       <!-- ================= SECCIÓN 4: GYM APP ================= -->
       <section id="panel-gym" class="panel">
@@ -1446,7 +1391,7 @@
             <button class="btn-back btn-back-home"><i class="fa-solid fa-chevron-left"></i> Volver</button>
             <div class="agents-title-wrap">
               <h2><i class="fa-solid fa-brain-circuit"></i> Panel de Vida & Enjambre IA</h2>
-              <span class="agents-subtitle">Gestión unificada de tus 7 agentes autónomos y operaciones personales de zVaito</span>
+              <span class="agents-subtitle">Gestión unificada de tus 6 agentes autónomos y operaciones personales de zVaito</span>
             </div>
           </div>
           <div class="agents-header-right">
@@ -1464,7 +1409,7 @@
           <div class="kpi-box">
             <div class="kpi-icon blue"><i class="fa-solid fa-network-wired"></i></div>
             <div class="kpi-data">
-              <span class="kpi-val" id="kpi-agents-active">7 / 7</span>
+              <span class="kpi-val" id="kpi-agents-active">6 / 6</span>
               <span class="kpi-tag">Agentes en servicio</span>
             </div>
           </div>
@@ -1507,7 +1452,7 @@
                 <i class="fa-solid fa-cubes"></i>
                 <h3>Enjambre de Agentes Autónomos</h3>
               </div>
-              <span class="badge-subtle" id="badge-agent-count">7 Agentes Registrados</span>
+              <span class="badge-subtle" id="badge-agent-count">6 Agentes Registrados</span>
             </div>
 
             <div class="agents-cards-grid" id="agents-cards-container">
@@ -1545,7 +1490,7 @@
                   <div class="orch-msg-avatar"><i class="fa-solid fa-brain-circuit"></i></div>
                   <div class="orch-msg-bubble">
                     <strong>Orquestador Maestro:</strong><br>
-                    A la orden, zVaito. Todo tu enjambre de 7 agentes está sincronizado. Tienes empresas investigadas con guion en Cabina Ventas, escaneo perimetral seguro y rutinas activas. ¿Qué orden o consulta deseas transmitir?
+                    A la orden, zVaito. Todo tu enjambre de 6 agentes está sincronizado. Tienes empresas investigadas con guion en Cabina Ventas, escaneo perimetral seguro y rutinas activas. ¿Qué orden o consulta deseas transmitir?
                   </div>
                 </div>
               </div>

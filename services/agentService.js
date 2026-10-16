@@ -67,18 +67,6 @@ export const DEFAULT_AGENTS = [
     metrics: { tasksExecuted: 28, alertsSent: 3, lastRun: new Date().toISOString() }
   },
   {
-    id: "agent-copilot",
-    name: "Inbox Copilot AI",
-    role: "Asistente Ejecutivo Gmail",
-    icon: "fa-robot",
-    color: "#f59e0b",
-    status: "active",
-    cadence: "En tiempo real / Bajo demanda",
-    description: "Gestiona el correo de yesas12345678@gmail.com, resume hilos de conversación complejos, redacta respuestas inteligentes y filtra el spam.",
-    systemPrompt: "Eres Inbox Copilot AI. Gestionas las comunicaciones por correo de zVaito con tono profesional y resolutivo.",
-    metrics: { tasksExecuted: 195, emailsAnalyzed: 420, lastRun: new Date().toISOString() }
-  },
-  {
     id: "agent-studysync",
     name: "StudySync & Life AI",
     role: "Planificador de Vida, Estudio y Pesca",
@@ -363,7 +351,7 @@ export async function chatWithLifeMaster(userMessage) {
 
   const systemInstruction = `
 Eres el "Orquestador Maestro de Vida y Negocios de zVaito" (Manuel López Ramos).
-Tienes a tu mando un enjambre de 7 agentes de IA especializados que gestionan su vida y proyectos:
+Tienes a tu mando un enjambre de 6 agentes de IA especializados que gestionan su vida y proyectos:
 ${agentListText}
 
 Tu rol:

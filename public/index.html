@@ -143,62 +143,577 @@
         </div>
       </section>
 
-      <!-- ================= SECCIÓN 1: CABINA VENTAS ================= -->
-      <section id="panel-sales" class="panel">
-        <div class="section-title-bar">
-          <button class="btn-back btn-back-home"><i class="fa-solid fa-chevron-left"></i> Volver</button>
-          <h2>Cabina Ventas</h2>
+      <!-- ================= SECCIÓN 1: CABINA VENTAS (MOTOR VEROX) ================= -->
+      <section id="panel-sales" class="panel cabina-panel-root">
+        <!-- Barra de Control Superior -->
+        <div class="cabina-top-bar">
+          <div class="cabina-top-left">
+            <button class="btn-back btn-back-home"><i class="fa-solid fa-chevron-left"></i> Volver</button>
+            <div class="cabina-queue-stepper">
+              <button id="cabina-btn-prev" class="btn-mini" title="Empresa anterior"><i class="fa-solid fa-chevron-left"></i></button>
+              <span id="cabina-queue-indicator" class="queue-label">Empresa 1 de 3</span>
+              <button id="cabina-btn-next" class="btn-mini" title="Empresa siguiente"><i class="fa-solid fa-chevron-right"></i></button>
+            </div>
+            <select id="cabina-prospect-select" class="cabina-select-inline"></select>
+          </div>
+
+          <div class="cabina-top-stats">
+            <div class="stat-pill"><i class="fa-solid fa-phone"></i> Llamadas: <strong id="stat-calls">0</strong></div>
+            <div class="stat-pill"><i class="fa-solid fa-user-check"></i> Decisores: <strong id="stat-decision-makers">0</strong></div>
+            <div class="stat-pill highlight-success"><i class="fa-solid fa-calendar-check"></i> Diagnósticos: <strong id="stat-diagnostics">0</strong></div>
+            <div class="stat-pill timer-pill"><i class="fa-solid fa-stopwatch"></i> <span id="cabina-call-timer">00:00</span></div>
+          </div>
+
+          <div class="cabina-top-actions">
+            <button id="btn-open-model-calls" class="btn btn-secondary btn-sm" title="Ver llamadas modelo puntuadas >= 80">
+              <i class="fa-solid fa-star"></i> <span>Llamadas Modelo</span>
+            </button>
+            <button id="btn-open-import" class="btn btn-secondary btn-sm" title="Importar empresas en JSON">
+              <i class="fa-solid fa-file-import"></i> <span>Importar</span>
+            </button>
+          </div>
         </div>
 
-        <div class="sales-workspace">
-          <!-- Columna Izquierda: Control y Transcripción -->
-          <div class="workspace-card">
-            <h3>Transcripción en Vivo</h3>
-            <p class="description">Usa el reconocimiento de voz del navegador para escuchar la llamada o videollamada.</p>
-            
-            <div class="sales-controls">
-              <button id="btn-toggle-listen" class="btn btn-listen">
-                <i class="fa-solid fa-microphone"></i> <span>Iniciar Escucha Activa</span>
+        <!-- Notificación de Deshacer llamada (8s) -->
+        <div id="cabina-undo-banner" class="undo-banner hidden">
+          <span>Llamada registrada como <strong id="undo-result-text"></strong>.</span>
+          <button id="btn-cabina-undo" class="btn-undo">Deshacer (Ctrl+Z) <span id="undo-countdown">8</span>s</button>
+        </div>
+
+        <!-- CUATRO PIEZAS, UNA SOLA PANTALLA: 3 COLUMNAS -->
+        <div class="cabina-grid-layout">
+          
+          <!-- COLUMNA 1: FICHA DE LA EMPRESA -->
+          <div class="cabina-col cabina-col-ficha">
+            <!-- Header Ficha -->
+            <div class="ficha-header-card">
+              <div class="ficha-top-row">
+                <div class="score-badge" id="ficha-score" title="Puntuación de encaje (0-100)">86</div>
+                <div class="ficha-title-block">
+                  <div class="title-with-priority">
+                    <h3 id="ficha-empresa-nombre">Frigotécnica Almanzor</h3>
+                    <span id="ficha-prioridad-tag" class="priority-tag prio-A">Prioridad A</span>
+                  </div>
+                  <div class="ficha-subsector-row">
+                    <span id="ficha-subsector">Mantenimiento y frío industrial</span> · <span id="ficha-provincia">Ávila</span>
+                    <a id="ficha-web-link" href="#" target="_blank" class="web-link" title="Abrir web"><i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Decisor y Contacto -->
+              <div class="ficha-decisor-box">
+                <div class="decisor-label">DECISOR:</div>
+                <div class="decisor-name"><strong id="ficha-decisor-nombre">Andrés Sanz</strong> · <span id="ficha-decisor-cargo">Gerente</span></div>
+              </div>
+
+              <!-- Teléfonos y Acción de Llamada -->
+              <div class="ficha-phones-group">
+                <button id="btn-call-primary" class="btn-call-action" title="Hacer clic para marcar y cronometrar">
+                  <div class="call-icon-pulse"><i class="fa-solid fa-phone"></i></div>
+                  <div class="call-text-box">
+                    <span class="call-label">Llamar: <span id="ficha-tel-label">móvil · gerencia</span></span>
+                    <strong id="ficha-tel-numero">608 00 00 01</strong>
+                  </div>
+                </button>
+                <div class="secondary-contacts">
+                  <a id="btn-whatsapp-direct" href="#" target="_blank" class="contact-pill-btn"><i class="fa-brands fa-whatsapp"></i> WhatsApp</a>
+                  <span id="ficha-tel-secondary" class="contact-secondary-pill"><i class="fa-solid fa-phone"></i> 910 00 00 01</span>
+                </div>
+              </div>
+
+              <!-- Mejor Franja -->
+              <div class="best-time-box">
+                <i class="fa-solid fa-clock"></i> <span id="ficha-mejor-franja">Mejor franja: 8:00 - 9:30 antes de que salgan los técnicos</span>
+              </div>
+            </div>
+
+            <!-- Ficha Detallada (Pestañas) -->
+            <div class="ficha-tabs-container">
+              <div class="ficha-tab-nav">
+                <button class="ftab-btn active" data-tab="ftab-investigacion">Investigación</button>
+                <button class="ftab-btn" data-tab="ftab-solucion">Solución</button>
+                <button class="ftab-btn" data-tab="ftab-historial">Historial (<span id="count-historial">0</span>)</button>
+              </div>
+
+              <div class="ficha-tab-content">
+                <!-- Pestaña 1: Investigación -->
+                <div id="ftab-investigacion" class="ftab-pane active">
+                  <div class="info-block">
+                    <h4>QUÉ HACEN</h4>
+                    <p id="ficha-que-hacen">Instalan y mantienen cámaras frigoríficas y equipos de frío para supermercados y almacenes.</p>
+                  </div>
+                  <div class="info-block">
+                    <h4>SEÑALES EN SU WEB</h4>
+                    <ul id="ficha-senales-list" class="signals-bullet-list"></ul>
+                  </div>
+                  <div class="info-block">
+                    <h4>DOLORES DETECTADOS</h4>
+                    <div id="ficha-dolores-list" class="pains-list"></div>
+                  </div>
+                </div>
+
+                <!-- Pestaña 2: Solución -->
+                <div id="ftab-solucion" class="ftab-pane">
+                  <div class="info-block">
+                    <h4>SOLUCIÓN PROPUESTA</h4>
+                    <p id="ficha-solucion-principal" class="highlight-text"></p>
+                    <p id="ficha-solucion-complementaria" class="sub-text"></p>
+                  </div>
+                  <div class="info-block">
+                    <h4>PRUEBA A CITAR (CASO REAL)</h4>
+                    <div class="case-quote-box">
+                      <i class="fa-solid fa-quote-left"></i>
+                      <p id="ficha-prueba-citar"></p>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Pestaña 3: Historial -->
+                <div id="ftab-historial" class="ftab-pane">
+                  <div id="ficha-history-list" class="history-feed">
+                    <p class="empty-hist">Sin llamadas previas registradas.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- COLUMNA 2: GUION EN 4 PASOS -->
+          <div class="cabina-col cabina-col-guion">
+            <!-- Barra Superior de Pasos -->
+            <div class="guion-stepper-bar">
+              <button class="step-btn active" data-step="1">
+                <span class="step-num">1</span>
+                <span class="step-title">Apertura</span>
+                <span class="step-key">tecla 1</span>
               </button>
-              <div id="mic-pulse" class="listening-wave-container hidden">
-                <div class="bar"></div>
-                <div class="bar"></div>
-                <div class="bar"></div>
-                <div class="bar"></div>
-              </div>
+              <button class="step-btn" data-step="2">
+                <span class="step-num">2</span>
+                <span class="step-title">¿Decide él?</span>
+                <span class="step-key">tecla 2</span>
+              </button>
+              <button class="step-btn" data-step="3">
+                <span class="step-num">3</span>
+                <span class="step-title">Su cifra</span>
+                <span class="step-key">tecla 3</span>
+              </button>
+              <button class="step-btn" data-step="4">
+                <span class="step-num">4</span>
+                <span class="step-title">Cierre</span>
+                <span class="step-key">tecla 4</span>
+              </button>
             </div>
 
-            <textarea id="sales-transcript" placeholder="La transcripción de la llamada aparecerá aquí de forma automática a medida que hables..."></textarea>
-            
-            <div class="sales-product-context" style="margin-top: 20px;">
-               <p class="small-desc">Contexto de tu Venta (¿Qué estás vendiendo?):</p>
-               <textarea id="sales-product-context-text" style="width: 100%; height: 70px; background: rgba(0, 0, 0, 0.25); border: 1px solid var(--border-color); border-radius: 8px; padding: 10px; color: var(--text-main); font-family: var(--font-primary); font-size: 0.9rem; resize: none; outline: none;" placeholder="Ejemplo: Vendo desarrollo web para inmobiliarias por 1500€. Destaca la pasarela de reservas y la velocidad SEO."></textarea>
-            </div>
-
-            <div class="sales-manual-input">
-              <p class="small-desc">O escribe el contexto de la objeción del cliente manualmente:</p>
-              <div class="input-send-row">
-                <input type="text" id="sales-manual-text" placeholder="Ejemplo: El cliente dice que el precio es demasiado caro y prefiere pensarlo...">
-                <button id="btn-send-sales-context" class="btn btn-secondary"><i class="fa-solid fa-paper-plane"></i></button>
+            <!-- Contenido del Paso Activo -->
+            <div class="guion-content-area">
+              
+              <!-- PASO 1: APERTURA -->
+              <div id="guion-step-1" class="guion-step-pane active">
+                <div class="step-rule-hint">
+                  <i class="fa-solid fa-bullhorn"></i> Abre con lo que viste en su web: así sabe el cliente por qué llamas.
+                </div>
+                <div class="script-reading-box">
+                  <p id="script-text-apertura" class="script-hero-text">
+                    «Hola, ¿Andrés? Soy zVaito, de Verox. Te llamo porque he visto en vuestra web que hacéis urgencias 24 horas a supermercados, y tengo una pregunta rápida sobre cómo os llegan los partes a la oficina. ¿Tienes un minuto?»
+                  </p>
+                </div>
+                <div class="step-action-footer">
+                  <button class="btn btn-primary btn-next-step" data-target="2">Siguiente: ¿Decide él? <kbd>2</kbd></button>
+                </div>
               </div>
+
+              <!-- PASO 2: ¿DECIDE ÉL? -->
+              <div id="guion-step-2" class="guion-step-pane">
+                <div class="step-rule-hint">
+                  <i class="fa-solid fa-user-shield"></i> Confirma rápido si habla quien decide; si no, consigue el nombre y hora.
+                </div>
+                <div class="script-reading-box">
+                  <p id="script-text-decide" class="script-hero-text">
+                    «¿Eres tú quien lleva la oficina y la facturación, o lo lleva otra persona?»
+                  </p>
+                </div>
+
+                <div class="sub-branch-box">
+                  <div class="sub-branch-title"><i class="fa-solid fa-turn-down"></i> Si dice que NO es él:</div>
+                  <p id="script-text-no-decide" class="script-secondary-text">
+                    «Perfecto. ¿Cómo se llama la persona que lo lleva y cuándo es mejor pillarle? Así no te hago perder más tiempo.»
+                  </p>
+                  <div class="inputs-inline-row">
+                    <input type="text" id="input-real-decisor-name" placeholder="Nombre de la persona...">
+                    <input type="text" id="input-real-decisor-time" placeholder="Mejor hora...">
+                  </div>
+                </div>
+
+                <div class="step-action-footer">
+                  <button class="btn btn-primary btn-next-step" data-target="3">Siguiente: Su Cifra <kbd>3</kbd></button>
+                </div>
+              </div>
+
+              <!-- PASO 3: SU CIFRA -->
+              <div id="guion-step-3" class="guion-step-pane">
+                <div class="step-rule-hint highlight">
+                  <i class="fa-solid fa-calculator"></i> Que la cifra la ponga ÉL, no tú. Pregunta y apunta tal cual.
+                </div>
+
+                <!-- Preguntas de cuantificación -->
+                <div class="discovery-questions-box">
+                  <h4>PREGUNTAS DE DESCUBRIMIENTO:</h4>
+                  <ul id="script-discovery-questions" class="questions-list"></ul>
+                </div>
+
+                <!-- CALCULADORA DE IMPACTO EN HORAS AL AÑO -->
+                <div class="calculator-card">
+                  <div class="calc-header">
+                    <span class="calc-title"><i class="fa-solid fa-calculator"></i> Calculadora de Impacto</span>
+                    <div class="calc-mode-toggle">
+                      <button id="calc-mode-veces" class="mode-btn active">Veces × Tiempo</button>
+                      <button id="calc-mode-horas" class="mode-btn">Horas directas</button>
+                    </div>
+                  </div>
+
+                  <div class="calc-body">
+                    <!-- Modo Veces -->
+                    <div id="calc-inputs-veces" class="calc-inputs-row">
+                      <div class="calc-field">
+                        <label>Cantidad:</label>
+                        <input type="number" id="calc-veces-cant" value="6" min="1">
+                      </div>
+                      <div class="calc-field">
+                        <label>Periodo:</label>
+                        <select id="calc-veces-periodo">
+                          <option value="dia">al día</option>
+                          <option value="semana" selected>a la semana</option>
+                          <option value="mes">al mes</option>
+                        </select>
+                      </div>
+                      <div class="calc-field">
+                        <label>Tiempo c/vez:</label>
+                        <input type="number" id="calc-veces-tiempo" value="60" min="1">
+                      </div>
+                      <div class="calc-field">
+                        <label>Unidad:</label>
+                        <select id="calc-veces-unidad">
+                          <option value="min" selected>min</option>
+                          <option value="h">horas</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <!-- Modo Horas Directas -->
+                    <div id="calc-inputs-horas" class="calc-inputs-row hidden">
+                      <div class="calc-field">
+                        <label>Horas directas:</label>
+                        <input type="number" id="calc-horas-cant" value="6" min="1">
+                      </div>
+                      <div class="calc-field">
+                        <label>Periodo:</label>
+                        <select id="calc-horas-periodo">
+                          <option value="dia">al día</option>
+                          <option value="semana" selected>a la semana</option>
+                          <option value="mes">al mes</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <!-- Resultado de la Calculadora -->
+                    <div class="calc-result-box">
+                      <div class="calc-hours-big">
+                        = <span id="calc-total-hours">280</span> h al año
+                      </div>
+                      <div id="calc-quote-phrase" class="calc-phrase">
+                        «Entonces, si no me equivoco, son unas 280 horas al año. ¿Es así?»
+                      </div>
+                      <div id="calc-human-equiv" class="calc-equiv">
+                        (Equivale a más de un mes y medio de una persona a jornada completa)
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="step-action-footer">
+                  <button class="btn btn-primary btn-next-step" data-target="4">Siguiente: Cierre con Fecha <kbd>4</kbd></button>
+                </div>
+              </div>
+
+              <!-- PASO 4: CIERRE CON FECHA -->
+              <div id="guion-step-4" class="guion-step-pane">
+                <div class="step-rule-hint success">
+                  <i class="fa-solid fa-handshake"></i> Propón dos horas concretas. «Ya te llamo» es 0.
+                </div>
+
+                <div class="script-reading-box">
+                  <p id="script-text-cierre" class="script-hero-text">
+                    «Te propongo 30 minutos por videollamada: te enseño cómo lo resolvió una empresa de tu sector y te digo con tus números si en tu caso compensa o no. ¿Te va mejor el martes a las 09:00 o el jueves a las 16:30?»
+                  </p>
+                </div>
+
+                <div class="slots-selection-card">
+                  <div class="slots-label">ELIGE UNO DE LOS DOS HUECOS CONCRETOS:</div>
+                  <div class="slots-buttons-row">
+                    <button id="btn-slot-1" class="slot-pick-btn active">
+                      <i class="fa-solid fa-calendar-day"></i> <span id="slot-1-text">Martes 13 a las 09:00</span>
+                    </button>
+                    <button id="btn-slot-2" class="slot-pick-btn">
+                      <i class="fa-solid fa-calendar-day"></i> <span id="slot-2-text">Jueves 15 a las 16:30</span>
+                    </button>
+                  </div>
+                  <div class="slot-custom-row">
+                    <span>O fecha alternativa:</span>
+                    <input type="datetime-local" id="slot-custom-datetime">
+                  </div>
+                </div>
+
+                <!-- Nota rápida de la llamada -->
+                <div class="call-notes-input-box">
+                  <label for="call-quick-note">Nota rápida de la llamada:</label>
+                  <textarea id="call-quick-note" rows="2" placeholder="Apunta qué dijo, objeciones o detalles para el CRM..."></textarea>
+                </div>
+              </div>
+
             </div>
           </div>
 
-          <!-- Columna Derecha: Consejos de la IA -->
-          <div class="workspace-card advice-card">
-            <div class="card-header-badge">
-              <h3>Sugerencias del Asesor de Cierre</h3>
-              <span id="sales-ai-status" class="badge">Listo</span>
+          <!-- COLUMNA 3: MUNICIÓN EN PESTAÑAS (COACH · OBJECIONES · SEÑALES · CASOS) -->
+          <div class="cabina-col cabina-col-tabs">
+            <div class="ammo-tab-nav">
+              <button class="atab-btn active" data-tab="atab-coach"><i class="fa-solid fa-headset"></i> Coach</button>
+              <button class="atab-btn" data-tab="atab-objeciones"><i class="fa-solid fa-shield-halved"></i> Objeciones</button>
+              <button class="atab-btn" data-tab="atab-senales"><i class="fa-solid fa-magnifying-glass"></i> Señales</button>
+              <button class="atab-btn" data-tab="atab-prueba"><i class="fa-solid fa-award"></i> Prueba</button>
+            </div>
+
+            <div class="ammo-tab-content">
+              
+              <!-- PESTAÑA COACH EN DIRECTO -->
+              <div id="atab-coach" class="atab-pane active">
+                
+                <!-- Barra de Escucha y Control -->
+                <div class="coach-control-bar">
+                  <button id="btn-coach-listen" class="btn-listen-toggle">
+                    <i class="fa-solid fa-microphone"></i> <span>Escuchar llamada</span>
+                  </button>
+                  <button id="btn-coach-test-audio" class="btn-audio-test" title="Graba 20s de prueba local sin enviar nada">
+                    <i class="fa-solid fa-vial"></i> Probar audio (20s)
+                  </button>
+                  <span id="coach-audio-indicator" class="audio-badge ready">Listo</span>
+                </div>
+
+                <!-- Recuadro «DI AHORA» -->
+                <div class="say-now-card">
+                  <div class="say-now-header">
+                    <span class="say-now-title"><i class="fa-solid fa-wand-magic-sparkles"></i> DI AHORA</span>
+                    <span id="say-now-tag" class="say-now-tag">Listo</span>
+                  </div>
+                  <p id="say-now-text" class="say-now-body">
+                    El coach escuchará la llamada y te dirá exactamente qué responder cuando el cliente hable.
+                  </p>
+                  <div id="say-now-meta" class="say-now-footer hidden">
+                    <span id="say-now-reason"></span>
+                  </div>
+                </div>
+
+                <!-- Barra de Reparto de Habla (Tú vs Cliente) -->
+                <div class="talk-ratio-widget">
+                  <div class="talk-labels">
+                    <span>Tú: <strong id="talk-pct-you">50%</strong></span>
+                    <span id="talk-alert-warning" class="talk-warning hidden">⚠️ Hablas &gt; 60%</span>
+                    <span>Cliente: <strong id="talk-pct-client">50%</strong></span>
+                  </div>
+                  <div class="talk-bar-track">
+                    <div id="talk-bar-fill-you" class="bar-you" style="width: 50%;"></div>
+                    <div id="talk-bar-fill-client" class="bar-client" style="width: 50%;"></div>
+                  </div>
+                </div>
+
+                <!-- Transcripción en Vivo en 2 Canales -->
+                <div class="live-transcript-card">
+                  <div class="transcript-header-row">
+                    <span>TRANSCRIPCIÓN EN VIVO</span>
+                    <button id="btn-clear-transcript" class="btn-tiny-action" title="Limpiar"><i class="fa-solid fa-trash"></i></button>
+                  </div>
+                  <div id="cabina-live-transcript" class="transcript-chat-box">
+                    <div class="transcript-msg system">Pulsa «Escuchar llamada» para transcribir a ambos interlocutores.</div>
+                  </div>
+                </div>
+
+              </div>
+
+              <!-- PESTAÑA OBJECIONES -->
+              <div id="atab-objeciones" class="atab-pane">
+                <div class="objections-library-header">
+                  <h4>BIBLIOTECA DE RESPUESTAS TÁCTICAS</h4>
+                  <p class="small-desc">Reconoce sin discutir, reencuadra y termina con pregunta.</p>
+                </div>
+
+                <div id="objections-library-list" class="objections-accordion-list"></div>
+
+                <!-- Entrada para objeción nueva que aprende con IA -->
+                <div class="new-objection-box">
+                  <label for="input-new-objection">¿Surgió una objeción nueva?</label>
+                  <div class="new-obj-row">
+                    <input type="text" id="input-new-objection" placeholder="Ej: No confío en meter la información en la nube...">
+                    <button id="btn-ask-new-objection" class="btn btn-secondary btn-sm">
+                      <i class="fa-solid fa-brain"></i> Resolver con IA
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- PESTAÑA SEÑALES -->
+              <div id="atab-senales" class="atab-pane">
+                <div class="signals-header">
+                  <h4>SEÑALES DETECTADAS EN SU WEB</h4>
+                  <p class="small-desc">Úsalas para demostrar que conoces su negocio.</p>
+                </div>
+                <div id="ammo-signals-list" class="signals-detail-list"></div>
+              </div>
+
+              <!-- PESTAÑA PRUEBA (CASOS REALES) -->
+              <div id="atab-prueba" class="atab-pane">
+                <div class="proof-header">
+                  <h4>CASOS DE ÉXITO REALES PARA CITAR</h4>
+                  <p class="small-desc">Anonimizados y sin porcentajes inventados.</p>
+                </div>
+                <div class="proof-case-card">
+                  <div class="proof-sector-badge" id="proof-nicho-badge">SERVICIOS TÉCNICOS</div>
+                  <p id="ammo-proof-text" class="proof-text"></p>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+
+        <!-- BARRA INFERIOR DE RESULTADOS CON ATAJOS DE TECLADO -->
+        <div class="cabina-bottom-bar">
+          <div class="results-buttons-row">
+            <button class="btn-outcome btn-outcome-no-answer" data-outcome="no_contesta">
+              <span class="outcome-key">Z</span>
+              <span class="outcome-text">No contesta</span>
+            </button>
+            <button class="btn-outcome btn-outcome-later" data-outcome="llamar_luego">
+              <span class="outcome-key">A</span>
+              <span class="outcome-text">Llamar luego</span>
+            </button>
+            <button class="btn-outcome btn-outcome-decision-maker" data-outcome="pedir_decisor">
+              <span class="outcome-key">D</span>
+              <span class="outcome-text">Pedir decisor</span>
+            </button>
+            <button class="btn-outcome btn-outcome-success" data-outcome="diagnostico">
+              <span class="outcome-key">V</span>
+              <span class="outcome-text">Diagnóstico ✓</span>
+            </button>
+            <button class="btn-outcome btn-outcome-no-interest" data-outcome="no_interesa">
+              <span class="outcome-key">R</span>
+              <span class="outcome-text">No interesa</span>
+            </button>
+            <button class="btn-outcome btn-outcome-blacklist" data-outcome="no_llamar_mas">
+              <span class="outcome-key">X</span>
+              <span class="outcome-text">No llamar más</span>
+            </button>
+            <button id="btn-next-prospect-direct" class="btn-next-inline">
+              <span>Siguiente</span> <i class="fa-solid fa-chevron-right"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- MODAL: DIAGNÓSTICO AGENDADO -->
+        <div id="modal-diagnostico" class="cabina-modal-overlay hidden">
+          <div class="cabina-modal-card">
+            <div class="modal-card-header">
+              <div class="modal-icon-success"><i class="fa-solid fa-circle-check"></i></div>
+              <div>
+                <h3>¡Diagnóstico Agendado!</h3>
+                <p id="modal-diag-company-summary">Frigotécnica Almanzor · Martes 13 a las 09:00</p>
+              </div>
+              <button class="btn-close-modal" id="btn-close-diag-modal">&times;</button>
             </div>
             
-            <div id="sales-advice-container" class="advice-output">
-              <div class="empty-state">
-                <i class="fa-solid fa-comments-dollar"></i>
-                <p>Comienza a transcribir o introduce texto para ver sugerencias y objeciones tácticas en tiempo real.</p>
+            <div class="modal-card-body">
+              <p class="modal-instruction">Antes de colgar o pasar a la siguiente llamada:</p>
+              
+              <div class="action-buttons-stack">
+                <a id="btn-diag-whatsapp" href="#" target="_blank" class="btn-action-big btn-whatsapp-action">
+                  <i class="fa-brands fa-whatsapp"></i>
+                  <div class="action-btn-texts">
+                    <strong>Confirmar por WhatsApp</strong>
+                    <span>Envía el mensaje de confirmación con la fecha y hora</span>
+                  </div>
+                </a>
+
+                <a id="btn-diag-calendar" href="#" target="_blank" class="btn-action-big btn-calendar-action">
+                  <i class="fa-solid fa-calendar-plus"></i>
+                  <div class="action-btn-texts">
+                    <strong>Añadir a Google Calendar (con Meet)</strong>
+                    <span>Crea el evento de 30 minutos con las notas y cifras</span>
+                  </div>
+                </a>
+
+                <button id="btn-diag-print" class="btn-action-big btn-print-action">
+                  <i class="fa-solid fa-print"></i>
+                  <div class="action-btn-texts">
+                    <strong>Ficha previa al diagnóstico</strong>
+                    <span>Lista para imprimir o exportar a PDF con las cifras</span>
+                  </div>
+                </button>
+              </div>
+            </div>
+
+            <div class="modal-card-footer">
+              <button id="btn-diag-next-call" class="btn btn-primary btn-block">
+                Siguiente llamada <i class="fa-solid fa-arrow-right"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- MODAL: LLAMADAS MODELO & HISTORIAL PUNTUADO -->
+        <div id="modal-model-calls" class="cabina-modal-overlay hidden">
+          <div class="cabina-modal-card modal-wide">
+            <div class="modal-card-header">
+              <div class="modal-icon-star"><i class="fa-solid fa-star"></i></div>
+              <div>
+                <h3>Llamadas Modelo &amp; Aprendizaje</h3>
+                <p>Llamadas puntuadas con 80 o más sobre 100 según la rúbrica del coach.</p>
+              </div>
+              <button class="btn-close-modal" id="btn-close-model-modal">&times;</button>
+            </div>
+
+            <div class="modal-card-body">
+              <div id="model-calls-list-container" class="model-calls-feed">
+                <p class="empty-state-p">No hay llamadas modelo registradas aún. ¡Realiza llamadas para que el coach las evalúe!</p>
               </div>
             </div>
           </div>
         </div>
+
+        <!-- MODAL: IMPORTAR EMPRESAS INVESTIGADAS (PROMPT A) -->
+        <div id="modal-import-prospects" class="cabina-modal-overlay hidden">
+          <div class="cabina-modal-card modal-wide">
+            <div class="modal-card-header">
+              <div class="modal-icon-import"><i class="fa-solid fa-file-import"></i></div>
+              <div>
+                <h3>Importar Lote de Empresas (JSON)</h3>
+                <p>Pega aquí el array JSON generado por los agentes de investigación (Prompt A).</p>
+              </div>
+              <button class="btn-close-modal" id="btn-close-import-modal">&times;</button>
+            </div>
+
+            <div class="modal-card-body">
+              <textarea id="import-json-textarea" rows="10" placeholder='[ { "empresa": "Ejemplo S.L.", "score": 80, ... } ]' class="code-textarea"></textarea>
+              <div id="import-status-msg" class="status-msg"></div>
+            </div>
+
+            <div class="modal-card-footer">
+              <button id="btn-submit-import" class="btn btn-primary">
+                <i class="fa-solid fa-upload"></i> Importar Empresas a la Cabina
+              </button>
+            </div>
+          </div>
+        </div>
+
       </section>
 
       <!-- ================= SECCIÓN 2: CAPTADOR Y BRAINSTORMING ================= -->

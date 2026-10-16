@@ -187,173 +187,1251 @@ function showPanel(panelId) {
 }
 
 
-// ================= MODULO 1: VENTAS EN DIRECTO =================
+// ================= CABINA VENTAS · MOTOR COMPLETO VEROX =================
+let cabinaQueue = [];
+let cabinaCurrentIndex = 0;
+let cabinaObjections = [];
+let cabinaActiveStep = 1;
+let cabinaCallTimerInterval = null;
+let cabinaCallSeconds = 0;
+let cabinaIsListening = false;
+let cabinaRecognition = null;
+let cabinaTalkWordsYou = 0;
+let cabinaTalkWordsClient = 0;
+let cabinaLastCoachCallTime = 0;
+let cabinaLastClientPhrase = '';
+let cabinaUndoTimer = null;
+let cabinaLastInteractionId = null;
+let cabinaSelectedSlot = '';
+let cabinaLiveTranscriptArray = [];
+
 function setupSalesModule() {
-  const btnToggleListen = document.getElementById('btn-toggle-listen');
-  const micPulse = document.getElementById('mic-pulse');
-  const salesTranscript = document.getElementById('sales-transcript');
-  const salesManualText = document.getElementById('sales-manual-text');
-  const btnSendSalesContext = document.getElementById('btn-send-sales-context');
-  const salesAdviceContainer = document.getElementById('sales-advice-container');
-  const salesAiStatus = document.getElementById('sales-ai-status');
+  // Inicialización de selectores
+  const btnPrev = document.getElementById('cabina-btn-prev');
+  const btnNext = document.getElementById('cabina-btn-next');
+  const prospectSelect = document.getElementById('cabina-prospect-select');
+  const btnCallPrimary = document.getElementById('btn-call-primary');
+  const btnCoachListen = document.getElementById('btn-coach-listen');
+  const btnCoachTestAudio = document.getElementById('btn-coach-test-audio');
+  const btnClearTranscript = document.getElementById('btn-clear-transcript');
+  const btnAskNewObjection = document.getElementById('btn-ask-new-objection');
+  const inputNewObjection = document.getElementById('input-new-objection');
+  const btnCabinaUndo = document.getElementById('btn-cabina-undo');
+  const btnNextProspectDirect = document.getElementById('btn-next-prospect-direct');
+  const btnOpenModelCalls = document.getElementById('btn-open-model-calls');
+  const btnOpenImport = document.getElementById('btn-open-import');
+  const btnCloseDiagModal = document.getElementById('btn-close-diag-modal');
+  const btnCloseModelModal = document.getElementById('btn-close-model-modal');
+  const btnCloseImportModal = document.getElementById('btn-close-import-modal');
+  const btnDiagNextCall = document.getElementById('btn-diag-next-call');
+  const btnSubmitImport = document.getElementById('btn-submit-import');
 
-  let recognition = null;
-  let isListening = false;
+  // Inicializar carga de datos
+  loadCabinaQueue();
 
-  // Inicializar Web Speech Recognition del navegador
-  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-  if (SpeechRecognition) {
-    recognition = new SpeechRecognition();
-    recognition.continuous = true;
-    recognition.interimResults = true;
-    recognition.lang = 'es-ES';
-
-    recognition.onresult = (event) => {
-      let finalTranscript = '';
-      for (let i = event.resultIndex; i < event.results.length; ++i) {
-        if (event.results[i].isFinal) {
-          finalTranscript += event.results[i][0].transcript + ' ';
-        }
-      }
-      if (finalTranscript) {
-        salesTranscript.value += finalTranscript;
-        // Hacer auto-scroll en el textarea
-        salesTranscript.scrollTop = salesTranscript.scrollHeight;
-        // Consultar IA de cierre de ventas
-        triggerSalesAdvice(salesTranscript.value);
-      }
-    };
-
-    recognition.onerror = (e) => {
-      console.error('Speech recognition error:', e.error);
-    };
-
-    recognition.onend = () => {
-      if (isListening) {
-        // Reiniciar si se detiene accidentalmente
-        recognition.start();
-      }
-    };
-  } else {
-    btnToggleListen.disabled = true;
-    btnToggleListen.querySelector('span').textContent = 'Micrófono No Soportado (Usa Manual)';
-    console.warn('El navegador no soporta Speech Recognition API.');
+  // Navegación de empresas
+  if (btnPrev) btnPrev.addEventListener('click', () => navigateCabinaQueue(-1));
+  if (btnNext) btnNext.addEventListener('click', () => navigateCabinaQueue(1));
+  if (btnNextProspectDirect) btnNextProspectDirect.addEventListener('click', () => navigateCabinaQueue(1));
+  if (prospectSelect) {
+    prospectSelect.addEventListener('change', (e) => {
+      cabinaCurrentIndex = parseInt(e.target.value, 10) || 0;
+      renderCurrentProspect();
+    });
   }
 
-  // Evento escuchar micrófono
-  btnToggleListen.addEventListener('click', () => {
-    if (!recognition) return;
-    
-    if (!isListening) {
-      recognition.start();
-      isListening = true;
-      btnToggleListen.classList.add('active');
-      btnToggleListen.querySelector('span').textContent = 'Escuchando llamada...';
-      micPulse.classList.remove('hidden');
-      salesAiStatus.textContent = 'Escuchando...';
-    } else {
-      isListening = false;
-      recognition.stop();
-      btnToggleListen.classList.remove('active');
-      btnToggleListen.querySelector('span').textContent = 'Iniciar Escucha Activa';
-      micPulse.classList.add('hidden');
-      salesAiStatus.textContent = 'Listo';
-    }
+  // Pestañas de la Ficha
+  document.querySelectorAll('.ftab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.ftab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.ftab-pane').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      const target = document.getElementById(btn.getAttribute('data-tab'));
+      if (target) target.classList.add('active');
+    });
   });
 
-  const salesProductContext = document.getElementById('sales-product-context-text');
-  
-  // Cargar contexto persistido
-  salesProductContext.value = localStorage.getItem('sales_product_context') || '';
-  
-  salesProductContext.addEventListener('input', () => {
-    localStorage.setItem('sales_product_context', salesProductContext.value);
+  // Pestañas de Munición
+  document.querySelectorAll('.atab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.atab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.atab-pane').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      const target = document.getElementById(btn.getAttribute('data-tab'));
+      if (target) target.classList.add('active');
+    });
   });
 
-  // Enviar texto manual
-  btnSendSalesContext.addEventListener('click', () => {
-    const text = salesManualText.value.trim();
-    if (!text) return;
-    
-    salesTranscript.value += `\n[Contexto Manual]: ${text}\n`;
-    salesManualText.value = '';
-    salesTranscript.scrollTop = salesTranscript.scrollHeight;
-    
-    triggerSalesAdvice(salesTranscript.value);
+  // Pasos del Guion (1 a 4)
+  document.querySelectorAll('.step-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const step = parseInt(btn.getAttribute('data-step'), 10);
+      setCabinaStep(step);
+    });
+  });
+  document.querySelectorAll('.btn-next-step').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const nextStep = parseInt(btn.getAttribute('data-target'), 10);
+      setCabinaStep(nextStep);
+    });
   });
 
-  // Consultar consejos al backend
-  async function triggerSalesAdvice(transcriptText) {
-    salesAiStatus.textContent = 'Analizando...';
-    salesAiStatus.className = 'badge';
-    try {
-      const res = await fetch('/api/sales/advice', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
-          transcript: transcriptText,
-          productContext: salesProductContext.value.trim()
-        })
-      });
-      
-      if (res.ok) {
-        const data = await res.json();
-        renderSalesAdvice(data.advice);
-        salesAiStatus.textContent = 'Actualizado';
-      } else {
-        const data = await res.json();
-        salesAiStatus.textContent = 'Error';
-        salesAiStatus.className = 'badge badge-critical';
-        renderSalesAdvice(`⚠️ **Error al consultar el asesor:**\n\n${data.message || 'Error en la API.'}\n\n*Por favor, asegúrate de configurar tu **API Key de Gemini** en los Ajustes de la Suite (esquina superior derecha) para activar este módulo.*`);
-      }
-    } catch (err) {
-      console.error('Error obteniendo consejos de venta:', err);
-      salesAiStatus.textContent = 'Error Red';
-      salesAiStatus.className = 'badge badge-critical';
-      renderSalesAdvice(`❌ **Error de Red:** No se pudo conectar con el servidor backend.`);
-    }
+  // Calculadora de impacto
+  setupImpactCalculator();
+
+  // Botón Llamar Principal
+  if (btnCallPrimary) {
+    btnCallPrimary.addEventListener('click', () => {
+      startCabinaTimer();
+      const p = cabinaQueue[cabinaCurrentIndex];
+      const tel = p?.telefonos?.[0]?.numero || '608000000';
+      // Abrir marcador o tel
+      window.open(`tel:${tel}`, '_self');
+      if (!cabinaIsListening) toggleCoachListening(true);
+    });
   }
 
-  function renderSalesAdvice(adviceMarkdown) {
-    // Convertir de forma simple las viñetas y negritas a HTML limpio
-    let htmlContent = '<div class="advice-block">';
-    
-    // Verificar si es un mensaje de alerta
-    if (adviceMarkdown.includes('⚠️') || adviceMarkdown.includes('❌')) {
-      htmlContent += '<h4><i class="fa-solid fa-triangle-exclamation"></i> Estado del Módulo</h4>';
-    } else {
-      htmlContent += '<h4><i class="fa-solid fa-lightbulb"></i> Consejos Tácticos de Cierre</h4>';
-    }
-    
-    const lines = adviceMarkdown.split('\n');
-    let inList = false;
+  // Coach de audio
+  if (btnCoachListen) {
+    btnCoachListen.addEventListener('click', () => toggleCoachListening(!cabinaIsListening));
+  }
+  if (btnCoachTestAudio) {
+    btnCoachTestAudio.addEventListener('click', runAudioTest20s);
+  }
+  if (btnClearTranscript) {
+    btnClearTranscript.addEventListener('click', () => {
+      cabinaLiveTranscriptArray = [];
+      const box = document.getElementById('cabina-live-transcript');
+      if (box) box.innerHTML = '<div class="transcript-msg system">Transcripción limpiada.</div>';
+      updateTalkRatio(0, 0);
+    });
+  }
 
-    lines.forEach(line => {
-      const cleanLine = line.trim();
-      if (cleanLine.startsWith('-') || cleanLine.startsWith('*')) {
-        if (!inList) {
-          htmlContent += '<ul>';
-          inList = true;
-        }
-        let listText = cleanLine.substring(1).trim();
-        listText = listText.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-        htmlContent += `<li>${listText}</li>`;
-      } else if (cleanLine) {
-        if (inList) {
-          htmlContent += '</ul>';
-          inList = false;
-        }
-        let paraText = cleanLine.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-        htmlContent += `<p>${paraText}</p>`;
+  // Objeción nueva con IA
+  if (btnAskNewObjection) {
+    btnAskNewObjection.addEventListener('click', handleAskNewObjection);
+  }
+  if (inputNewObjection) {
+    inputNewObjection.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        handleAskNewObjection();
       }
     });
+  }
 
-    if (inList) htmlContent += '</ul>';
-    htmlContent += '</div>';
+  // Botones de Resultados (Outcomes)
+  document.querySelectorAll('.btn-outcome').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const outcome = btn.getAttribute('data-outcome');
+      handleRecordOutcome(outcome);
+    });
+  });
 
-    salesAdviceContainer.innerHTML = htmlContent;
+  // Deshacer (Undo)
+  if (btnCabinaUndo) {
+    btnCabinaUndo.addEventListener('click', handleUndoLastCall);
+  }
+
+  // Modales
+  if (btnCloseDiagModal) btnCloseDiagModal.addEventListener('click', () => closeCabinaModal('modal-diagnostico'));
+  if (btnCloseModelModal) btnCloseModelModal.addEventListener('click', () => closeCabinaModal('modal-model-calls'));
+  if (btnCloseImportModal) btnCloseImportModal.addEventListener('click', () => closeCabinaModal('modal-import-prospects'));
+  if (btnOpenModelCalls) btnOpenModelCalls.addEventListener('click', openModelCallsModal);
+  if (btnOpenImport) btnOpenImport.addEventListener('click', () => openCabinaModal('modal-import-prospects'));
+  if (btnDiagNextCall) {
+    btnDiagNextCall.addEventListener('click', () => {
+      closeCabinaModal('modal-diagnostico');
+      navigateCabinaQueue(1);
+    });
+  }
+  if (btnSubmitImport) btnSubmitImport.addEventListener('click', handleImportProspects);
+
+  // Botón Imprimir Ficha Previa al Diagnóstico
+  const btnDiagPrint = document.getElementById('btn-diag-print');
+  if (btnDiagPrint) {
+    btnDiagPrint.addEventListener('click', handlePrintDiagnosticSheet);
+  }
+
+  // Selector de Huecos en Cierre
+  setupSlotPickers();
+
+  // Atajos de teclado globales para la cabina
+  setupCabinaKeybindings();
+}
+
+// Cargar la cola de llamadas desde el backend
+async function loadCabinaQueue() {
+  try {
+    const res = await fetch('/api/cabina/queue');
+    if (res.ok) {
+      const data = await res.json();
+      if (data.success) {
+        cabinaQueue = data.queue || [];
+        cabinaObjections = data.objections || [];
+        renderProspectSelect();
+        renderCurrentProspect();
+        renderObjectionsList();
+      }
+    }
+  } catch (err) {
+    console.error('Error cargando cola de la cabina:', err);
   }
 }
+
+function renderProspectSelect() {
+  const select = document.getElementById('cabina-prospect-select');
+  if (!select) return;
+  select.innerHTML = cabinaQueue.map((p, idx) => `
+    <option value="${idx}">[Prio ${p.prioridad || 'B'}] ${p.empresa}</option>
+  `).join('');
+  select.value = cabinaCurrentIndex;
+}
+
+function navigateCabinaQueue(delta) {
+  if (cabinaQueue.length === 0) return;
+  cabinaCurrentIndex = (cabinaCurrentIndex + delta + cabinaQueue.length) % cabinaQueue.length;
+  const select = document.getElementById('cabina-prospect-select');
+  if (select) select.value = cabinaCurrentIndex;
+  renderCurrentProspect();
+}
+
+// Renderizar la empresa actual en toda la pantalla
+function renderCurrentProspect() {
+  if (cabinaQueue.length === 0) return;
+  const p = cabinaQueue[cabinaCurrentIndex];
+  if (!p) return;
+
+  // Actualizar indicador de cola
+  const ind = document.getElementById('cabina-queue-indicator');
+  if (ind) ind.textContent = `Empresa ${cabinaCurrentIndex + 1} de ${cabinaQueue.length}`;
+
+  // Reset del Guion al Paso 1
+  setCabinaStep(1);
+
+  // Reset de temporizador de llamada
+  resetCabinaTimer();
+
+  // COLUMNA 1: FICHA
+  const scoreEl = document.getElementById('ficha-score');
+  if (scoreEl) scoreEl.textContent = p.score || 50;
+
+  const nameEl = document.getElementById('ficha-empresa-nombre');
+  if (nameEl) nameEl.textContent = p.empresa;
+
+  const prioTag = document.getElementById('ficha-prioridad-tag');
+  if (prioTag) {
+    prioTag.textContent = `Prioridad ${p.prioridad || 'B'}`;
+    prioTag.className = `priority-tag prio-${p.prioridad || 'B'}`;
+  }
+
+  const subsectorEl = document.getElementById('ficha-subsector');
+  if (subsectorEl) subsectorEl.textContent = p.subsector || p.nicho || 'Servicios';
+
+  const provEl = document.getElementById('ficha-provincia');
+  if (provEl) provEl.textContent = p.provincia || 'España';
+
+  const webLink = document.getElementById('ficha-web-link');
+  if (webLink) {
+    webLink.href = p.web || '#';
+    webLink.style.display = p.web ? 'inline' : 'none';
+  }
+
+  // Decisor
+  const decisorNameEl = document.getElementById('ficha-decisor-nombre');
+  if (decisorNameEl) decisorNameEl.textContent = p.decisor?.nombre || 'Decisor por confirmar';
+
+  const decisorCargoEl = document.getElementById('ficha-decisor-cargo');
+  if (decisorCargoEl) decisorCargoEl.textContent = p.decisor?.cargo || 'Gerente / Dirección';
+
+  // Teléfonos
+  const telPri = p.telefonos?.[0] || { numero: '600 00 00 00', etiqueta: 'gerencia' };
+  const telLabelEl = document.getElementById('ficha-tel-label');
+  if (telLabelEl) telLabelEl.textContent = `${telPri.tipo || 'móvil'} · ${telPri.etiqueta || 'contacto'}`;
+  
+  const telNumEl = document.getElementById('ficha-tel-numero');
+  if (telNumEl) telNumEl.textContent = telPri.numero;
+
+  const telSec = p.telefonos?.[1];
+  const telSecEl = document.getElementById('ficha-tel-secondary');
+  if (telSecEl) {
+    if (telSec) {
+      telSecEl.innerHTML = `<i class="fa-solid fa-phone-office"></i> ${telSec.numero}`;
+      telSecEl.style.display = 'inline-flex';
+    } else {
+      telSecEl.style.display = 'none';
+    }
+  }
+
+  // Enlace directo de WhatsApp
+  const cleanPhone = (telPri.numero || '').replace(/\D/g, '');
+  const btnWa = document.getElementById('btn-whatsapp-direct');
+  if (btnWa) {
+    btnWa.href = `https://wa.me/34${cleanPhone}`;
+  }
+
+  // Mejor franja
+  const franjaEl = document.getElementById('ficha-mejor-franja');
+  if (franjaEl) franjaEl.textContent = `Mejor franja: ${p.mejor_franja || '9:00 - 13:00'}`;
+
+  // Qué hacen
+  const queHacenEl = document.getElementById('ficha-que-hacen');
+  if (queHacenEl) queHacenEl.textContent = p.que_hacen || 'Empresa de servicios técnicos y mantenimiento.';
+
+  // Señales
+  const senalesListEl = document.getElementById('ficha-senales-list');
+  const ammoSenalesList = document.getElementById('ammo-signals-list');
+  if (senalesListEl) {
+    const listHtml = (p.senales || []).map(s => `<li>${s.senal}</li>`).join('') || '<li>Sin señales web específicas.</li>';
+    senalesListEl.innerHTML = listHtml;
+  }
+  if (ammoSenalesList) {
+    const ammoHtml = (p.senales || []).map(s => `
+      <div class="signal-detail-item">
+        <div class="signal-title">${s.senal}</div>
+        ${s.fuente ? `<a href="${s.fuente}" target="_blank" class="signal-source-link"><i class="fa-solid fa-link"></i> Ver fuente en su web</a>` : ''}
+      </div>
+    `).join('') || '<p class="small-desc">Sin señales detalladas.</p>';
+    ammoSenalesList.innerHTML = ammoHtml;
+  }
+
+  // Dolores
+  const doloresListEl = document.getElementById('ficha-dolores-list');
+  if (doloresListEl) {
+    doloresListEl.innerHTML = (p.dolores || []).map(d => `
+      <div class="pain-card">
+        <div class="pain-title"><i class="fa-solid fa-circle-exclamation"></i> ${d.dolor}</div>
+        <div class="pain-evidence">${d.por_que_lo_creemos || ''}</div>
+        <div class="pain-question">«${d.pregunta_cuantificacion || ''}»</div>
+      </div>
+    `).join('') || '<p class="small-desc">Sin dolores registrados.</p>';
+  }
+
+  // Solución y Prueba
+  const solPriEl = document.getElementById('ficha-solucion-principal');
+  if (solPriEl) solPriEl.textContent = p.solucion_propuesta?.principal || 'Digitalización de partes y avisos a clientes.';
+  const solSecEl = document.getElementById('ficha-solucion-complementaria');
+  if (solSecEl) solSecEl.textContent = p.solucion_propuesta?.complementaria || '';
+  
+  const pruebaEl = document.getElementById('ficha-prueba-citar');
+  const ammoPruebaEl = document.getElementById('ammo-proof-text');
+  const pruebaText = p.solucion_propuesta?.prueba_a_citar || 'Un servicio técnico similar en Toledo redujo a cero las horas perdidas de facturación.';
+  if (pruebaEl) pruebaEl.textContent = pruebaText;
+  if (ammoPruebaEl) ammoPruebaEl.textContent = pruebaText;
+
+  // COLUMNA 2: GUION
+  // Paso 1: Apertura
+  const aperturaTextEl = document.getElementById('script-text-apertura');
+  if (aperturaTextEl) {
+    const decisorName = p.decisor?.nombre || 'buenos días';
+    const firstSignal = p.senales?.[0]?.senal?.toLowerCase() || 'vuestros servicios técnicos';
+    const defaultApertura = p.apertura_siguiente || p.guion?.apertura || `«Hola, ¿${decisorName}? Soy zVaito, de Verox. Te llamo porque he visto en vuestra web que ${firstSignal}, y tengo una pregunta rápida sobre cómo os llegan los partes a la oficina. ¿Tienes un minuto?»`;
+    aperturaTextEl.textContent = defaultApertura;
+  }
+
+  // Paso 2: ¿Decide él?
+  const decideTextEl = document.getElementById('script-text-decide');
+  if (decideTextEl) {
+    decideTextEl.textContent = p.guion?.si_no_esta_el_decisor ? '«¿Eres tú quien decide esto o lo lleva otra persona?»' : '«¿Eres tú quien lleva la oficina y la facturación, o lo lleva otra persona?»';
+  }
+
+  // Paso 3: Preguntas de cuantificación
+  const discoveryEl = document.getElementById('script-discovery-questions');
+  if (discoveryEl) {
+    const questions = p.guion?.preguntas_descubrimiento || (p.dolores || []).map(d => d.pregunta_cuantificacion).filter(Boolean);
+    discoveryEl.innerHTML = questions.map((q, idx) => `
+      <li><strong>Pregunta ${idx + 1}:</strong> «${q}»</li>
+    `).join('') || '<li>«¿Cuántas horas a la semana se van en esto?»</li>';
+  }
+
+  // Paso 4: Cierre con huecos dinámicos
+  updateDynamicSlots(p);
+
+  // COLUMNA 3: RESET COACH
+  const sayNowText = document.getElementById('say-now-text');
+  if (sayNowText) {
+    sayNowText.textContent = `Empieza la llamada con la apertura. Cuando ${p.decisor?.nombre || 'el cliente'} responda, el coach te dirá qué contestar aquí.`;
+  }
+  const sayNowTag = document.getElementById('say-now-tag');
+  if (sayNowTag) sayNowTag.textContent = 'Listo';
+
+  // Cargar transcripción en caché del navegador (3 horas según manual)
+  loadCachedTranscript(p.id);
+}
+
+// Actualizar los 2 huecos de fecha dinámica
+function updateDynamicSlots(p) {
+  const now = new Date();
+  
+  // Hueco 1: Siguiente día laborable a las 9:00
+  const slot1 = new Date(now);
+  slot1.setDate(slot1.getDate() + 1);
+  if (slot1.getDay() === 0) slot1.setDate(slot1.getDate() + 1); // Domingo -> Lunes
+  if (slot1.getDay() === 6) slot1.setDate(slot1.getDate() + 2); // Sábado -> Lunes
+  slot1.setHours(9, 0, 0, 0);
+
+  // Hueco 2: Dos días laborables después a las 16:30
+  const slot2 = new Date(slot1);
+  slot2.setDate(slot2.getDate() + 2);
+  if (slot2.getDay() === 0) slot2.setDate(slot2.getDate() + 1);
+  if (slot2.getDay() === 6) slot2.setDate(slot2.getDate() + 2);
+  slot2.setHours(16, 30, 0, 0);
+
+  const formatSlot = (d) => {
+    const days = ['domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado'];
+    const hh = String(d.getHours()).padStart(2, '0');
+    const mm = String(d.getMinutes()).padStart(2, '0');
+    return `${days[d.getDay()]} ${d.getDate()} a las ${hh}:${mm}`;
+  };
+
+  const strSlot1 = formatSlot(slot1);
+  const strSlot2 = formatSlot(slot2);
+
+  const slot1TextEl = document.getElementById('slot-1-text');
+  const slot2TextEl = document.getElementById('slot-2-text');
+  if (slot1TextEl) slot1TextEl.textContent = strSlot1;
+  if (slot2TextEl) slot2TextEl.textContent = strSlot2;
+
+  cabinaSelectedSlot = strSlot1;
+
+  // Frase de cierre con los dos huecos
+  const cierreTextEl = document.getElementById('script-text-cierre');
+  if (cierreTextEl) {
+    cierreTextEl.textContent = `«Te propongo 30 minutos por videollamada: te enseño cómo lo resolvió una empresa de tu sector y te digo con tus números si en tu caso compensa o no. ¿Te va mejor el ${strSlot1} o el ${strSlot2}?»`;
+  }
+}
+
+function setupSlotPickers() {
+  const b1 = document.getElementById('btn-slot-1');
+  const b2 = document.getElementById('btn-slot-2');
+  const customInput = document.getElementById('slot-custom-datetime');
+
+  if (b1) {
+    b1.addEventListener('click', () => {
+      b1.classList.add('active');
+      if (b2) b2.classList.remove('active');
+      const t = document.getElementById('slot-1-text');
+      if (t) cabinaSelectedSlot = t.textContent;
+    });
+  }
+  if (b2) {
+    b2.addEventListener('click', () => {
+      b2.classList.add('active');
+      if (b1) b1.classList.remove('active');
+      const t = document.getElementById('slot-2-text');
+      if (t) cabinaSelectedSlot = t.textContent;
+    });
+  }
+  if (customInput) {
+    customInput.addEventListener('change', () => {
+      if (b1) b1.classList.remove('active');
+      if (b2) b2.classList.remove('active');
+      const val = new Date(customInput.value);
+      if (!isNaN(val.getTime())) {
+        cabinaSelectedSlot = val.toLocaleString('es-ES', { dateStyle: 'full', timeStyle: 'short' });
+      }
+    });
+  }
+}
+
+// Navegación de pasos del guion (1 a 4)
+function setCabinaStep(stepNumber) {
+  cabinaActiveStep = stepNumber;
+  document.querySelectorAll('.step-btn').forEach(btn => {
+    btn.classList.toggle('active', parseInt(btn.getAttribute('data-step'), 10) === stepNumber);
+  });
+  document.querySelectorAll('.guion-step-pane').forEach((pane, idx) => {
+    pane.classList.toggle('active', idx + 1 === stepNumber);
+  });
+}
+
+// Calculadora de impacto (Horas al año, año de 46 semanas / 220 días / 11 meses)
+function setupImpactCalculator() {
+  const btnVeces = document.getElementById('calc-mode-veces');
+  const btnHoras = document.getElementById('calc-mode-horas');
+  const inputsVeces = document.getElementById('calc-inputs-veces');
+  const inputsHoras = document.getElementById('calc-inputs-horas');
+
+  let mode = 'veces';
+
+  if (btnVeces && btnHoras) {
+    btnVeces.addEventListener('click', () => {
+      mode = 'veces';
+      btnVeces.classList.add('active');
+      btnHoras.classList.remove('active');
+      if (inputsVeces) inputsVeces.classList.remove('hidden');
+      if (inputsHoras) inputsHoras.classList.add('hidden');
+      recalcImpact();
+    });
+    btnHoras.addEventListener('click', () => {
+      mode = 'horas';
+      btnHoras.classList.add('active');
+      btnVeces.classList.remove('active');
+      if (inputsVeces) inputsVeces.classList.add('hidden');
+      if (inputsHoras) inputsHoras.classList.remove('hidden');
+      recalcImpact();
+    });
+  }
+
+  const elements = [
+    'calc-veces-cant', 'calc-veces-periodo', 'calc-veces-tiempo', 'calc-veces-unidad',
+    'calc-horas-cant', 'calc-horas-periodo'
+  ];
+  elements.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener('input', recalcImpact);
+  });
+
+  function recalcImpact() {
+    let annualHours = 0;
+    if (mode === 'veces') {
+      const cant = parseFloat(document.getElementById('calc-veces-cant')?.value) || 0;
+      const periodo = document.getElementById('calc-veces-periodo')?.value || 'semana';
+      const tiempo = parseFloat(document.getElementById('calc-veces-tiempo')?.value) || 0;
+      const unidad = document.getElementById('calc-veces-unidad')?.value || 'min';
+
+      const hoursPerOccurrence = unidad === 'min' ? tiempo / 60 : tiempo;
+      let multiplier = 46; // año de 46 semanas laborales según manual Verox
+      if (periodo === 'dia') multiplier = 220; // 220 días laborales
+      if (periodo === 'mes') multiplier = 11;  // 11 meses
+
+      annualHours = cant * hoursPerOccurrence * multiplier;
+    } else {
+      const cant = parseFloat(document.getElementById('calc-horas-cant')?.value) || 0;
+      const periodo = document.getElementById('calc-horas-periodo')?.value || 'semana';
+      let multiplier = 46;
+      if (periodo === 'dia') multiplier = 220;
+      if (periodo === 'mes') multiplier = 11;
+      annualHours = cant * multiplier;
+    }
+
+    // Redondear de 10 en 10 desde 100h según regla del manual
+    if (annualHours >= 100) {
+      annualHours = Math.round(annualHours / 10) * 10;
+    } else {
+      annualHours = Math.round(annualHours);
+    }
+
+    const totalEl = document.getElementById('calc-total-hours');
+    const quoteEl = document.getElementById('calc-quote-phrase');
+    const equivEl = document.getElementById('calc-human-equiv');
+
+    if (totalEl) totalEl.textContent = annualHours;
+    if (quoteEl) quoteEl.textContent = `«Entonces, si no me equivoco, son unas ${annualHours} horas al año. ¿Es así?»`;
+
+    // Equivalencia humana: con >= 160h, en meses de jornada completa (160h/mes)
+    if (equivEl) {
+      if (annualHours >= 160) {
+        const months = (annualHours / 160).toFixed(1);
+        equivEl.textContent = `(Equivale a ${months > 1 ? `más de ${Math.floor(months)} meses` : 'un mes'} de una persona a jornada completa)`;
+      } else {
+        const days = Math.round(annualHours / 8);
+        equivEl.textContent = `(Equivale a unas ${days} jornadas laborales completas de 8 horas)`;
+      }
+    }
+  }
+
+  recalcImpact();
+}
+
+// Cronómetro de la llamada
+function startCabinaTimer() {
+  if (cabinaCallTimerInterval) clearInterval(cabinaCallTimerInterval);
+  cabinaCallSeconds = 0;
+  updateTimerDisplay();
+  cabinaCallTimerInterval = setInterval(() => {
+    cabinaCallSeconds++;
+    updateTimerDisplay();
+  }, 1000);
+}
+
+function stopCabinaTimer() {
+  if (cabinaCallTimerInterval) {
+    clearInterval(cabinaCallTimerInterval);
+    cabinaCallTimerInterval = null;
+  }
+}
+
+function resetCabinaTimer() {
+  stopCabinaTimer();
+  cabinaCallSeconds = 0;
+  updateTimerDisplay();
+}
+
+function updateTimerDisplay() {
+  const el = document.getElementById('cabina-call-timer');
+  if (!el) return;
+  const m = String(Math.floor(cabinaCallSeconds / 60)).padStart(2, '0');
+  const s = String(cabinaCallSeconds % 60).padStart(2, '0');
+  el.textContent = `${m}:${s}`;
+}
+
+// Audio y Transcripción en Directo del Coach
+function toggleCoachListening(shouldListen) {
+  const btn = document.getElementById('btn-coach-listen');
+  const badge = document.getElementById('coach-audio-indicator');
+  
+  if (shouldListen) {
+    initSpeechCapture();
+    cabinaIsListening = true;
+    if (btn) {
+      btn.classList.add('listening');
+      btn.innerHTML = '<i class="fa-solid fa-stop"></i> <span>Detener escucha</span>';
+    }
+    if (badge) {
+      badge.textContent = 'Escuchando...';
+      badge.className = 'audio-badge listening';
+    }
+  } else {
+    stopSpeechCapture();
+    cabinaIsListening = false;
+    if (btn) {
+      btn.classList.remove('listening');
+      btn.innerHTML = '<i class="fa-solid fa-microphone"></i> <span>Escuchar llamada</span>';
+    }
+    if (badge) {
+      badge.textContent = 'Listo';
+      badge.className = 'audio-badge ready';
+    }
+  }
+}
+
+// Inicializar captura de voz (Web Speech API con soporte para micrófono y audio)
+function initSpeechCapture() {
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SpeechRecognition) {
+    addTranscriptMessage('system', 'Tu navegador no soporta reconocimiento de voz nativo. Usa Chrome para mejor experiencia.');
+    return;
+  }
+
+  try {
+    cabinaRecognition = new SpeechRecognition();
+    cabinaRecognition.continuous = true;
+    cabinaRecognition.interimResults = false;
+    cabinaRecognition.lang = 'es-ES';
+
+    cabinaRecognition.onresult = (event) => {
+      for (let i = event.resultIndex; i < event.results.length; ++i) {
+        if (event.results[i].isFinal) {
+          const phrase = event.results[i][0].transcript.trim();
+          handleRecognizedSpeech(phrase);
+        }
+      }
+    };
+
+    cabinaRecognition.onerror = (e) => {
+      console.warn('Speech capture notice:', e.error);
+    };
+
+    cabinaRecognition.onend = () => {
+      if (cabinaIsListening && cabinaRecognition) {
+        try { cabinaRecognition.start(); } catch (err) {}
+      }
+    };
+
+    cabinaRecognition.start();
+    addTranscriptMessage('system', 'Escuchando llamada activa...');
+  } catch (err) {
+    console.error('Error iniciando SpeechRecognition:', err);
+  }
+}
+
+function stopSpeechCapture() {
+  if (cabinaRecognition) {
+    try { cabinaRecognition.stop(); } catch (err) {}
+    cabinaRecognition = null;
+  }
+}
+
+// Procesar texto reconocido y separar voces / eco
+function handleRecognizedSpeech(text) {
+  if (!text) return;
+
+  // Filtro de eco: si la misma frase llega repetida en menos de 3s, se descarta
+  if (text.toLowerCase() === cabinaLastClientPhrase.toLowerCase()) {
+    return;
+  }
+
+  // Deducir si habla el comercial o el cliente según palabras clave habituales
+  const lower = text.toLowerCase();
+  const isYou = lower.includes('soy zvaito') || lower.includes('de verox') || lower.includes('te llamo porque') || lower.includes('te propongo 30');
+  const speaker = isYou ? 'you' : 'client';
+
+  if (!isYou) {
+    cabinaLastClientPhrase = text;
+  }
+
+  addTranscriptMessage(speaker, text);
+
+  // Contabilizar palabras para ratio Tú vs Cliente
+  const wordCount = text.split(/\s+/).length;
+  if (speaker === 'you') cabinaTalkWordsYou += wordCount;
+  else cabinaTalkWordsClient += wordCount;
+  updateTalkRatio(cabinaTalkWordsYou, cabinaTalkWordsClient);
+
+  // Reglas del manual Verox (B.4) para consultar al Coach:
+  // - Solo cuando termina de hablar el CLIENTE
+  // - Su última frase tiene 3 palabras o más
+  // - Han pasado al menos 5 segundos desde la última sugerencia
+  const now = Date.now();
+  if (speaker === 'client' && wordCount >= 3 && (now - cabinaLastCoachCallTime >= 5000)) {
+    cabinaLastCoachCallTime = now;
+    requestCoachAdvice();
+  }
+}
+
+function addTranscriptMessage(speaker, text) {
+  const box = document.getElementById('cabina-live-transcript');
+  if (!box) return;
+
+  const msg = document.createElement('div');
+  msg.className = `transcript-msg ${speaker}`;
+  const label = speaker === 'you' ? 'Tú: ' : speaker === 'client' ? 'Cliente: ' : '';
+  msg.textContent = `${label}${text}`;
+  box.appendChild(msg);
+  box.scrollTop = box.scrollHeight;
+
+  cabinaLiveTranscriptArray.push({ speaker, text, time: Date.now() });
+
+  // Guardar en caché del navegador (3 horas según regla 6 del manual)
+  saveCachedTranscript();
+}
+
+// Ratio de habla y alerta de > 60%
+function updateTalkRatio(wordsYou, wordsClient) {
+  const total = wordsYou + wordsClient;
+  if (total === 0) return;
+
+  const pctYou = Math.round((wordsYou / total) * 100);
+  const pctClient = 100 - pctYou;
+
+  const elYou = document.getElementById('talk-pct-you');
+  const elClient = document.getElementById('talk-pct-client');
+  const barYou = document.getElementById('talk-bar-fill-you');
+  const barClient = document.getElementById('talk-bar-fill-client');
+  const alertWarning = document.getElementById('talk-alert-warning');
+
+  if (elYou) elYou.textContent = `${pctYou}%`;
+  if (elClient) elClient.textContent = `${pctClient}%`;
+  if (barYou) barYou.style.width = `${pctYou}%`;
+  if (barClient) barClient.style.width = `${pctClient}%`;
+
+  // Alerta si hablas más del 60%
+  if (alertWarning) {
+    alertWarning.classList.toggle('hidden', pctYou <= 60);
+  }
+}
+
+// Consultar al coach en directo con IA
+async function requestCoachAdvice() {
+  const p = cabinaQueue[cabinaCurrentIndex];
+  if (!p) return;
+
+  const sayNowTag = document.getElementById('say-now-tag');
+  if (sayNowTag) sayNowTag.textContent = 'Pensando...';
+
+  const transcriptSnippet = cabinaLiveTranscriptArray.slice(-14).map(m => `${m.speaker === 'you' ? 'Comercial' : 'Cliente'}: ${m.text}`).join('\n');
+
+  try {
+    const res = await fetch('/api/cabina/coach', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        prospect: p,
+        step: cabinaActiveStep,
+        transcript: transcriptSnippet,
+        slots: { slot1: document.getElementById('slot-1-text')?.textContent, slot2: document.getElementById('slot-2-text')?.textContent },
+        objections: cabinaObjections
+      })
+    });
+
+    if (res.ok) {
+      const data = await res.json();
+      if (data.success && data.advice) {
+        applyCoachAdvice(data.advice);
+      }
+    }
+  } catch (err) {
+    console.error('Error consultando al coach:', err);
+  }
+}
+
+function applyCoachAdvice(advice) {
+  const sayNowText = document.getElementById('say-now-text');
+  const sayNowTag = document.getElementById('say-now-tag');
+  const sayNowReason = document.getElementById('say-now-reason');
+  const sayNowMeta = document.getElementById('say-now-meta');
+
+  if (advice.decir) {
+    if (sayNowText) sayNowText.textContent = `«${advice.decir}»`;
+    if (sayNowTag) {
+      sayNowTag.textContent = advice.motivo ? advice.motivo.toUpperCase() : 'SUGERENCIA';
+    }
+    if (sayNowReason && advice.objecion) {
+      sayNowReason.textContent = `Objeción detectada: ${advice.objecion}`;
+      if (sayNowMeta) sayNowMeta.classList.remove('hidden');
+    }
+  }
+
+  // Si trae cálculo automático, rellenar la calculadora
+  if (advice.calculo && advice.calculo.modo !== 'ninguno') {
+    const c = advice.calculo;
+    if (c.modo === 'veces') {
+      const btnVeces = document.getElementById('calc-mode-veces');
+      if (btnVeces) btnVeces.click();
+      if (c.cantidad) document.getElementById('calc-veces-cant').value = c.cantidad;
+      if (c.periodo) document.getElementById('calc-veces-periodo').value = c.periodo;
+      if (c.tiempo) document.getElementById('calc-veces-tiempo').value = c.tiempo;
+      if (c.unidad) document.getElementById('calc-veces-unidad').value = c.unidad;
+    } else if (c.modo === 'horas') {
+      const btnHoras = document.getElementById('calc-mode-horas');
+      if (btnHoras) btnHoras.click();
+      if (c.cantidad) document.getElementById('calc-horas-cant').value = c.cantidad;
+      if (c.periodo) document.getElementById('calc-horas-periodo').value = c.periodo;
+    }
+    // Disparar input para recalcular
+    document.getElementById('calc-veces-cant')?.dispatchEvent(new Event('input'));
+  }
+}
+
+// Prueba de audio local de 20 segundos
+async function runAudioTest20s() {
+  const btn = document.getElementById('btn-coach-test-audio');
+  if (!navigator.mediaDevices?.getUserMedia) {
+    alert('Tu navegador no permite acceso al micrófono.');
+    return;
+  }
+
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    const mediaRecorder = new MediaRecorder(stream);
+    const audioChunks = [];
+
+    mediaRecorder.ondataavailable = (e) => audioChunks.push(e.data);
+    mediaRecorder.onstop = () => {
+      const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+      const audioUrl = URL.createObjectURL(audioBlob);
+      const audio = new Audio(audioUrl);
+      audio.play();
+      if (btn) btn.innerHTML = '<i class="fa-solid fa-check"></i> Prueba OK (reproduciendo)';
+      setTimeout(() => {
+        if (btn) btn.innerHTML = '<i class="fa-solid fa-vial"></i> Probar audio (20s)';
+      }, 5000);
+    };
+
+    mediaRecorder.start();
+    let timeLeft = 20;
+    if (btn) btn.innerHTML = `<i class="fa-solid fa-circle text-danger"></i> Grabando prueba (${timeLeft}s)...`;
+
+    const countdown = setInterval(() => {
+      timeLeft--;
+      if (timeLeft <= 0) {
+        clearInterval(countdown);
+        mediaRecorder.stop();
+        stream.getTracks().forEach(t => t.stop());
+      } else if (btn) {
+        btn.innerHTML = `<i class="fa-solid fa-circle text-danger"></i> Grabando prueba (${timeLeft}s)...`;
+      }
+    }, 1000);
+  } catch (err) {
+    alert('No se pudo acceder al micrófono para la prueba: ' + err.message);
+  }
+}
+
+// Biblioteca de objeciones y resolución con IA
+function renderObjectionsList() {
+  const listEl = document.getElementById('objections-library-list');
+  if (!listEl) return;
+
+  listEl.innerHTML = cabinaObjections.map((o, idx) => `
+    <div class="obj-accordion-item">
+      <div class="obj-acc-header" onclick="toggleObjectionBody(${idx})">
+        <span>${o.etiqueta}</span>
+        <span class="obj-stats-tag">${o.exitos || 0} diagnósticos</span>
+      </div>
+      <div id="obj-body-${idx}" class="obj-acc-body" style="display: ${idx === 0 ? 'block' : 'none'};">
+        «${o.respuesta}»
+      </div>
+    </div>
+  `).join('');
+}
+
+window.toggleObjectionBody = function(idx) {
+  const body = document.getElementById(`obj-body-${idx}`);
+  if (body) {
+    body.style.display = body.style.display === 'none' ? 'block' : 'none';
+  }
+};
+
+async function handleAskNewObjection() {
+  const input = document.getElementById('input-new-objection');
+  if (!input || !input.value.trim()) return;
+
+  const objectionText = input.value.trim();
+  const btn = document.getElementById('btn-ask-new-objection');
+  if (btn) {
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Resolviendo...';
+  }
+
+  const p = cabinaQueue[cabinaCurrentIndex];
+  try {
+    const res = await fetch('/api/cabina/objections/ask', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ prospect: p, objectionText })
+    });
+
+    if (res.ok) {
+      const data = await res.json();
+      if (data.success && data.objection) {
+        cabinaObjections.unshift(data.objection);
+        renderObjectionsList();
+        input.value = '';
+
+        // Poner la respuesta en el DI AHORA
+        const sayNowText = document.getElementById('say-now-text');
+        const sayNowTag = document.getElementById('say-now-tag');
+        if (sayNowText) sayNowText.textContent = `«${data.objection.respuesta}»`;
+        if (sayNowTag) sayNowTag.textContent = 'OBJECIÓN RESUELTA';
+      }
+    }
+  } catch (err) {
+    console.error('Error resolviendo nueva objeción:', err);
+  } finally {
+    if (btn) {
+      btn.disabled = false;
+      btn.innerHTML = '<i class="fa-solid fa-brain"></i> Resolver con IA';
+    }
+  }
+}
+
+// Registrar resultado de llamada (Outcomes Z, A, D, V, R, X)
+async function handleRecordOutcome(outcomeCode) {
+  const p = cabinaQueue[cabinaCurrentIndex];
+  if (!p) return;
+
+  stopCabinaTimer();
+  toggleCoachListening(false);
+
+  const quickNote = document.getElementById('call-quick-note')?.value || '';
+  const transcriptText = cabinaLiveTranscriptArray.map(m => `${m.speaker === 'you' ? 'Tú' : 'Cliente'}: ${m.text}`).join('\n');
+  const annualHours = document.getElementById('calc-total-hours')?.textContent || '0';
+
+  const bodyData = {
+    prospect_id: p.id,
+    comercial: currentUser || 'zVaito',
+    resultado: outcomeCode,
+    paso_alcanzado: cabinaActiveStep,
+    duracion_segundos: cabinaCallSeconds,
+    cifras: [{ clave: 'horas_al_anio', valor: `${annualHours} horas` }],
+    nota_rapida: quickNote,
+    transcripcion: transcriptText
+  };
+
+  try {
+    const res = await fetch('/api/cabina/interactions', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(bodyData)
+    });
+
+    if (res.ok) {
+      const data = await res.json();
+      if (data.success && data.interaction) {
+        cabinaLastInteractionId = data.interaction.id;
+        showUndoBanner(outcomeCode);
+
+        // Actualizar estadísticas en la cabina
+        incrementStat('stat-calls');
+        if (outcomeCode === 'pedir_decisor') incrementStat('stat-decision-makers');
+        if (outcomeCode === 'diagnostico') {
+          incrementStat('stat-diagnostics');
+          openDiagnosticModal(p, cabinaSelectedSlot);
+        } else {
+          // Pasar a la siguiente llamada
+          navigateCabinaQueue(1);
+        }
+      }
+    }
+  } catch (err) {
+    console.error('Error guardando llamada:', err);
+  }
+}
+
+function incrementStat(elementId) {
+  const el = document.getElementById(elementId);
+  if (el) {
+    el.textContent = (parseInt(el.textContent, 10) || 0) + 1;
+  }
+}
+
+// Banner de deshacer llamada (8s con Ctrl+Z)
+function showUndoBanner(outcome) {
+  const banner = document.getElementById('cabina-undo-banner');
+  const text = document.getElementById('undo-result-text');
+  const countdownEl = document.getElementById('undo-countdown');
+  if (!banner || !text) return;
+
+  const names = {
+    no_contesta: 'No contesta',
+    llamar_luego: 'Llamar luego',
+    pedir_decisor: 'Pedir decisor',
+    diagnostico: 'Diagnóstico ✓',
+    no_interesa: 'No interesa',
+    no_llamar_mas: 'No llamar más'
+  };
+  text.textContent = names[outcome] || outcome;
+  banner.classList.remove('hidden');
+
+  let seconds = 8;
+  if (countdownEl) countdownEl.textContent = seconds;
+
+  if (cabinaUndoTimer) clearInterval(cabinaUndoTimer);
+  cabinaUndoTimer = setInterval(() => {
+    seconds--;
+    if (countdownEl) countdownEl.textContent = seconds;
+    if (seconds <= 0) {
+      clearInterval(cabinaUndoTimer);
+      banner.classList.add('hidden');
+      cabinaLastInteractionId = null;
+    }
+  }, 1000);
+}
+
+async function handleUndoLastCall() {
+  if (!cabinaLastInteractionId) return;
+  try {
+    const res = await fetch(`/api/cabina/undo/${cabinaLastInteractionId}`, { method: 'POST' });
+    if (res.ok) {
+      const banner = document.getElementById('cabina-undo-banner');
+      if (banner) banner.classList.add('hidden');
+      if (cabinaUndoTimer) clearInterval(cabinaUndoTimer);
+      cabinaLastInteractionId = null;
+      // Recargar cola
+      await loadCabinaQueue();
+    }
+  } catch (err) {
+    console.error('Error deshaciendo llamada:', err);
+  }
+}
+
+// Modal Diagnóstico Agendado (WhatsApp F.1, Google Calendar F.5 y Ficha)
+function openDiagnosticModal(prospect, slotText) {
+  const modal = document.getElementById('modal-diagnostico');
+  const summaryEl = document.getElementById('modal-diag-company-summary');
+  const btnWa = document.getElementById('btn-diag-whatsapp');
+  const btnCal = document.getElementById('btn-diag-calendar');
+
+  if (summaryEl) {
+    summaryEl.textContent = `${prospect.empresa} · ${slotText}`;
+  }
+
+  // Plantilla F.1: WhatsApp de Confirmación
+  const decisorFirstName = prospect.decisor?.nombre ? prospect.decisor.nombre.split(' ')[0] : '';
+  const greeting = decisorFirstName ? `Hola ${decisorFirstName}` : 'Hola';
+  const waMessage = `${greeting}, soy zVaito, de Verox. Te confirmo el diagnóstico del ${slotText}: 30 minutos por videollamada, te mando el enlace por aquí. Si te surge algo, dímelo y lo movemos. ¡Hasta entonces!`;
+  
+  const phoneDigits = (prospect.telefonos?.[0]?.numero || '').replace(/\D/g, '');
+  if (btnWa) {
+    btnWa.href = `https://wa.me/34${phoneDigits}?text=${encodeURIComponent(waMessage)}`;
+  }
+
+  // Plantilla F.5: Enlace a Google Calendar (con Meet)
+  const title = encodeURIComponent(`Diagnóstico Verox · ${prospect.empresa}`);
+  const details = encodeURIComponent(`Diagnóstico gratuito · ${prospect.empresa}\nCon: ${prospect.decisor?.nombre || 'Decisor'} (${prospect.decisor?.cargo || 'Gerente'})\nQué hacen: ${prospect.que_hacen || ''}\nFicha completa en el CRM de prospección.`);
+  if (btnCal) {
+    btnCal.href = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&details=${details}`;
+  }
+
+  openCabinaModal('modal-diagnostico');
+}
+
+// Ficha previa al diagnóstico imprimible (versión PDF / Impresión)
+function handlePrintDiagnosticSheet() {
+  const p = cabinaQueue[cabinaCurrentIndex];
+  if (!p) return;
+
+  const printArea = document.createElement('div');
+  printArea.className = 'print-area-diagnostico';
+  printArea.innerHTML = `
+    <h2>FICHA PREVIA AL DIAGNÓSTICO (30 MINUTOS)</h2>
+    <hr>
+    <p><strong>Empresa:</strong> ${p.empresa} (${p.subsector || p.nicho || 'Servicios'})</p>
+    <p><strong>Decisor:</strong> ${p.decisor?.nombre || '—'} · ${p.decisor?.cargo || '—'}</p>
+    <p><strong>Teléfono:</strong> ${p.telefonos?.[0]?.numero || '—'} · <strong>Web:</strong> ${p.web || '—'}</p>
+    <p><strong>Qué hacen:</strong> ${p.que_hacen || '—'}</p>
+    <p><strong>Dolores detectados:</strong> ${(p.dolores || []).map(d => d.dolor).join(', ') || '—'}</p>
+    <p><strong>Solución propuesta:</strong> ${p.solucion_propuesta?.principal || '—'}</p>
+    <p><strong>Horas al año estimadas:</strong> ${document.getElementById('calc-total-hours')?.textContent || '—'} h/año</p>
+    <p><strong>Hueco acordado:</strong> ${cabinaSelectedSlot}</p>
+  `;
+  document.body.appendChild(printArea);
+  window.print();
+  document.body.removeChild(printArea);
+}
+
+// Modal Llamadas Modelo (Puntuadas >= 80)
+async function openModelCallsModal() {
+  openCabinaModal('modal-model-calls');
+  const container = document.getElementById('model-calls-list-container');
+  if (!container) return;
+  container.innerHTML = '<p class="small-desc"><i class="fa-solid fa-spinner fa-spin"></i> Cargando llamadas modelo...</p>';
+
+  try {
+    const res = await fetch('/api/cabina/model-calls');
+    if (res.ok) {
+      const data = await res.json();
+      if (data.calls && data.calls.length > 0) {
+        container.innerHTML = data.calls.map(c => `
+          <div class="model-call-item">
+            <div class="model-call-top">
+              <strong>Llamada de ${c.comercial || 'zVaito'} · Resultado: ${c.resultado}</strong>
+              <span class="model-score-badge">Nota: ${c.nota_rubrica || 85}/100</span>
+            </div>
+            <div class="model-feedback">
+              <strong>Comentario del Coach:</strong> ${c.rubrica_desglose?.comentario || c.resumen_ia || 'Llamada ejemplar con cuantificación y fecha cerrada.'}
+            </div>
+            ${c.transcripcion ? `<div class="model-snippet">${c.transcripcion}</div>` : ''}
+          </div>
+        `).join('');
+      } else {
+        container.innerHTML = '<p class="empty-state-p">Aún no hay llamadas con nota ≥ 80. ¡Realiza llamadas para que el coach las puntúe!</p>';
+      }
+    }
+  } catch (err) {
+    container.innerHTML = '<p class="error-msg">Error cargando llamadas modelo.</p>';
+  }
+}
+
+// Importar Lote de Empresas (Prompt A)
+async function handleImportProspects() {
+  const textarea = document.getElementById('import-json-textarea');
+  const statusMsg = document.getElementById('import-status-msg');
+  if (!textarea || !textarea.value.trim()) return;
+
+  try {
+    const parsed = JSON.parse(textarea.value.trim());
+    const list = Array.isArray(parsed) ? parsed : [parsed];
+    statusMsg.textContent = 'Importando empresas a la base de datos...';
+    statusMsg.className = 'status-msg';
+
+    const res = await fetch('/api/cabina/import', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ list })
+    });
+
+    if (res.ok) {
+      const data = await res.json();
+      statusMsg.textContent = `¡Éxito! Se importaron ${data.imported || list.length} empresas a la cola.`;
+      statusMsg.className = 'status-msg status-ok';
+      setTimeout(async () => {
+        closeCabinaModal('modal-import-prospects');
+        textarea.value = '';
+        statusMsg.textContent = '';
+        await loadCabinaQueue();
+      }, 1500);
+    }
+  } catch (err) {
+    statusMsg.textContent = 'Error: JSON no válido. Verifica la sintaxis.';
+    statusMsg.className = 'status-msg status-err';
+  }
+}
+
+function openCabinaModal(modalId) {
+  const m = document.getElementById(modalId);
+  if (m) m.classList.remove('hidden');
+}
+
+function closeCabinaModal(modalId) {
+  const m = document.getElementById(modalId);
+  if (m) m.classList.add('hidden');
+}
+
+// Atajos de teclado globales (1-4 pasos, Z, A, D, V, R, X, Ctrl+Z)
+function setupCabinaKeybindings() {
+  window.addEventListener('keydown', (e) => {
+    // Si el panel de cabina ventas no está activo, no interceptar
+    const panel = document.getElementById('panel-sales');
+    if (!panel || !panel.classList.contains('active')) return;
+
+    // Si el usuario está escribiendo en un input, textarea o select, ignorar teclas normales
+    const targetTag = e.target.tagName.toLowerCase();
+    if (targetTag === 'input' || targetTag === 'textarea' || targetTag === 'select') {
+      if (e.ctrlKey && (e.key === 'z' || e.key === 'Z')) {
+        e.preventDefault();
+        handleUndoLastCall();
+      }
+      return;
+    }
+
+    // Ctrl+Z para deshacer
+    if (e.ctrlKey && (e.key === 'z' || e.key === 'Z')) {
+      e.preventDefault();
+      handleUndoLastCall();
+      return;
+    }
+
+    // Teclas 1 a 4 para cambiar paso del guion
+    if (['1', '2', '3', '4'].includes(e.key)) {
+      e.preventDefault();
+      setCabinaStep(parseInt(e.key, 10));
+      return;
+    }
+
+    // Teclas de resultados
+    const key = e.key.toLowerCase();
+    if (key === 'z') { e.preventDefault(); handleRecordOutcome('no_contesta'); }
+    else if (key === 'a') { e.preventDefault(); handleRecordOutcome('llamar_luego'); }
+    else if (key === 'd') { e.preventDefault(); handleRecordOutcome('pedir_decisor'); }
+    else if (key === 'v') { e.preventDefault(); handleRecordOutcome('diagnostico'); }
+    else if (key === 'r') { e.preventDefault(); handleRecordOutcome('no_interesa'); }
+    else if (key === 'x') { e.preventDefault(); handleRecordOutcome('no_llamar_mas'); }
+  });
+}
+
+// Caché de transcripción de 3 horas en localStorage
+function saveCachedTranscript() {
+  const p = cabinaQueue[cabinaCurrentIndex];
+  if (!p) return;
+  const key = `cabina_trans_${p.id}`;
+  localStorage.setItem(key, JSON.stringify({
+    timestamp: Date.now(),
+    items: cabinaLiveTranscriptArray
+  }));
+}
+
+function loadCachedTranscript(prospectId) {
+  cabinaLiveTranscriptArray = [];
+  const box = document.getElementById('cabina-live-transcript');
+  if (!box) return;
+  box.innerHTML = '';
+
+  const key = `cabina_trans_${prospectId}`;
+  const raw = localStorage.getItem(key);
+  if (raw) {
+    try {
+      const parsed = JSON.parse(raw);
+      // Validar expiración de 3 horas (10800000 ms)
+      if (Date.now() - parsed.timestamp < 3 * 60 * 60 * 1000 && Array.isArray(parsed.items)) {
+        cabinaLiveTranscriptArray = parsed.items;
+        parsed.items.forEach(m => {
+          const div = document.createElement('div');
+          div.className = `transcript-msg ${m.speaker}`;
+          const label = m.speaker === 'you' ? 'Tú: ' : m.speaker === 'client' ? 'Cliente: ' : '';
+          div.textContent = `${label}${m.text}`;
+          box.appendChild(div);
+        });
+        box.scrollTop = box.scrollHeight;
+        return;
+      }
+    } catch (e) {}
+  }
+
+  box.innerHTML = '<div class="transcript-msg system">Pulsa «Escuchar llamada» para transcribir a ambos interlocutores.</div>';
+}
+
 
 
 // ================= MODULO 2: CAPTADOR B2B & IDEAS =================

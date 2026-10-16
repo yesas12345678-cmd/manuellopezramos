@@ -12,6 +12,23 @@ dotenv.config();
 // Importar servicios locales
 import { readDB, writeDB } from './services/dbHelper.js';
 import { getSalesAdvice } from './services/gemini.js';
+import {
+  initPostgresTables,
+  getCabinaState,
+  getCallQueue,
+  recordInteraction,
+  undoInteraction,
+  getObjections,
+  addObjection,
+  getModelCalls,
+  importProspects
+} from './services/cabinaService.js';
+import {
+  getLiveCoachAdvice,
+  generateCallSummary,
+  gradeCallRubric,
+  generateObjectionResponse
+} from './services/cabinaAi.js';
 import { runSitemapAuditAll } from './services/cronTasks.js';
 import { runSecurityScanAll } from './services/cronTasks.js';
 import { runLeadGeneration } from './services/cronTasks.js';
@@ -350,15 +367,163 @@ app.post('/api/security/recheck-vuln', authMiddleware, async (req, res) => {
   }
 });
 
-// ================= SALES CLOSING API =================
+// ================= CABINA VENTAS API (MOTOR VEROX) =================
 
+// Obtener cola inteligente de llamadas
+app.get('/api/cabina/queue', authMiddleware, async (req, res) => {
+  try {
+    const queue = await getCallQueue();
+    const objections = await getObjections();
+    res.json({ success: true, queue, objections });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+});
+
+// Obtener todas las empresas registradas
+app.get('/api/cabina/prospects', authMiddleware, async (req, res) => {
+  try {
+    const state = await getCabinaState();
+    res.json({ success: true, prospects: state.prospects });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+});
+
+// El Coach en Directo (Prompt B)
+app.post('/api/cabina/coach', authMiddleware, async (req, res) => {
+  try {
+    const { prospect, step, transcript, slots, objections } = req.body;
+    if (!prospect) {
+      return res.status(400).json({ success: false, message: 'Falta información de la empresa prospecto' });
+    }
+    const advice = await getLiveCoachAdvice({ prospect, step, transcript, slots, objections });
+    res.json({ success: true, advice });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+});
+
+// Registrar llamada / resultado con cálculo de resumen y rúbrica
+app.post('/api/cabina/interactions', authMiddleware, async (req, res) => {
+  try {
+    const interaction = await recordInteraction(req.body);
+
+    // Procesar en segundo plano para máxima velocidad de respuesta en la cabina
+    (async () => {
+      try {
+        const state = await getCabinaState();
+        const prospect = state.prospects.find(p => p.id === req.body.prospect_id) || { empresa: 'Empresa' };
+
+        const summary = await generateCallSummary({
+          prospect,
+          resultado: req.body.resultado,
+          paso: req.body.paso_alcanzado,
+          cifras: req.body.cifras,
+          objeciones: req.body.objeciones,
+          nota: req.body.nota_rapida,
+          transcripcion: req.body.transcripcion
+        });
+
+        const rubric = await gradeCallRubric({
+          prospect,
+          resultado: req.body.resultado,
+          resumen: summary.resumen,
+          transcripcion: req.body.transcripcion
+        });
+
+        // Actualizar en la base de datos
+        const db = await readDB();
+        if (db.cabina && Array.isArray(db.cabina.interactions)) {
+          const target = db.cabina.interactions.find(i => i.id === interaction.id);
+          if (target) {
+            target.resumen_ia = summary.resumen;
+            target.proxima_accion = summary.proxima_accion;
+            target.nota_rubrica = rubric.nota_total;
+            target.rubrica_desglose = rubric;
+            target.es_modelo = rubric.es_modelo;
+            await writeDB(db);
+          }
+        }
+      } catch (bgErr) {
+        console.error('[Cabina AI Background] Error generando resumen/rúbrica:', bgErr.message);
+      }
+    })();
+
+    res.json({ success: true, interaction });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+});
+
+// Deshacer última llamada (margen de 8 segundos Ctrl+Z)
+app.post('/api/cabina/undo/:id', authMiddleware, async (req, res) => {
+  try {
+    const result = await undoInteraction(req.params.id);
+    res.json(result);
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+});
+
+// Biblioteca de objeciones
+app.get('/api/cabina/objections', authMiddleware, async (req, res) => {
+  try {
+    const objections = await getObjections(req.query.sector);
+    res.json({ success: true, objections });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+});
+
+// Resolver objeción nueva con IA (Prompt E) y guardarla en la biblioteca
+app.post('/api/cabina/objections/ask', authMiddleware, async (req, res) => {
+  try {
+    const { prospect, objectionText } = req.body;
+    if (!objectionText) {
+      return res.status(400).json({ success: false, message: 'Falta texto de la objeción' });
+    }
+    const aiAnswer = await generateObjectionResponse({ prospect, objectionText });
+    const saved = await addObjection({
+      etiqueta: aiAnswer.etiqueta || objectionText.slice(0, 40),
+      respuesta: aiAnswer.respuesta,
+      sector: prospect?.nicho || 'general'
+    });
+    res.json({ success: true, objection: saved });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+});
+
+// Llamadas modelo (≥ 80 puntos)
+app.get('/api/cabina/model-calls', authMiddleware, async (req, res) => {
+  try {
+    const calls = await getModelCalls();
+    res.json({ success: true, calls });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+});
+
+// Importar lote de empresas investigadas (Prompt A)
+app.post('/api/cabina/import', authMiddleware, async (req, res) => {
+  try {
+    const { list } = req.body;
+    if (!Array.isArray(list)) {
+      return res.status(400).json({ success: false, message: 'Se esperaba un array de empresas' });
+    }
+    const result = await importProspects(list);
+    res.json({ success: true, ...result });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+});
+
+// Endpoint legado de compatibilidad
 app.post('/api/sales/advice', authMiddleware, async (req, res) => {
   try {
     const { transcript, productContext } = req.body;
-    if (!transcript) {
-      return res.status(400).json({ success: false, message: 'Falta transcripción' });
-    }
-    const advice = await getSalesAdvice(transcript, productContext);
+    const advice = await getSalesAdvice(transcript || '', productContext || '');
     res.json({ success: true, advice });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
@@ -843,8 +1008,9 @@ app.post('/api/grades/subject', authMiddleware, async (req, res) => {
 
 // ================= RUN SERVER =================
 
-// Iniciar tareas cron al encender el servidor
+// Iniciar tareas cron y verificar base de datos al encender el servidor
 initCronTasks();
+initPostgresTables();
 
 app.listen(PORT, () => {
   console.log(`===============================================`);

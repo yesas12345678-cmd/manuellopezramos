@@ -20,6 +20,7 @@ const statusGmailVal = document.querySelector('#status-gmail .val');
 document.addEventListener('DOMContentLoaded', async () => {
   await verifySession();
   setupRouter();
+  setupAgentsModule();
   setupGymModule();
   setupSitemapsModule();
   setupSecurityModule();
@@ -97,6 +98,7 @@ async function loadGlobalStatus() {
 
 function loadDashboardData() {
   // Carga silenciosa en segundo plano para que los paneles tengan datos frescos
+  loadAgentsData();
   loadLeadsData();
   loadGymData();
   loadSitemapsData();
@@ -163,6 +165,47 @@ function setupRouter() {
   if (btnNavConfig) {
     btnNavConfig.addEventListener('click', () => showPanel('panel-config'));
   }
+
+  // Navegación de Cabecera: Panel de Vida y Cabina Ventas
+  const navBtnLife = document.getElementById('nav-btn-life');
+  if (navBtnLife) {
+    navBtnLife.addEventListener('click', () => showPanel('panel-agents'));
+  }
+
+  const navBtnCabina = document.getElementById('nav-btn-cabina');
+  if (navBtnCabina) {
+    navBtnCabina.addEventListener('click', () => showPanel('panel-sales'));
+  }
+
+  // Banner y Botones Hero en Dashboard
+  const bannerOpenAgents = document.getElementById('banner-open-agents');
+  if (bannerOpenAgents) {
+    bannerOpenAgents.addEventListener('click', (e) => {
+      if (!e.target.closest('button')) {
+        showPanel('panel-agents');
+      }
+    });
+  }
+
+  const btnHeroAgents = document.getElementById('btn-hero-agents');
+  if (btnHeroAgents) {
+    btnHeroAgents.addEventListener('click', (e) => {
+      e.stopPropagation();
+      showPanel('panel-agents');
+    });
+  }
+
+  const btnHeroChat = document.getElementById('btn-hero-chat');
+  if (btnHeroChat) {
+    btnHeroChat.addEventListener('click', (e) => {
+      e.stopPropagation();
+      showPanel('panel-agents');
+      setTimeout(() => {
+        const inp = document.getElementById('orch-input-text');
+        if (inp) inp.focus();
+      }, 150);
+    });
+  }
 }
 
 function showPanel(panelId) {
@@ -171,8 +214,15 @@ function showPanel(panelId) {
   if (target) {
     target.classList.add('active');
     window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    // Actualizar estado activo en botones superiores
+    const navBtnLife = document.getElementById('nav-btn-life');
+    const navBtnCabina = document.getElementById('nav-btn-cabina');
+    if (navBtnLife) navBtnLife.classList.toggle('active', panelId === 'panel-agents');
+    if (navBtnCabina) navBtnCabina.classList.toggle('active', panelId === 'panel-sales');
     
     // Cargas de datos bajo demanda específicas al abrir paneles
+    if (panelId === 'panel-agents') loadAgentsData();
     if (panelId === 'panel-leads') loadLeadsData();
     if (panelId === 'panel-gym') loadGymData();
     if (panelId === 'panel-sitemaps') loadSitemapsData();
@@ -3489,5 +3539,418 @@ function setupGradesModule() {
     });
   }
 }
+
+// =====================================================================
+// LIFE HUB & AI AGENTS SWARM (PANEL DE VIDA DE zVaito)
+// =====================================================================
+let lifeAgentsList = [];
+let lifeLogsList = [];
+let lifeMetricsData = {};
+
+function formatTimeAgo(isoString) {
+  if (!isoString) return 'Nunca';
+  const diffSec = Math.floor((Date.now() - new Date(isoString).getTime()) / 1000);
+  if (diffSec < 60) return 'Hace unos segundos';
+  if (diffSec < 3600) return `Hace ${Math.floor(diffSec / 60)} min`;
+  if (diffSec < 86400) return `Hace ${Math.floor(diffSec / 3600)} h`;
+  return `Hace ${Math.floor(diffSec / 86400)} d`;
+}
+
+function formatMarkdownOrText(text) {
+  if (!text) return '';
+  let formatted = text
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+  // Negritas **texto**
+  formatted = formatted.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+  // Cursivas *texto*
+  formatted = formatted.replace(/\*(.*?)\*/g, '<em>$1</em>');
+  // Viñetas - o * al inicio de línea
+  formatted = formatted.replace(/(?:^|\n)[-*]\s+(.*)/g, '<div style="margin-left: 12px; margin-top: 3px;">• $1</div>');
+  // Saltos de línea
+  formatted = formatted.replace(/\n/g, '<br>');
+  return formatted;
+}
+
+// Carga principal de datos del enjambre de vida
+async function loadAgentsData() {
+  try {
+    const res = await fetch('/api/life/agents');
+    if (!res.ok) return;
+    const data = await res.json();
+    if (!data.success) return;
+
+    lifeAgentsList = data.agents || [];
+    lifeLogsList = data.logs || [];
+    lifeMetricsData = data.metrics || {};
+
+    const activeCount = lifeAgentsList.filter(a => a.status === 'active').length;
+    const totalCount = lifeAgentsList.length;
+
+    // Actualizar badges superiores y contadores en Dashboard
+    const navBadge = document.getElementById('nav-active-agents-badge');
+    if (navBadge) navBadge.textContent = `${activeCount} IA`;
+
+    const statActive = document.getElementById('stat-active-agents');
+    if (statActive) statActive.textContent = activeCount;
+
+    const statProspects = document.getElementById('stat-prospects-queue');
+    if (statProspects) statProspects.textContent = lifeMetricsData.prospectsInCabina || 0;
+
+    const statSec = document.getElementById('stat-sec-targets');
+    if (statSec) statSec.textContent = lifeMetricsData.securityTargets || 0;
+
+    const statGym = document.getElementById('stat-gym-sessions');
+    if (statGym) statGym.textContent = lifeMetricsData.workoutsLogged || 0;
+
+    // Actualizar KPIs del panel de agentes
+    const kpiActive = document.getElementById('kpi-agents-active');
+    if (kpiActive) kpiActive.textContent = `${activeCount} / ${totalCount}`;
+
+    const kpiCabina = document.getElementById('kpi-cabina-prospects');
+    if (kpiCabina) kpiCabina.textContent = lifeMetricsData.prospectsInCabina || 0;
+
+    const kpiSec = document.getElementById('kpi-sec-protected');
+    if (kpiSec) kpiSec.textContent = lifeMetricsData.securityTargets > 0 ? '100% OK' : '8 Objetivos';
+
+    const kpiGym = document.getElementById('kpi-gym-workouts');
+    if (kpiGym) kpiGym.textContent = lifeMetricsData.workoutsLogged || 0;
+
+    const kpiGrades = document.getElementById('kpi-grades-count');
+    if (kpiGrades) kpiGrades.textContent = `${lifeMetricsData.gradesCount || 0} Notas`;
+
+    const badgeCount = document.getElementById('badge-agent-count');
+    if (badgeCount) badgeCount.textContent = `${totalCount} Agentes Registrados`;
+
+    renderAgentCards(lifeAgentsList);
+    renderLifeTimeline(lifeLogsList);
+  } catch (err) {
+    console.error('Error cargando estado de agentes de vida:', err);
+  }
+}
+
+// Renderizar tarjetas de cada agente
+function renderAgentCards(agents) {
+  const container = document.getElementById('agents-cards-container');
+  if (!container) return;
+
+  if (agents.length === 0) {
+    container.innerHTML = '<div class="empty-state">No hay agentes registrados en el enjambre.</div>';
+    return;
+  }
+
+  container.innerHTML = agents.map(agent => {
+    const isActive = agent.status === 'active';
+    const color = agent.color || '#8c52ff';
+    const icon = agent.icon || 'fa-robot';
+    const tasksCount = agent.metrics?.tasksExecuted || 0;
+    const lastRunFormatted = formatTimeAgo(agent.metrics?.lastRun);
+
+    return `
+      <div class="agent-card ${isActive ? 'status-active' : 'status-paused'}" data-agent-id="${agent.id}">
+        <div class="agent-card-top">
+          <div class="agent-avatar-wrap">
+            <div class="agent-icon-box" style="background: ${color};">
+              <i class="fa-solid ${icon}"></i>
+            </div>
+            <div class="agent-info">
+              <h4>${agent.name}</h4>
+              <span class="agent-role-pill">${agent.role || 'Agente Autónomo'}</span>
+            </div>
+          </div>
+          <div class="agent-status-badge ${isActive ? 'active' : 'paused'}">
+            <span class="pulse ${isActive ? 'green' : ''}"></span>
+            ${isActive ? 'Activo' : 'Pausado'}
+          </div>
+        </div>
+
+        <div class="agent-cadence">
+          <i class="fa-solid fa-clock"></i>
+          <span>${agent.cadence || 'Bajo demanda'}</span>
+        </div>
+
+        <p class="agent-desc">${agent.description || 'Sin descripción detallada.'}</p>
+
+        <div class="agent-metrics-row">
+          <div class="agent-metric-chip">
+            <strong>${tasksCount}</strong> misiones
+          </div>
+          <div class="agent-metric-chip">
+            Última: <strong>${lastRunFormatted}</strong>
+          </div>
+        </div>
+
+        <div class="agent-actions-row">
+          <button class="btn-trigger-agent" data-id="${agent.id}" title="Lanzar tarea manual inmediatamente">
+            <i class="fa-solid fa-bolt"></i> Ejecutar Misión
+          </button>
+          <button class="btn-toggle-agent" data-id="${agent.id}" title="${isActive ? 'Pausar agente' : 'Reanudar agente'}">
+            <i class="fa-solid ${isActive ? 'fa-pause' : 'fa-play'}"></i>
+          </button>
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  // Vincular eventos de botones
+  container.querySelectorAll('.btn-trigger-agent').forEach(btn => {
+    btn.addEventListener('click', async (e) => {
+      e.stopPropagation();
+      const agentId = btn.getAttribute('data-id');
+      const originalText = btn.innerHTML;
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Ejecutando...';
+      btn.disabled = true;
+
+      try {
+        const res = await fetch(`/api/life/agents/${agentId}/trigger`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' }
+        });
+        const data = await res.json();
+        if (data.success) {
+          alert(`✅ ${data.message || 'Misión ejecutada con éxito.'}`);
+          await loadAgentsData();
+        } else {
+          alert(`❌ Error al ejecutar: ${data.message || 'Fallo desconocido'}`);
+        }
+      } catch (err) {
+        alert('❌ Error de conexión al disparar misión.');
+      } finally {
+        btn.innerHTML = originalText;
+        btn.disabled = false;
+      }
+    });
+  });
+
+  container.querySelectorAll('.btn-toggle-agent').forEach(btn => {
+    btn.addEventListener('click', async (e) => {
+      e.stopPropagation();
+      const agentId = btn.getAttribute('data-id');
+      try {
+        const res = await fetch(`/api/life/agents/${agentId}/toggle`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' }
+        });
+        const data = await res.json();
+        if (data.success) {
+          await loadAgentsData();
+        }
+      } catch (err) {
+        console.error('Error al alternar estado del agente:', err);
+      }
+    });
+  });
+}
+
+// Renderizar timeline de actividad de vida
+function renderLifeTimeline(logs) {
+  const feed = document.getElementById('life-timeline-feed');
+  if (!feed) return;
+
+  if (logs.length === 0) {
+    feed.innerHTML = '<div class="empty-state">No hay registros de actividad todavía.</div>';
+    return;
+  }
+
+  feed.innerHTML = logs.slice(0, 30).map(log => {
+    const color = log.color || '#8c52ff';
+    const icon = log.icon || 'fa-robot';
+    const timeAgo = formatTimeAgo(log.timestamp);
+
+    return `
+      <div class="timeline-item">
+        <div class="timeline-item-icon" style="background: ${color};">
+          <i class="fa-solid ${icon}"></i>
+        </div>
+        <div class="timeline-item-content">
+          <div class="timeline-item-top">
+            <span class="timeline-agent-tag" style="color: ${color};">${log.agentName || 'Agente IA'}</span>
+            <span class="timeline-time">${timeAgo}</span>
+          </div>
+          <div class="timeline-title">${log.title}</div>
+          <p class="timeline-desc">${log.description}</p>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+// Inicializar módulo de Agentes y Orquestador
+function setupAgentsModule() {
+  const btnRefresh = document.getElementById('btn-refresh-agents');
+  if (btnRefresh) {
+    btnRefresh.addEventListener('click', () => {
+      btnRefresh.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
+      loadAgentsData().finally(() => {
+        btnRefresh.innerHTML = '<i class="fa-solid fa-rotate"></i>';
+      });
+    });
+  }
+
+  // Modal Reclutar Agente
+  const modal = document.getElementById('modal-create-agent');
+  const btnOpen = document.getElementById('btn-open-create-agent');
+  const btnClose = document.getElementById('btn-close-modal-agent');
+  const btnCancel = document.getElementById('btn-cancel-modal-agent');
+  const btnSubmit = document.getElementById('btn-submit-modal-agent');
+
+  if (btnOpen && modal) {
+    btnOpen.addEventListener('click', () => modal.classList.remove('hidden'));
+  }
+  if (btnClose && modal) {
+    btnClose.addEventListener('click', () => modal.classList.add('hidden'));
+  }
+  if (btnCancel && modal) {
+    btnCancel.addEventListener('click', () => modal.classList.add('hidden'));
+  }
+
+  if (btnSubmit && modal) {
+    btnSubmit.addEventListener('click', async () => {
+      const name = document.getElementById('new-agent-name').value.trim();
+      const role = document.getElementById('new-agent-role').value.trim();
+      const cadence = document.getElementById('new-agent-cadence').value.trim();
+      const color = document.getElementById('new-agent-color').value;
+      const description = document.getElementById('new-agent-desc').value.trim();
+      const systemPrompt = document.getElementById('new-agent-prompt').value.trim();
+
+      if (!name || !role) {
+        alert('Por favor ingresa al menos el Nombre y Rol del agente.');
+        return;
+      }
+
+      btnSubmit.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Reclutando...';
+      btnSubmit.disabled = true;
+
+      try {
+        const res = await fetch('/api/life/agents', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, role, cadence, color, description, systemPrompt })
+        });
+        const data = await res.json();
+        if (data.success) {
+          modal.classList.add('hidden');
+          // Limpiar formulario
+          document.getElementById('new-agent-name').value = '';
+          document.getElementById('new-agent-role').value = '';
+          document.getElementById('new-agent-cadence').value = '';
+          document.getElementById('new-agent-desc').value = '';
+          document.getElementById('new-agent-prompt').value = '';
+          await loadAgentsData();
+          alert(`🤖 ¡Agente "${name}" reclutado y activado en el enjambre!`);
+        } else {
+          alert(`Error: ${data.message || 'No se pudo crear el agente'}`);
+        }
+      } catch (err) {
+        alert('Error al conectar con el servidor.');
+      } finally {
+        btnSubmit.innerHTML = '<i class="fa-solid fa-check"></i> Activar y Reclutar Agente';
+        btnSubmit.disabled = false;
+      }
+    });
+  }
+
+  // Chat con el Orquestador Maestro de Vida
+  const chatForm = document.getElementById('orch-chat-form');
+  const chatInput = document.getElementById('orch-input-text');
+  const chatMessages = document.getElementById('orch-chat-messages');
+
+  async function sendOrchestratorMessage(message) {
+    if (!message || !chatMessages) return;
+
+    // Agregar mensaje del usuario
+    const userMsgHtml = `
+      <div class="orch-msg orch-msg-user">
+        <div class="orch-msg-avatar"><i class="fa-solid fa-user"></i></div>
+        <div class="orch-msg-bubble"><strong>zVaito:</strong><br>${message.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</div>
+      </div>
+    `;
+    chatMessages.insertAdjacentHTML('beforeend', userMsgHtml);
+
+    // Indicador de "pensando"
+    const thinkingId = 'orch-thinking-' + Date.now();
+    const thinkingHtml = `
+      <div class="orch-msg orch-msg-ai" id="${thinkingId}">
+        <div class="orch-msg-avatar"><i class="fa-solid fa-brain-circuit"></i></div>
+        <div class="orch-msg-bubble">
+          <em><i class="fa-solid fa-spinner fa-spin"></i> El Orquestador está coordinando con tus agentes...</em>
+        </div>
+      </div>
+    `;
+    chatMessages.insertAdjacentHTML('beforeend', thinkingHtml);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+
+    try {
+      const res = await fetch('/api/life/orchestrator/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message })
+      });
+      const data = await res.json();
+      const thinkingElem = document.getElementById(thinkingId);
+      if (thinkingElem) thinkingElem.remove();
+
+      if (data.success && data.reply) {
+        const replyFormatted = formatMarkdownOrText(data.reply);
+        const aiMsgHtml = `
+          <div class="orch-msg orch-msg-ai">
+            <div class="orch-msg-avatar"><i class="fa-solid fa-brain-circuit"></i></div>
+            <div class="orch-msg-bubble">
+              <strong>Orquestador Maestro:</strong><br>
+              ${replyFormatted}
+            </div>
+          </div>
+        `;
+        chatMessages.insertAdjacentHTML('beforeend', aiMsgHtml);
+      } else {
+        const errorHtml = `
+          <div class="orch-msg orch-msg-ai">
+            <div class="orch-msg-avatar"><i class="fa-solid fa-triangle-exclamation"></i></div>
+            <div class="orch-msg-bubble" style="color: #ff6b6b;">
+              <strong>Error:</strong> No se pudo obtener respuesta del Orquestador.
+            </div>
+          </div>
+        `;
+        chatMessages.insertAdjacentHTML('beforeend', errorHtml);
+      }
+    } catch (err) {
+      const thinkingElem = document.getElementById(thinkingId);
+      if (thinkingElem) thinkingElem.remove();
+      const errorHtml = `
+        <div class="orch-msg orch-msg-ai">
+          <div class="orch-msg-avatar"><i class="fa-solid fa-triangle-exclamation"></i></div>
+          <div class="orch-msg-bubble" style="color: #ff6b6b;">
+            <strong>Error:</strong> Error de red al comunicar con el Orquestador.
+          </div>
+        </div>
+      `;
+      chatMessages.insertAdjacentHTML('beforeend', errorHtml);
+    }
+
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+  }
+
+  if (chatForm && chatInput) {
+    chatForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const msg = chatInput.value.trim();
+      if (!msg) return;
+      chatInput.value = '';
+      sendOrchestratorMessage(msg);
+    });
+  }
+
+  // Chips de sugerencia rápida
+  document.querySelectorAll('.orch-chip-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const query = btn.getAttribute('data-query');
+      if (query) {
+        sendOrchestratorMessage(query);
+      }
+    });
+  });
+}
+
 
 

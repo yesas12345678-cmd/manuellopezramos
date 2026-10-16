@@ -441,5 +441,183 @@
         "createdAt": "2026-09-30T15:25:46.093Z"
       }
     ]
+  },
+  "lifeAgents": {
+    "agents": [
+      {
+        "id": "agent-hunter",
+        "name": "Hunter AI",
+        "role": "Prospección B2B & Captación de Clientes",
+        "icon": "fa-magnifying-glass-chart",
+        "color": "#8c52ff",
+        "status": "active",
+        "cadence": "Cada 6 horas (0 */6 * * *)",
+        "description": "Rastrea pymes y empresas en internet, analiza sus webs, detecta decisores y dolores, y alimenta la Cabina de Ventas con empresas investigadas.",
+        "systemPrompt": "Eres Hunter AI, especialista en identificar oportunidades de negocio B2B para zVaito analizando sitios web de servicios técnicos y pymes.",
+        "metrics": {
+          "tasksExecuted": 142,
+          "leadsGenerated": 48,
+          "lastRun": "2026-10-16T15:07:44.619Z"
+        }
+      },
+      {
+        "id": "agent-closer",
+        "name": "Sales Closer Coach AI",
+        "role": "Coach en Directo para Cabina Ventas",
+        "icon": "fa-headset",
+        "color": "#2563eb",
+        "status": "active",
+        "cadence": "Bajo demanda (Durante llamadas)",
+        "description": "Escucha las llamadas en frío, reconoce objeciones en 2 segundos, calcula impacto en horas/año y evalúa las llamadas con la rúbrica sobre 100 de Verox.",
+        "systemPrompt": "Eres Sales Closer Coach AI. Ayudas a zVaito a cerrar diagnósticos por videollamada sin discutir objeciones y cuantificando horas.",
+        "metrics": {
+          "tasksExecuted": 86,
+          "rubricsScored": 34,
+          "lastRun": "2026-10-16T15:07:44.620Z"
+        }
+      },
+      {
+        "id": "agent-sentinel",
+        "name": "Sentinel Cyber AI",
+        "role": "Pentesting & Seguridad 24/7",
+        "icon": "fa-shield-halved",
+        "color": "#ff4757",
+        "status": "active",
+        "cadence": "Diario a las 02:00 (0 2 * * *)",
+        "description": "Inspecciona servidores y páginas web buscando puertos vulnerables, certificados SSL próximos a caducar, archivos .env expuestos y cabeceras inseguras.",
+        "systemPrompt": "Eres Sentinel Cyber AI. Monitorizas la infraestructura de zVaito para prevenir brechas de seguridad y neutralizar fallos.",
+        "metrics": {
+          "tasksExecuted": 62,
+          "targetsMonitored": 8,
+          "lastRun": "2026-10-16T15:07:44.620Z"
+        }
+      },
+      {
+        "id": "agent-radar",
+        "name": "Radar SEO AI",
+        "role": "Auditor de Sitemaps & Indexación",
+        "icon": "fa-sitemap",
+        "color": "#00db8b",
+        "status": "active",
+        "cadence": "Semanal domingos (0 0 * * 0)",
+        "description": "Compara el recuento real de URLs de blogs y webs contra sus sitemaps XML y envía alertas por Gmail si hay discrepancias o caídas.",
+        "systemPrompt": "Eres Radar SEO AI. Garantizas que todo el contenido publicado por zVaito esté correctamente indexado.",
+        "metrics": {
+          "tasksExecuted": 28,
+          "alertsSent": 3,
+          "lastRun": "2026-10-16T15:07:44.620Z"
+        }
+      },
+      {
+        "id": "agent-copilot",
+        "name": "Inbox Copilot AI",
+        "role": "Asistente Ejecutivo Gmail",
+        "icon": "fa-robot",
+        "color": "#f59e0b",
+        "status": "active",
+        "cadence": "En tiempo real / Bajo demanda",
+        "description": "Gestiona el correo de yesas12345678@gmail.com, resume hilos de conversación complejos, redacta respuestas inteligentes y filtra el spam.",
+        "systemPrompt": "Eres Inbox Copilot AI. Gestionas las comunicaciones por correo de zVaito con tono profesional y resolutivo.",
+        "metrics": {
+          "tasksExecuted": 195,
+          "emailsAnalyzed": 420,
+          "lastRun": "2026-10-16T15:07:44.620Z"
+        }
+      },
+      {
+        "id": "agent-studysync",
+        "name": "StudySync & Life AI",
+        "role": "Planificador de Vida, Estudio y Pesca",
+        "icon": "fa-graduation-cap",
+        "color": "#00f2fe",
+        "status": "active",
+        "cadence": "Sincronizado con Google Calendar",
+        "description": "Aplica time-blocking inteligente entre fechas de exámenes, bloques de estudio por asignatura y jornadas libres de pesca/desconexión.",
+        "systemPrompt": "Eres StudySync AI. Optimizas el tiempo de estudio de zVaito garantizando también días de pesca y descanso.",
+        "metrics": {
+          "tasksExecuted": 74,
+          "eventsCreated": 26,
+          "lastRun": "2026-10-16T15:07:44.620Z"
+        }
+      },
+      {
+        "id": "agent-fitness",
+        "name": "Fitness Coach AI",
+        "role": "Entrenamiento & Progresión de Cargas",
+        "icon": "fa-dumbbell",
+        "color": "#ec4899",
+        "status": "active",
+        "cadence": "Semanal / Registro tras sesión",
+        "description": "Supervisa las progresiones de fuerza en banca, dominadas y militar, recomendando ajustes de volumen e intensidad en las rutinas de gym.",
+        "systemPrompt": "Eres Fitness Coach AI. Maximizas el rendimiento en el gimnasio de zVaito con sobrecarga progresiva estricta.",
+        "metrics": {
+          "tasksExecuted": 51,
+          "workoutsTracked": 38,
+          "lastRun": "2026-10-16T15:07:44.620Z"
+        }
+      }
+    ],
+    "logs": [
+      {
+        "id": "log_1792163291452",
+        "agentId": "agent-hunter",
+        "agentName": "Hunter AI",
+        "icon": "fa-magnifying-glass-chart",
+        "color": "#8c52ff",
+        "title": "Estado cambiado: Activado",
+        "description": "El agente Hunter AI ahora está activo y vigilante.",
+        "timestamp": "2026-10-16T15:08:11.452Z"
+      },
+      {
+        "id": "log_1792163285048",
+        "agentId": "agent-hunter",
+        "agentName": "Hunter AI",
+        "icon": "fa-magnifying-glass-chart",
+        "color": "#8c52ff",
+        "title": "Estado cambiado: Pausado",
+        "description": "El agente Hunter AI ahora está en pausa temporal.",
+        "timestamp": "2026-10-16T15:08:05.048Z"
+      },
+      {
+        "id": "log_1",
+        "agentId": "agent-hunter",
+        "agentName": "Hunter AI",
+        "icon": "fa-magnifying-glass-chart",
+        "color": "#8c52ff",
+        "title": "Nueva empresa cualificada en Ávila",
+        "description": "Detectada Frigotécnica Almanzor con score 86 (Prioridad A). Señal: urgencias 24h a supermercados.",
+        "timestamp": "2026-10-16T14:32:44.620Z"
+      },
+      {
+        "id": "log_2",
+        "agentId": "agent-sentinel",
+        "agentName": "Sentinel Cyber AI",
+        "icon": "fa-shield-halved",
+        "color": "#ff4757",
+        "title": "Escaneo de puertos completado",
+        "description": "Servidor seguro. Verificado puerto 22 cerrado al público y certificados SSL válidos.",
+        "timestamp": "2026-10-16T13:07:44.620Z"
+      },
+      {
+        "id": "log_3",
+        "agentId": "agent-studysync",
+        "agentName": "StudySync & Life AI",
+        "icon": "fa-graduation-cap",
+        "color": "#00f2fe",
+        "title": "Bloque de estudio programado",
+        "description": "Asignado bloque de 2h para Examen de Matemáticas en Google Calendar.",
+        "timestamp": "2026-10-16T09:27:44.620Z"
+      },
+      {
+        "id": "log_4",
+        "agentId": "agent-closer",
+        "agentName": "Sales Closer Coach AI",
+        "icon": "fa-headset",
+        "color": "#2563eb",
+        "title": "Diagnóstico confirmado en Cabina",
+        "description": "Calculadas 280 horas al año ahorradas y confirmado enlace para videollamada de 30 min.",
+        "timestamp": "2026-10-16T06:27:44.620Z"
+      }
+    ]
   }
 }

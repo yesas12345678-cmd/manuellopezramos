@@ -29,6 +29,13 @@ import {
   gradeCallRubric,
   generateObjectionResponse
 } from './services/cabinaAi.js';
+import {
+  getAgentsState,
+  triggerAgentMission,
+  toggleAgentStatus,
+  createCustomAgent,
+  chatWithLifeMaster
+} from './services/agentService.js';
 import { runSitemapAuditAll } from './services/cronTasks.js';
 import { runSecurityScanAll } from './services/cronTasks.js';
 import { runLeadGeneration } from './services/cronTasks.js';
@@ -525,6 +532,91 @@ app.post('/api/sales/advice', authMiddleware, async (req, res) => {
     const { transcript, productContext } = req.body;
     const advice = await getSalesAdvice(transcript || '', productContext || '');
     res.json({ success: true, advice });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+});
+
+// ================= LIFE HUB & AI AGENTS SWARM API =================
+
+// Obtener estado completo de agentes, logs y métricas de vida de zVaito
+app.get('/api/life/agents', authMiddleware, async (req, res) => {
+  try {
+    const agentsData = await getAgentsState();
+    const db = await readDB();
+
+    // Métricas unificadas de vida y operaciones
+    const lifeMetrics = {
+      activeAgentsCount: agentsData.agents.filter(a => a.status === 'active').length,
+      totalAgentsCount: agentsData.agents.length,
+      prospectsInCabina: db.cabina?.prospects?.length || 0,
+      securityTargets: db.security?.targets?.length || 0,
+      sitemapsAudited: db.sitemaps?.length || 0,
+      workoutsLogged: db.gym?.history?.length || 0,
+      gradesCount: db.grades?.entries?.length || 0
+    };
+
+    res.json({
+      success: true,
+      agents: agentsData.agents,
+      logs: agentsData.logs,
+      metrics: lifeMetrics
+    });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+});
+
+// Disparar la misión de un agente específico
+app.post('/api/life/agents/:id/trigger', authMiddleware, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const result = await triggerAgentMission(id);
+    res.json(result);
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+});
+
+// Alternar estado de un agente (Activo / Pausado)
+app.post('/api/life/agents/:id/toggle', authMiddleware, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const result = await toggleAgentStatus(id);
+    res.json(result);
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+});
+
+// Crear nuevo agente personalizado
+app.post('/api/life/agents', authMiddleware, async (req, res) => {
+  try {
+    const { name, role, icon, color, cadence, description, systemPrompt } = req.body;
+    const newAgent = await createCustomAgent({
+      name,
+      role,
+      icon,
+      color,
+      cadence,
+      description,
+      systemPrompt
+    });
+    res.json({ success: true, agent: newAgent });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+});
+
+// Chat con el Orquestador Maestro de Vida
+app.post('/api/life/orchestrator/chat', authMiddleware, async (req, res) => {
+  try {
+    const { message } = req.body;
+    if (!message) {
+      return res.status(400).json({ success: false, message: 'Falta el mensaje para el orquestador.' });
+    }
+    const reply = await chatWithLifeMaster(message);
+    res.json({ success: true, reply });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
   }

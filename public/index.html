@@ -43,12 +43,24 @@
   <!-- ================= APP PRINCIPAL ================= -->
   <div id="app-container" class="hidden">
     <!-- Barra Superior -->
+    <!-- Barra Superior -->
     <header class="app-header">
       <div class="header-logo" id="btn-logo-home">
         <i class="fa-solid fa-cubes-split"></i>
         <span>zVaito<span class="dot">.</span></span>
       </div>
       
+      <div class="header-nav-center">
+        <button id="nav-btn-life" class="nav-pill-btn active" title="Ir al Panel de Vida">
+          <i class="fa-solid fa-brain-circuit"></i>
+          <span>Panel de Vida</span>
+          <span class="nav-badge" id="nav-active-agents-badge">7 IA</span>
+        </button>
+        <button id="nav-btn-cabina" class="nav-pill-btn" title="Ir a Cabina Ventas">
+          <i class="fa-solid fa-headset"></i>
+          <span>Cabina Ventas</span>
+        </button>
+      </div>
 
       <!-- Perfil y Menú -->
       <div class="user-menu">
@@ -65,10 +77,56 @@
       <section id="panel-dashboard" class="panel active">
         <div class="panel-header-intro">
           <h2>Hola, zVaito</h2>
-          <p>Bienvenido a tu centro de control operativo personal. ¿Qué vas a gestionar hoy?</p>
+          <p>Bienvenido a tu centro de control operativo personal y enjambre de IA. ¿Qué vas a gestionar hoy?</p>
+        </div>
+
+        <!-- Banner Central de Vida -->
+        <div class="life-hero-banner" id="banner-open-agents">
+          <div class="life-hero-content">
+            <div class="life-hero-badge">
+              <span class="pulse green"></span> ENJAMBRE DE AGENTES IA ACTIVO
+            </div>
+            <h2>Panel de Vida & Centro de Mando IA</h2>
+            <p>7 agentes autónomos coordinando tu captación de clientes, cabina de ventas, ciberseguridad, sitemaps, correo, estudio y entrenamiento.</p>
+            <div class="life-hero-stats">
+              <div class="life-stat-item">
+                <span class="stat-num" id="stat-active-agents">7</span>
+                <span class="stat-lbl">Agentes Activos</span>
+              </div>
+              <div class="life-stat-item">
+                <span class="stat-num" id="stat-prospects-queue">3</span>
+                <span class="stat-lbl">Prospectos Cabina</span>
+              </div>
+              <div class="life-stat-item">
+                <span class="stat-num" id="stat-sec-targets">8</span>
+                <span class="stat-lbl">Objetivos Pentest</span>
+              </div>
+              <div class="life-stat-item">
+                <span class="stat-num" id="stat-gym-sessions">38</span>
+                <span class="stat-lbl">Sesiones Gym</span>
+              </div>
+            </div>
+          </div>
+          <div class="life-hero-actions">
+            <button class="btn btn-primary btn-glow" id="btn-hero-agents">
+              <i class="fa-solid fa-microchip"></i> Abrir Panel de Vida
+            </button>
+            <button class="btn btn-secondary" id="btn-hero-chat">
+              <i class="fa-solid fa-comment-dots"></i> Hablar con Orquestador
+            </button>
+          </div>
         </div>
 
         <div class="dashboard-grid">
+          <!-- Tarjeta 0: Panel de Vida & Agentes IA -->
+          <div class="dash-card dash-card-life" data-target="panel-agents">
+            <div class="card-status status-ok"><span class="pulse green"></span>7 Agentes</div>
+            <div class="card-icon life-icon"><i class="fa-solid fa-brain-circuit"></i></div>
+            <h3>Panel de Vida & Agentes IA</h3>
+            <p>Supervisa tu enjambre de 7 agentes de IA. Dispara misiones manuales, añade nuevos agentes y coordina tu vida con el Orquestador.</p>
+            <button class="btn btn-card btn-life-card">Abrir Centro de Mando</button>
+          </div>
+
           <!-- Tarjeta 1: Ventas en Directo -->
           <div class="dash-card" data-target="panel-sales">
             <div class="card-status status-ok"><span class="pulse"></span>En vivo</div>
@@ -1298,6 +1356,187 @@
 
         </div>
       </section>
+
+      <!-- ================= SECCIÓN: PANEL DE VIDA & AGENTES DE IA ================= -->
+      <section id="panel-agents" class="panel">
+        <div class="agents-header-bar">
+          <div class="agents-header-left">
+            <button class="btn-back btn-back-home"><i class="fa-solid fa-chevron-left"></i> Volver</button>
+            <div class="agents-title-wrap">
+              <h2><i class="fa-solid fa-brain-circuit"></i> Panel de Vida & Enjambre IA</h2>
+              <span class="agents-subtitle">Gestión unificada de tus 7 agentes autónomos y operaciones personales de zVaito</span>
+            </div>
+          </div>
+          <div class="agents-header-right">
+            <button id="btn-open-create-agent" class="btn btn-primary">
+              <i class="fa-solid fa-plus"></i> Reclutar Nuevo Agente
+            </button>
+            <button id="btn-refresh-agents" class="btn btn-secondary" title="Actualizar estado">
+              <i class="fa-solid fa-rotate"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Life KPIs strip -->
+        <div class="life-kpis-strip">
+          <div class="kpi-box">
+            <div class="kpi-icon blue"><i class="fa-solid fa-network-wired"></i></div>
+            <div class="kpi-data">
+              <span class="kpi-val" id="kpi-agents-active">7 / 7</span>
+              <span class="kpi-tag">Agentes en servicio</span>
+            </div>
+          </div>
+          <div class="kpi-box">
+            <div class="kpi-icon purple"><i class="fa-solid fa-phone-volume"></i></div>
+            <div class="kpi-data">
+              <span class="kpi-val" id="kpi-cabina-prospects">3</span>
+              <span class="kpi-tag">Cola de Cabina Ventas</span>
+            </div>
+          </div>
+          <div class="kpi-box">
+            <div class="kpi-icon green"><i class="fa-solid fa-shield-check"></i></div>
+            <div class="kpi-data">
+              <span class="kpi-val" id="kpi-sec-protected">100%</span>
+              <span class="kpi-tag">Perímetro Ciberseguridad</span>
+            </div>
+          </div>
+          <div class="kpi-box">
+            <div class="kpi-icon amber"><i class="fa-solid fa-dumbbell"></i></div>
+            <div class="kpi-data">
+              <span class="kpi-val" id="kpi-gym-workouts">38</span>
+              <span class="kpi-tag">Entrenamientos registrados</span>
+            </div>
+          </div>
+          <div class="kpi-box">
+            <div class="kpi-icon cyan"><i class="fa-solid fa-graduation-cap"></i></div>
+            <div class="kpi-data">
+              <span class="kpi-val" id="kpi-grades-count">8.5 Media</span>
+              <span class="kpi-tag">Rendimiento Académico</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Layout 2 Columnas -->
+        <div class="agents-layout-grid">
+          <!-- Columna Izquierda: Tarjetas del Enjambre de Agentes -->
+          <div class="agents-col-left">
+            <div class="section-card-header">
+              <div class="sch-title">
+                <i class="fa-solid fa-cubes"></i>
+                <h3>Enjambre de Agentes Autónomos</h3>
+              </div>
+              <span class="badge-subtle" id="badge-agent-count">7 Agentes Registrados</span>
+            </div>
+
+            <div class="agents-cards-grid" id="agents-cards-container">
+              <!-- Renderizado dinámicamente con app.js -->
+            </div>
+          </div>
+
+          <!-- Columna Derecha: Orquestador Maestro y Timeline de Vida -->
+          <div class="agents-col-right">
+            <!-- Card 1: Orquestador Maestro de Vida (Chat IA) -->
+            <div class="orchestrator-card">
+              <div class="orchestrator-header">
+                <div class="orch-title-box">
+                  <div class="orch-avatar">
+                    <i class="fa-solid fa-brain-circuit"></i>
+                    <span class="pulse green"></span>
+                  </div>
+                  <div>
+                    <h4>Orquestador Maestro</h4>
+                    <p>Coordinador Central de Vida de zVaito</p>
+                  </div>
+                </div>
+                <span class="orch-chip">Gemini AI</span>
+              </div>
+
+              <div class="orchestrator-suggestions">
+                <button class="orch-chip-btn" data-query="¿Cuál es el estado general de mis agentes y proyectos hoy?">📊 Estado General</button>
+                <button class="orch-chip-btn" data-query="¿A qué empresa debo llamar ahora en Cabina Ventas?">📞 Siguiente Llamada</button>
+                <button class="orch-chip-btn" data-query="Dame un informe rápido de ciberseguridad y servidores">🛡️ Pentest</button>
+                <button class="orch-chip-btn" data-query="¿Cómo va mi rendimiento en el gimnasio y qué me recomiendas entrenar?">🏋️ Gym</button>
+              </div>
+
+              <div class="orchestrator-chat-messages" id="orch-chat-messages">
+                <div class="orch-msg orch-msg-ai">
+                  <div class="orch-msg-avatar"><i class="fa-solid fa-brain-circuit"></i></div>
+                  <div class="orch-msg-bubble">
+                    <strong>Orquestador Maestro:</strong><br>
+                    A la orden, zVaito. Todo tu enjambre de 7 agentes está sincronizado. Tienes empresas investigadas con guion en Cabina Ventas, escaneo perimetral seguro y rutinas activas. ¿Qué orden o consulta deseas transmitir?
+                  </div>
+                </div>
+              </div>
+
+              <form id="orch-chat-form" class="orchestrator-input-row">
+                <input type="text" id="orch-input-text" placeholder="Escribe tu orden o consulta al Orquestador..." autocomplete="off">
+                <button type="submit" class="btn btn-primary" id="btn-orch-send">
+                  <i class="fa-solid fa-paper-plane"></i>
+                </button>
+              </form>
+            </div>
+
+            <!-- Card 2: Timeline de Actividad de Vida -->
+            <div class="life-timeline-card">
+              <div class="timeline-header">
+                <div class="sch-title">
+                  <i class="fa-solid fa-clock-rotate-left"></i>
+                  <h4>Timeline de Vida en Directo</h4>
+                </div>
+                <span class="live-pill"><span class="pulse red"></span> Live Feed</span>
+              </div>
+              <div class="timeline-feed" id="life-timeline-feed">
+                <!-- Se inyectan logs dinámicos -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Modal: Reclutar Nuevo Agente IA -->
+      <div id="modal-create-agent" class="cabina-modal-overlay hidden">
+        <div class="cabina-modal-box">
+          <div class="cabina-modal-header">
+            <h3><i class="fa-solid fa-robot"></i> Reclutar Nuevo Agente de IA</h3>
+            <button class="cabina-btn-close" id="btn-close-modal-agent">&times;</button>
+          </div>
+          <div class="cabina-modal-body">
+            <p class="modal-intro">Configura un nuevo agente autónomo para sumarlo a tu enjambre personal.</p>
+            <div class="form-group-agent">
+              <label>Nombre del Agente:</label>
+              <input type="text" id="new-agent-name" placeholder="Ej: Scaler Outreach AI">
+            </div>
+            <div class="form-group-agent">
+              <label>Rol / Especialidad:</label>
+              <input type="text" id="new-agent-role" placeholder="Ej: Captación en frío en LinkedIn y automatización de mensajes">
+            </div>
+            <div class="form-row-2">
+              <div class="form-group-agent">
+                <label>Cadencia / Frecuencia:</label>
+                <input type="text" id="new-agent-cadence" placeholder="Ej: Diario 10:00 / Bajo demanda">
+              </div>
+              <div class="form-group-agent">
+                <label>Color distintivo:</label>
+                <input type="color" id="new-agent-color" value="#8c52ff">
+              </div>
+            </div>
+            <div class="form-group-agent">
+              <label>Descripción de su misión:</label>
+              <textarea id="new-agent-desc" rows="2" placeholder="Qué hace este agente por ti y cómo te asiste..."></textarea>
+            </div>
+            <div class="form-group-agent">
+              <label>Prompt de Sistema (Instrucciones para la IA):</label>
+              <textarea id="new-agent-prompt" rows="3" placeholder="Eres un agente de IA experto en... Tu objetivo principal para zVaito es..."></textarea>
+            </div>
+          </div>
+          <div class="cabina-modal-footer">
+            <button class="btn btn-secondary" id="btn-cancel-modal-agent">Cancelar</button>
+            <button class="btn btn-primary" id="btn-submit-modal-agent">
+              <i class="fa-solid fa-check"></i> Activar y Reclutar Agente
+            </button>
+          </div>
+        </div>
+      </div>
 
     </main>
   </div>

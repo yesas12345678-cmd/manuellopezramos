@@ -160,7 +160,9 @@ function setupRouter() {
   });
 
   // Navegar a Config
-  btnNavConfig.addEventListener('click', () => showPanel('panel-config'));
+  if (btnNavConfig) {
+    btnNavConfig.addEventListener('click', () => showPanel('panel-config'));
+  }
 }
 
 function showPanel(panelId) {

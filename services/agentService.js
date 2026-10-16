@@ -20,14 +20,14 @@ if (process.env.DATABASE_URL) {
 export const DEFAULT_AGENTS = [
   {
     id: "agent-hunter",
-    name: "Hunter AI",
-    role: "Prospección B2B & Captación de Clientes",
+    name: "Captador B2B & Ideas (Hunter AI)",
+    role: "Agente Autónomo de Prospección B2B y Generación de Ideas",
     icon: "fa-magnifying-glass-chart",
     color: "#8c52ff",
     status: "active",
     cadence: "Cada 6 horas (0 */6 * * *)",
-    description: "Rastrea pymes y empresas en internet, analiza sus webs, detecta decisores y dolores, y alimenta la Cabina de Ventas con empresas investigadas.",
-    systemPrompt: "Eres Hunter AI, especialista en identificar oportunidades de negocio B2B para zVaito analizando sitios web de servicios técnicos y pymes.",
+    description: "Agente autónomo que rastrea pymes en internet, detecta fallas en sus webs, genera ideas de software micro-SaaS y alimenta la Cabina de Ventas.",
+    systemPrompt: "Eres el Agente Autónomo Captador B2B & Ideas (Hunter AI). Tu objetivo para zVaito es identificar oportunidades comerciales B2B y generar conceptos viables de software analizando servicios técnicos.",
     metrics: { tasksExecuted: 142, leadsGenerated: 48, lastRun: new Date().toISOString() }
   },
   {
@@ -44,26 +44,26 @@ export const DEFAULT_AGENTS = [
   },
   {
     id: "agent-sentinel",
-    name: "Sentinel Cyber AI",
-    role: "Pentesting & Seguridad 24/7",
+    name: "Pentesting Bot 24/7 (Sentinel Cyber AI)",
+    role: "Agente Autónomo de Ciberseguridad & Pentesting 24/7",
     icon: "fa-shield-halved",
     color: "#ff4757",
     status: "active",
     cadence: "Diario a las 02:00 (0 2 * * *)",
-    description: "Inspecciona servidores y páginas web buscando puertos vulnerables, certificados SSL próximos a caducar, archivos .env expuestos y cabeceras inseguras.",
-    systemPrompt: "Eres Sentinel Cyber AI. Monitorizas la infraestructura de zVaito para prevenir brechas de seguridad y neutralizar fallos.",
+    description: "Agente de defensa y pentesting que inspecciona servidores y páginas web buscando puertos vulnerables, certificados SSL próximos a caducar, archivos .env expuestos y cabeceras inseguras.",
+    systemPrompt: "Eres el Agente Autónomo Pentesting Bot 24/7 (Sentinel Cyber AI). Monitorizas la infraestructura y servidores de zVaito para prevenir brechas de seguridad, puertos abiertos y datos expuestos.",
     metrics: { tasksExecuted: 62, targetsMonitored: 8, lastRun: new Date().toISOString() }
   },
   {
     id: "agent-radar",
-    name: "Radar SEO AI",
-    role: "Auditor de Sitemaps & Indexación",
+    name: "Auditor de Sitemaps (Radar SEO AI)",
+    role: "Agente Autónomo Auditor de Sitemaps e Indexación",
     icon: "fa-sitemap",
     color: "#00db8b",
     status: "active",
     cadence: "Semanal domingos (0 0 * * 0)",
-    description: "Compara el recuento real de URLs de blogs y webs contra sus sitemaps XML y envía alertas por Gmail si hay discrepancias o caídas.",
-    systemPrompt: "Eres Radar SEO AI. Garantizas que todo el contenido publicado por zVaito esté correctamente indexado.",
+    description: "Agente autónomo que compara el recuento real de URLs de blogs y webs contra sus sitemaps XML y envía alertas por Gmail si hay discrepancias o caídas.",
+    systemPrompt: "Eres el Agente Autónomo Auditor de Sitemaps (Radar SEO AI). Garantizas que todo el contenido publicado por zVaito esté correctamente indexado sin páginas huérfanas.",
     metrics: { tasksExecuted: 28, alertsSent: 3, lastRun: new Date().toISOString() }
   },
   {

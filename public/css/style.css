@@ -4956,5 +4956,125 @@ tr:hover td {
   gap: 12px;
 }
 
+/* Agent Panel Command Banner (En los módulos individuales) */
+.agent-panel-banner {
+  background: radial-gradient(circle at top left, rgba(255, 255, 255, 0.05) 0%, rgba(15, 23, 42, 0.95) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 14px;
+  padding: 18px 22px;
+  margin-bottom: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
+  position: relative;
+  overflow: hidden;
+}
+.agent-panel-banner#banner-agent-hunter {
+  border-color: rgba(140, 82, 255, 0.35);
+  background: linear-gradient(135deg, rgba(140, 82, 255, 0.1) 0%, rgba(15, 23, 42, 0.95) 100%);
+}
+.agent-panel-banner#banner-agent-radar {
+  border-color: rgba(0, 219, 139, 0.35);
+  background: linear-gradient(135deg, rgba(0, 219, 139, 0.08) 0%, rgba(15, 23, 42, 0.95) 100%);
+}
+.agent-panel-banner#banner-agent-sentinel {
+  border-color: rgba(255, 71, 87, 0.35);
+  background: linear-gradient(135deg, rgba(255, 71, 87, 0.08) 0%, rgba(15, 23, 42, 0.95) 100%);
+}
+.apb-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex: 1;
+}
+.apb-avatar {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  color: #fff;
+  flex-shrink: 0;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+}
+.apb-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.apb-title-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.apb-title-row h3 {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #fff;
+  margin: 0;
+}
+.apb-status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.72rem;
+  font-weight: 800;
+  padding: 2px 8px;
+  border-radius: 20px;
+}
+.apb-status-pill.active {
+  background: rgba(0, 219, 139, 0.15);
+  color: #00db8b;
+  border: 1px solid rgba(0, 219, 139, 0.35);
+}
+.apb-status-pill.paused {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text-muted);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+.apb-desc {
+  font-size: 0.85rem;
+  color: #cbd5e1;
+  margin: 0;
+  line-height: 1.4;
+  max-width: 680px;
+}
+.apb-meta {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-top: 2px;
+  flex-wrap: wrap;
+}
+.apb-meta span {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+.apb-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+@media (max-width: 900px) {
+  .agent-panel-banner {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .apb-right {
+    width: 100%;
+    justify-content: flex-start;
+  }
+}
+
+
 
 

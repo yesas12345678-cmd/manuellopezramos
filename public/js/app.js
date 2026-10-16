@@ -3623,6 +3623,23 @@ async function loadAgentsData() {
     const badgeCount = document.getElementById('badge-agent-count');
     if (badgeCount) badgeCount.textContent = `${totalCount} Agentes Registrados`;
 
+    // Sincronizar banners de agentes en módulos individuales
+    ['agent-hunter', 'agent-radar', 'agent-sentinel'].forEach(aId => {
+      const aObj = lifeAgentsList.find(a => a.id === aId);
+      if (aObj) {
+        const isAct = aObj.status === 'active';
+        const pill = document.getElementById(`pill-status-${aId}`);
+        if (pill) {
+          pill.className = `apb-status-pill ${isAct ? 'active' : 'paused'}`;
+          pill.innerHTML = `<span class="pulse ${isAct ? 'green' : ''}"></span> ${isAct ? 'En Servicio' : 'Pausado'}`;
+        }
+        const toggleBtn = document.querySelector(`.btn-agent-toggle[data-agent-id="${aId}"]`);
+        if (toggleBtn) {
+          toggleBtn.innerHTML = `<i class="fa-solid ${isAct ? 'fa-pause' : 'fa-play'}"></i> ${isAct ? 'Pausar Agente' : 'Activar Agente'}`;
+        }
+      }
+    });
+
     renderAgentCards(lifeAgentsList);
     renderLifeTimeline(lifeLogsList);
   } catch (err) {
@@ -3947,6 +3964,67 @@ function setupAgentsModule() {
       const query = btn.getAttribute('data-query');
       if (query) {
         sendOrchestratorMessage(query);
+      }
+    });
+  });
+
+  // Botones de ejecución manual de agentes en los banners de módulos individuales
+  document.querySelectorAll('.btn-agent-trigger').forEach(btn => {
+    btn.addEventListener('click', async (e) => {
+      e.stopPropagation();
+      const agentId = btn.getAttribute('data-agent-id');
+      const originalText = btn.innerHTML;
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Ejecutando misión...';
+      btn.disabled = true;
+
+      try {
+        const res = await fetch(`/api/life/agents/${agentId}/trigger`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' }
+        });
+        const data = await res.json();
+        if (data.success) {
+          alert(`✅ ${data.message || 'Misión ejecutada con éxito.'}`);
+          // Recargar datos del módulo activo
+          if (agentId === 'agent-hunter') loadLeadsData();
+          if (agentId === 'agent-radar') loadSitemapsData();
+          if (agentId === 'agent-sentinel') loadSecurityData();
+          await loadAgentsData();
+        } else {
+          alert(`❌ Error al ejecutar misión: ${data.message || 'Fallo desconocido'}`);
+        }
+      } catch (err) {
+        alert('❌ Error de conexión al disparar misión del agente.');
+      } finally {
+        btn.innerHTML = originalText;
+        btn.disabled = false;
+      }
+    });
+  });
+
+  // Botones de pausar/activar agente en banners de módulos individuales
+  document.querySelectorAll('.btn-agent-toggle').forEach(btn => {
+    btn.addEventListener('click', async (e) => {
+      e.stopPropagation();
+      const agentId = btn.getAttribute('data-agent-id');
+      try {
+        const res = await fetch(`/api/life/agents/${agentId}/toggle`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' }
+        });
+        const data = await res.json();
+        if (data.success) {
+          const isAct = data.status === 'active';
+          btn.innerHTML = `<i class="fa-solid ${isAct ? 'fa-pause' : 'fa-play'}"></i> ${isAct ? 'Pausar Agente' : 'Activar Agente'}`;
+          const pill = document.getElementById(`pill-status-${agentId}`);
+          if (pill) {
+            pill.className = `apb-status-pill ${isAct ? 'active' : 'paused'}`;
+            pill.innerHTML = `<span class="pulse ${isAct ? 'green' : ''}"></span> ${isAct ? 'En Servicio' : 'Pausado'}`;
+          }
+          await loadAgentsData();
+        }
+      } catch (err) {
+        console.error('Error al alternar estado del agente:', err);
       }
     });
   });

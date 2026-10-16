@@ -136,13 +136,14 @@
             <button class="btn btn-card">Abrir Módulo</button>
           </div>
 
-          <!-- Tarjeta 2: Captador B2B -->
-          <div class="dash-card" data-target="panel-leads">
-            <div class="card-status status-active">Activo 24/7</div>
-            <div class="card-icon"><i class="fa-solid fa-magnifying-glass-chart"></i></div>
-            <h3>Captador B2B & Ideas</h3>
-            <p>Búsqueda automatizada de clientes que necesitan software y lluvia de ideas de micro-SaaS neurodivergente.</p>
-            <button class="btn btn-card">Abrir Módulo</button>
+          <!-- Tarjeta 2: Captador B2B (Agente Hunter) -->
+          <div class="dash-card dash-card-agent-lead" data-target="panel-leads">
+            <div class="card-status status-ok"><span class="pulse green"></span>Agente IA Autónomo</div>
+            <div class="card-icon" style="background: rgba(140, 82, 255, 0.15); color: #8c52ff; border-color: rgba(140, 82, 255, 0.4);"><i class="fa-solid fa-magnifying-glass-chart"></i></div>
+            <h3>Agente: Captador B2B & Ideas</h3>
+            <span class="agent-role-pill" style="margin-bottom: 6px;">Hunter AI · Cada 6 horas</span>
+            <p>Agente autónomo que rastrea empresas con webs obsoletas, extrae decisores e inventa conceptos viables de micro-SaaS.</p>
+            <button class="btn btn-card" style="background: rgba(140, 82, 255, 0.2); border-color: #8c52ff; color: #fff;">Abrir Agente Captador</button>
           </div>
 
           <!-- Tarjeta 3: Asistente Gmail -->
@@ -163,22 +164,24 @@
             <button class="btn btn-card">Abrir Módulo</button>
           </div>
 
-          <!-- Tarjeta 5: Revisor Sitemaps -->
-          <div class="dash-card" data-target="panel-sitemaps">
-            <div class="card-status status-active">Semanal</div>
-            <div class="card-icon"><i class="fa-solid fa-sitemap"></i></div>
-            <h3>Auditor de Sitemaps</h3>
-            <p>Monitorea y compara la cantidad de posts en sitemaps XML contra el sitio web real. Envía alertas por Gmail.</p>
-            <button class="btn btn-card">Abrir Módulo</button>
+          <!-- Tarjeta 5: Revisor Sitemaps (Agente Radar) -->
+          <div class="dash-card dash-card-agent-radar" data-target="panel-sitemaps">
+            <div class="card-status status-ok"><span class="pulse green"></span>Agente IA Autónomo</div>
+            <div class="card-icon" style="background: rgba(0, 219, 139, 0.15); color: #00db8b; border-color: rgba(0, 219, 139, 0.4);"><i class="fa-solid fa-sitemap"></i></div>
+            <h3>Agente: Auditor de Sitemaps</h3>
+            <span class="agent-role-pill" style="margin-bottom: 6px;">Radar SEO AI · Semanal domingos</span>
+            <p>Agente autónomo que audita y compara las URLs de sitemaps XML contra el sitio web real y dispara alertas por Gmail si hay caídas.</p>
+            <button class="btn btn-card" style="background: rgba(0, 219, 139, 0.2); border-color: #00db8b; color: #fff;">Abrir Agente Auditor</button>
           </div>
 
-          <!-- Tarjeta 6: Hack/Pentest Bot -->
-          <div class="dash-card" data-target="panel-security">
-            <div class="card-status status-active">Bot Activo</div>
-            <div class="card-icon"><i class="fa-solid fa-bug-slash"></i></div>
-            <h3>Pentesting Bot 24/7</h3>
-            <p>Pruebas de vulnerabilidad automáticas: busca puertos abiertos, SSL seguro, archivos .env expuestos y cabeceras.</p>
-            <button class="btn btn-card">Abrir Módulo</button>
+          <!-- Tarjeta 6: Hack/Pentest Bot (Agente Sentinel) -->
+          <div class="dash-card dash-card-agent-sentinel" data-target="panel-security">
+            <div class="card-status status-ok"><span class="pulse green"></span>Agente IA Autónomo</div>
+            <div class="card-icon" style="background: rgba(255, 71, 87, 0.15); color: #ff4757; border-color: rgba(255, 71, 87, 0.4);"><i class="fa-solid fa-shield-halved"></i></div>
+            <h3>Agente: Pentesting Bot 24/7</h3>
+            <span class="agent-role-pill" style="margin-bottom: 6px;">Sentinel Cyber AI · Diario 02:00</span>
+            <p>Agente autónomo de ciberseguridad que analiza puertos abiertos, certificados SSL, cabeceras y archivos .env expuestos 24/7.</p>
+            <button class="btn btn-card" style="background: rgba(255, 71, 87, 0.2); border-color: #ff4757; color: #fff;">Abrir Agente Pentesting</button>
           </div>
 
           <!-- Tarjeta 7: StudySync ARCADE -->
@@ -774,12 +777,39 @@
 
       </section>
 
-      <!-- ================= SECCIÓN 2: CAPTADOR Y BRAINSTORMING ================= -->
+      <!-- ================= SECCIÓN 2: CAPTADOR Y BRAINSTORMING (AGENTE HUNTER) ================= -->
       <section id="panel-leads" class="panel">
         <div class="section-title-bar">
           <button class="btn-back btn-back-home"><i class="fa-solid fa-chevron-left"></i> Volver</button>
-          <h2>Captador B2B & Ideas de Software</h2>
-          <button id="btn-trigger-leads" class="btn btn-primary"><i class="fa-solid fa-wand-magic-sparkles"></i> Generar 5 Nuevos con IA</button>
+          <h2>Agente: Captador B2B & Ideas de Software</h2>
+        </div>
+
+        <!-- Banner del Agente Asignado -->
+        <div class="agent-panel-banner" id="banner-agent-hunter">
+          <div class="apb-left">
+            <div class="apb-avatar" style="background: #8c52ff;">
+              <i class="fa-solid fa-magnifying-glass-chart"></i>
+            </div>
+            <div class="apb-info">
+              <div class="apb-title-row">
+                <h3>Agente Autónomo: Captador B2B & Ideas (Hunter AI)</h3>
+                <span class="apb-status-pill active" id="pill-status-agent-hunter"><span class="pulse green"></span> En Servicio</span>
+              </div>
+              <p class="apb-desc">Rastrea pymes en internet, extrae datos de decisores, genera ideas de micro-SaaS y alimenta automáticamente la Cabina de Ventas.</p>
+              <div class="apb-meta">
+                <span><i class="fa-solid fa-clock"></i> Cadencia: Cada 6 horas (0 */6 * * *)</span>
+                <span><i class="fa-solid fa-brain"></i> IA: Gemini Pro / Hunter Engine</span>
+              </div>
+            </div>
+          </div>
+          <div class="apb-right">
+            <button class="btn btn-primary btn-agent-trigger" data-agent-id="agent-hunter">
+              <i class="fa-solid fa-bolt"></i> Ejecutar Misión de Agente
+            </button>
+            <button class="btn btn-secondary btn-agent-toggle" data-agent-id="agent-hunter">
+              <i class="fa-solid fa-pause"></i> Pausar Agente
+            </button>
+          </div>
         </div>
 
         <div class="leads-workspace">
@@ -932,13 +962,38 @@
         </div>
       </section>
 
-      <!-- ================= SECCIÓN 5: SITEMAPS ================= -->
+      <!-- ================= SECCIÓN 5: SITEMAPS (AGENTE RADAR) ================= -->
       <section id="panel-sitemaps" class="panel">
         <div class="section-title-bar">
           <button class="btn-back btn-back-home"><i class="fa-solid fa-chevron-left"></i> Volver</button>
-          <h2>Auditor de Sitemaps</h2>
-          <div class="action-buttons-row">
-            <button id="btn-sitemap-check-now" class="btn btn-primary"><i class="fa-solid fa-magnifying-glass"></i> Auditar Todos Ahora</button>
+          <h2>Agente: Auditor de Sitemaps</h2>
+        </div>
+
+        <!-- Banner del Agente Asignado -->
+        <div class="agent-panel-banner" id="banner-agent-radar">
+          <div class="apb-left">
+            <div class="apb-avatar" style="background: #00db8b;">
+              <i class="fa-solid fa-sitemap"></i>
+            </div>
+            <div class="apb-info">
+              <div class="apb-title-row">
+                <h3>Agente Autónomo: Auditor de Sitemaps (Radar SEO AI)</h3>
+                <span class="apb-status-pill active" id="pill-status-agent-radar"><span class="pulse green"></span> En Servicio</span>
+              </div>
+              <p class="apb-desc">Supervisa la salud de indexación de tus webs. Compara las URLs indexadas con el sitemap XML y te avisa por Gmail si hay caídas.</p>
+              <div class="apb-meta">
+                <span><i class="fa-solid fa-clock"></i> Cadencia: Semanal domingos 00:00 (0 0 * * 0)</span>
+                <span><i class="fa-solid fa-envelope"></i> Alertas automáticas por Gmail</span>
+              </div>
+            </div>
+          </div>
+          <div class="apb-right">
+            <button class="btn btn-primary btn-agent-trigger" data-agent-id="agent-radar">
+              <i class="fa-solid fa-magnifying-glass"></i> Auditar Sitios Ahora
+            </button>
+            <button class="btn btn-secondary btn-agent-toggle" data-agent-id="agent-radar">
+              <i class="fa-solid fa-pause"></i> Pausar Agente
+            </button>
           </div>
         </div>
 
@@ -980,12 +1035,39 @@
         </div>
       </section>
 
-      <!-- ================= SECCIÓN 6: SEGURIDAD / PENTESTING ================= -->
+      <!-- ================= SECCIÓN 6: SEGURIDAD / PENTESTING (AGENTE SENTINEL) ================= -->
       <section id="panel-security" class="panel">
         <div class="section-title-bar">
           <button class="btn-back btn-back-home"><i class="fa-solid fa-chevron-left"></i> Volver</button>
-          <h2>Pentesting Bot 24/7</h2>
-          <button id="btn-run-pentest" class="btn btn-primary"><i class="fa-solid fa-user-secret"></i> Lanzar Escaneo Completo</button>
+          <h2>Agente: Pentesting Bot 24/7</h2>
+        </div>
+
+        <!-- Banner del Agente Asignado -->
+        <div class="agent-panel-banner" id="banner-agent-sentinel">
+          <div class="apb-left">
+            <div class="apb-avatar" style="background: #ff4757;">
+              <i class="fa-solid fa-shield-halved"></i>
+            </div>
+            <div class="apb-info">
+              <div class="apb-title-row">
+                <h3>Agente Autónomo: Pentesting Bot 24/7 (Sentinel Cyber AI)</h3>
+                <span class="apb-status-pill active" id="pill-status-agent-sentinel"><span class="pulse green"></span> En Servicio</span>
+              </div>
+              <p class="apb-desc">Guardián autónomo perimetral. Comprueba puertos abiertos (SSH, MySQL, Redis), certificados SSL próximos a caducar y archivos .env expuestos.</p>
+              <div class="apb-meta">
+                <span><i class="fa-solid fa-clock"></i> Cadencia: Diario a las 02:00 (0 2 * * *)</span>
+                <span><i class="fa-solid fa-shield-virus"></i> Inspección profunda de cabeceras de seguridad</span>
+              </div>
+            </div>
+          </div>
+          <div class="apb-right">
+            <button class="btn btn-primary btn-agent-trigger" data-agent-id="agent-sentinel">
+              <i class="fa-solid fa-user-secret"></i> Lanzar Pentest Ahora
+            </button>
+            <button class="btn btn-secondary btn-agent-toggle" data-agent-id="agent-sentinel">
+              <i class="fa-solid fa-pause"></i> Pausar Agente
+            </button>
+          </div>
         </div>
 
         <div class="security-workspace">

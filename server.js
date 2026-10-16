@@ -76,7 +76,7 @@ function authMiddleware(req, res, next) {
 app.post('/api/login', (req, res) => {
   const { username, password } = req.body;
   const adminUser = process.env.ADMIN_USER || 'zVaito';
-  const adminPassword = process.env.ADMIN_PASSWORD || 'XPDMNM12';
+  const adminPassword = process.env.ADMIN_PASSWORD || 'xPDMNM12';
 
   if (username === adminUser && password === adminPassword) {
     const token = jwt.sign({ username }, JWT_SECRET, { expiresIn: '7d' });

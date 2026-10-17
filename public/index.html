@@ -16,7 +16,7 @@
   <!-- FontAwesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <!-- Estilos CSS -->
-  <link rel="stylesheet" href="css/style.css?v=2.6">
+  <link rel="stylesheet" href="css/style.css?v=2.7">
 </head>
 <body>
 
@@ -77,9 +77,6 @@
 
       <!-- Perfil y Menú -->
       <div class="user-menu">
-        <button id="btn-nav-config" class="btn-icon-subtle" title="Configuración y Credenciales">
-          <i class="fa-solid fa-gear"></i>
-        </button>
         <button id="btn-logout" class="btn-logout" title="Cerrar Sesión">
           <span>Salir</span> <i class="fa-solid fa-power-off"></i>
         </button>
@@ -1139,43 +1136,7 @@
         </div>
       </section>
 
-      <!-- ================= CONFIGURACIÓN Y SETTINGS ================= -->
-      <section id="panel-config" class="panel">
-        <div class="section-title-bar">
-          <button class="btn-back btn-back-home"><i class="fa-solid fa-chevron-left"></i> Volver</button>
-          <h2>Ajustes y Credenciales de la Suite</h2>
-        </div>
 
-        <div class="config-workspace">
-          <div class="workspace-card config-box-wide">
-            <h3>Variables de Configuración (.env)</h3>
-            <p class="description">Modifica las variables de entorno de tu backend de forma segura sin editar código.</p>
-            
-            <form id="config-form">
-              <div class="input-group">
-                <label for="config-gemini-key">API Key de Gemini</label>
-                <input type="password" id="config-gemini-key" placeholder="Coloca tu GEMINI_API_KEY para activar la inteligencia de ventas y Gmail">
-                <span class="help-text">Obtén una clave gratuita en Google AI Studio.</span>
-              </div>
-
-              <div class="input-group">
-                <label for="config-gmail-user">Dirección de correo Gmail</label>
-                <input type="email" id="config-gmail-user" placeholder="tu_usuario@gmail.com">
-                <span class="help-text">El email desde donde se enviarán alertas y operará el asistente.</span>
-              </div>
-
-              <div class="input-group">
-                <label for="config-gmail-pass">Contraseña de Aplicación de Gmail</label>
-                <input type="password" id="config-gmail-pass" placeholder="Contraseña de aplicación de 16 caracteres de Google">
-                <span class="help-text">No es tu contraseña habitual. Debes crear una "Contraseña de Aplicación" en tu cuenta de Google.</span>
-              </div>
-
-              <button type="submit" class="btn btn-primary"><i class="fa-solid fa-save"></i> Guardar Configuración</button>
-              <div id="config-status-msg" class="status-msg"></div>
-            </form>
-          </div>
-        </div>
-      </section>
 
       <!-- ================= SECCIÓN 7: STUDYSYNC ARCADE ================= -->
       <section id="panel-studysync" class="panel">
@@ -1625,6 +1586,6 @@
     </main>
   </div>
 
-  <script src="js/app.js?v=2.5"></script>
+  <script src="js/app.js?v=2.7"></script>
 </body>
 </html>

@@ -9,7 +9,6 @@ const loginError = document.getElementById('login-error');
 const panels = document.querySelectorAll('.panel');
 const dashCards = document.querySelectorAll('.dash-card');
 const btnLogoHome = document.getElementById('btn-logo-home');
-const btnNavConfig = document.getElementById('btn-nav-config');
 const btnLogout = document.getElementById('btn-logout');
 
 // Indicadores de cabecera
@@ -27,7 +26,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   try { setupSitemapsModule(); } catch(e) { console.error('Error en setupSitemapsModule:', e); }
   try { setupSecurityModule(); } catch(e) { console.error('Error en setupSecurityModule:', e); }
   try { setupSalesModule(); } catch(e) { console.error('Error en setupSalesModule:', e); }
-  try { setupConfigModule(); } catch(e) { console.error('Error en setupConfigModule:', e); }
   try { setupLeadsModule(); } catch(e) { console.error('Error en setupLeadsModule:', e); }
   try { setupStudySyncModule(); } catch(e) { console.error('Error en setupStudySyncModule:', e); }
   try { setupGradesModule(); } catch(e) { console.error('Error en setupGradesModule:', e); }
@@ -180,10 +178,7 @@ function setupRouter() {
     });
   });
 
-  // Navegar a Config
-  if (btnNavConfig) {
-    btnNavConfig.addEventListener('click', () => showPanel('panel-config'));
-  }
+
 
   // Navegación de Cabecera: Selector de Estaciones, Cabina Ventas, Panel de Vida, Agentes IA
   const navBtnHub = document.getElementById('nav-btn-hub');
@@ -237,7 +232,6 @@ function showPanel(panelId) {
     if (panelId === 'panel-gym') loadGymData();
     if (panelId === 'panel-sitemaps') loadSitemapsData();
     if (panelId === 'panel-security') loadSecurityData();
-    if (panelId === 'panel-config') loadConfigData();
     if (panelId === 'panel-grades') loadGradesData();
     if (panelId === 'panel-sales') {
       loadCabinaQueue();
@@ -2599,78 +2593,7 @@ function renderFilteredSecurityLogs() {
 }
 
 
-// ================= CONFIGURACIÓN DE SETTINGS =================
-function setupConfigModule() {
-  const form = document.getElementById('config-form');
-  const msg = document.getElementById('config-status-msg');
 
-  if (form) {
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      if (msg) {
-        msg.textContent = '';
-        msg.className = 'status-msg';
-      }
-
-    const geminiApiKey = document.getElementById('config-gemini-key').value.trim();
-    const gmailUser = document.getElementById('config-gmail-user').value.trim();
-    const gmailAppPassword = document.getElementById('config-gmail-pass').value.trim();
-
-    const bodyData = {};
-    if (geminiApiKey) bodyData.geminiApiKey = geminiApiKey;
-    if (gmailUser) bodyData.gmailUser = gmailUser;
-    if (gmailAppPassword) bodyData.gmailAppPassword = gmailAppPassword;
-
-    try {
-      const res = await fetch('/api/config/save', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(bodyData)
-      });
-
-      if (res.ok) {
-        msg.textContent = 'Configuración guardada correctamente y recargada en memoria.';
-        msg.classList.add('success');
-        
-        // Limpiar inputs de contraseña para seguridad
-        document.getElementById('config-gemini-key').value = '';
-        document.getElementById('config-gmail-pass').value = '';
-        
-        // Actualizar indicadores globales
-        loadGlobalStatus();
-      } else {
-        msg.textContent = 'Error al guardar la configuración.';
-        msg.classList.add('error');
-      }
-    } catch (err) {
-      if (msg) {
-        msg.textContent = 'Error de red.';
-        msg.classList.add('error');
-      }
-    }
-  });
-  }
-}
-
-async function loadConfigData() {
-  try {
-    const res = await fetch('/api/config');
-    if (res.ok) {
-      const config = await res.json();
-      document.getElementById('config-gmail-user').value = config.gmailUser || '';
-      
-      // Mostrar pistas si ya están configuradas
-      if (config.geminiApiKey) {
-        document.getElementById('config-gemini-key').placeholder = '✔ Configurada. Introduce una nueva para sobrescribir.';
-      }
-      if (config.gmailAppPassword) {
-        document.getElementById('config-gmail-pass').placeholder = '✔ Configurada. Introduce una nueva para sobrescribir.';
-      }
-    }
-  } catch (err) {
-    console.error(err);
-  }
-}
 
 
 // ================= UTILIDADES AUXILIARES =================

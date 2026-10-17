@@ -28,7 +28,7 @@ export const DEFAULT_AGENTS = [
     cadence: "Cada 6 horas (0 */6 * * *)",
     description: "Agente autónomo que rastrea pymes en internet, detecta fallas en sus webs, genera ideas de software micro-SaaS y alimenta la Cabina de Ventas.",
     systemPrompt: "Eres el Agente Autónomo Captador B2B & Ideas (Hunter AI). Tu objetivo para zVaito es identificar oportunidades comerciales B2B y generar conceptos viables de software analizando servicios técnicos.",
-    metrics: { tasksExecuted: 142, leadsGenerated: 48, lastRun: new Date().toISOString() }
+    metrics: { tasksExecuted: 0, lastRun: null }
   },
   {
     id: "agent-closer",
@@ -40,7 +40,7 @@ export const DEFAULT_AGENTS = [
     cadence: "Bajo demanda (Durante llamadas)",
     description: "Escucha las llamadas en frío, reconoce objeciones en 2 segundos, calcula impacto en horas/año y evalúa las llamadas con la rúbrica sobre 100 de Verox.",
     systemPrompt: "Eres Sales Closer Coach AI. Ayudas a zVaito a cerrar diagnósticos por videollamada sin discutir objeciones y cuantificando horas.",
-    metrics: { tasksExecuted: 86, rubricsScored: 34, lastRun: new Date().toISOString() }
+    metrics: { tasksExecuted: 0, lastRun: null }
   },
   {
     id: "agent-sentinel",
@@ -52,7 +52,7 @@ export const DEFAULT_AGENTS = [
     cadence: "Diario a las 02:00 (0 2 * * *)",
     description: "Agente de defensa y pentesting que inspecciona servidores y páginas web buscando puertos vulnerables, certificados SSL próximos a caducar, archivos .env expuestos y cabeceras inseguras.",
     systemPrompt: "Eres el Agente Autónomo Pentesting Bot 24/7 (Sentinel Cyber AI). Monitorizas la infraestructura y servidores de zVaito para prevenir brechas de seguridad, puertos abiertos y datos expuestos.",
-    metrics: { tasksExecuted: 62, targetsMonitored: 8, lastRun: new Date().toISOString() }
+    metrics: { tasksExecuted: 0, lastRun: null }
   },
   {
     id: "agent-radar",
@@ -64,7 +64,7 @@ export const DEFAULT_AGENTS = [
     cadence: "Semanal domingos (0 0 * * 0)",
     description: "Agente autónomo que compara el recuento real de URLs de blogs y webs contra sus sitemaps XML y envía alertas por Gmail si hay discrepancias o caídas.",
     systemPrompt: "Eres el Agente Autónomo Auditor de Sitemaps (Radar SEO AI). Garantizas que todo el contenido publicado por zVaito esté correctamente indexado sin páginas huérfanas.",
-    metrics: { tasksExecuted: 28, alertsSent: 3, lastRun: new Date().toISOString() }
+    metrics: { tasksExecuted: 0, lastRun: null }
   },
   {
     id: "agent-studysync",
@@ -76,7 +76,7 @@ export const DEFAULT_AGENTS = [
     cadence: "Sincronizado con Google Calendar",
     description: "Aplica time-blocking inteligente entre fechas de exámenes, bloques de estudio por asignatura y jornadas libres de pesca/desconexión.",
     systemPrompt: "Eres StudySync AI. Optimizas el tiempo de estudio de zVaito garantizando también días de pesca y descanso.",
-    metrics: { tasksExecuted: 74, eventsCreated: 26, lastRun: new Date().toISOString() }
+    metrics: { tasksExecuted: 0, lastRun: null }
   },
   {
     id: "agent-fitness",
@@ -88,52 +88,11 @@ export const DEFAULT_AGENTS = [
     cadence: "Semanal / Registro tras sesión",
     description: "Supervisa las progresiones de fuerza en banca, dominadas y militar, recomendando ajustes de volumen e intensidad en las rutinas de gym.",
     systemPrompt: "Eres Fitness Coach AI. Maximizas el rendimiento en el gimnasio de zVaito con sobrecarga progresiva estricta.",
-    metrics: { tasksExecuted: 51, workoutsTracked: 38, lastRun: new Date().toISOString() }
+    metrics: { tasksExecuted: 0, lastRun: null }
   }
 ];
 
-export const DEFAULT_LIFE_LOGS = [
-  {
-    id: "log_1",
-    agentId: "agent-hunter",
-    agentName: "Hunter AI",
-    icon: "fa-magnifying-glass-chart",
-    color: "#8c52ff",
-    title: "Nueva empresa cualificada en Madrid",
-    description: "Detectada Hernández & Asociados · Asesoría con score 89 (Prioridad A). Señal: web desactualizada sin pasarela de reservas ni automatización.",
-    timestamp: new Date(Date.now() - 1000 * 60 * 35).toISOString()
-  },
-  {
-    id: "log_2",
-    agentId: "agent-sentinel",
-    agentName: "Sentinel Cyber AI",
-    icon: "fa-shield-halved",
-    color: "#ff4757",
-    title: "Escaneo de puertos completado",
-    description: "Servidor seguro. Verificado puerto 22 cerrado al público y certificados SSL válidos.",
-    timestamp: new Date(Date.now() - 1000 * 60 * 120).toISOString()
-  },
-  {
-    id: "log_3",
-    agentId: "agent-studysync",
-    agentName: "StudySync & Life AI",
-    icon: "fa-graduation-cap",
-    color: "#00f2fe",
-    title: "Bloque de estudio programado",
-    description: "Asignado bloque de 2h para Examen de Matemáticas en Google Calendar.",
-    timestamp: new Date(Date.now() - 1000 * 60 * 340).toISOString()
-  },
-  {
-    id: "log_4",
-    agentId: "agent-closer",
-    agentName: "Sales Closer Coach AI",
-    icon: "fa-headset",
-    color: "#2563eb",
-    title: "Diagnóstico confirmado en Cabina",
-    description: "Calculadas 280 horas al año ahorradas y confirmado enlace para videollamada de 30 min.",
-    timestamp: new Date(Date.now() - 1000 * 60 * 520).toISOString()
-  }
-];
+export const DEFAULT_LIFE_LOGS = [];
 
 // Obtener estado unificado de agentes y logs
 export async function getAgentsState() {
@@ -163,6 +122,16 @@ export async function getAgentsState() {
           description TEXT,
           created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         );
+      `);
+
+      // Limpiar cualquier métrica de muestra en PostgreSQL para asegurar datos 100% reales
+      await pgPool.query(`
+        UPDATE life_agents 
+        SET metrics = jsonb_build_object('tasksExecuted', 0, 'lastRun', null)
+        WHERE (metrics->>'tasksExecuted')::int IN (142, 86, 62, 28, 74, 51);
+      `);
+      await pgPool.query(`
+        DELETE FROM life_logs WHERE id IN ('log_1', 'log_2', 'log_3', 'log_4');
       `);
 
       const aRes = await pgPool.query('SELECT * FROM life_agents ORDER BY created_at ASC');
@@ -228,17 +197,39 @@ export async function triggerAgentMission(agentId) {
     resultSummary = `Misión de ${agent.name} ejecutada correctamente. Parámetros sincronizados.`;
   }
 
-  // Registrar en el log de actividad
+  // Actualizar métricas reales de ejecución (contador estricto y fecha real)
+  agent.metrics = agent.metrics || {};
+  agent.metrics.tasksExecuted = (Number(agent.metrics.tasksExecuted) || 0) + 1;
+  agent.metrics.lastRun = new Date().toISOString();
+
+  if (pgPool) {
+    try {
+      await pgPool.query('UPDATE life_agents SET metrics = $1 WHERE id = $2', [JSON.stringify(agent.metrics), agent.id]);
+    } catch (e) {
+      console.warn('[Agents DB] Error actualizando métricas en Postgres:', e.message);
+    }
+  }
+
+  const db = await readDB();
+  if (db.lifeAgents && db.lifeAgents.agents) {
+    const agIdx = db.lifeAgents.agents.findIndex(a => a.id === agent.id);
+    if (agIdx !== -1) {
+      db.lifeAgents.agents[agIdx].metrics = agent.metrics;
+      await writeDB(db);
+    }
+  }
+
+  // Registrar en el log de actividad real
   await addLifeLog({
     agentId: agent.id,
     agentName: agent.name,
     icon: agent.icon,
     color: agent.color,
-    title: `Misión manual ejecutada (${agent.name})`,
+    title: `Misión ejecutada (${agent.name})`,
     description: resultSummary
   });
 
-  return { success: true, message: resultSummary };
+  return { success: true, message: resultSummary, tasksExecuted: agent.metrics.tasksExecuted };
 }
 
 // Registrar un nuevo log en el timeline de vida
@@ -317,7 +308,7 @@ export async function createCustomAgent({ name, role, icon, color, cadence, desc
     cadence: cadence || "Bajo demanda",
     description: description || "Agente autónomo para optimización de vida y negocios.",
     systemPrompt: systemPrompt || "Eres un agente de IA al servicio de zVaito.",
-    metrics: { tasksExecuted: 0, lastRun: new Date().toISOString() }
+    metrics: { tasksExecuted: 0, lastRun: null }
   };
 
   if (pgPool) {

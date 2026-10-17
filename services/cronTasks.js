@@ -186,32 +186,31 @@ export async function runLeadGeneration() {
 export function initCronTasks() {
   console.log('[Cron] Inicializando tareas programadas...');
 
-  // 1. Revisión de Sitemap: Una vez a la semana (ej: domingos a las 00:00)
-  // '0 0 * * 0'
-  // Para pruebas rápidas o simulación, también se puede forzar manualmente.
+  // 1. Revisión de Sitemap: Una vez a la semana (domingos a las 00:00)
   cron.schedule('0 0 * * 0', async () => {
     try {
-      await runSitemapAuditAll();
+      const { triggerAgentMission } = await import('./agentService.js');
+      await triggerAgentMission('agent-radar');
     } catch (err) {
       console.error('[Cron] Error en sitemaps automático:', err.message);
     }
   });
 
-  // 2. Escaneo de vulnerabilidades: Diario (ej: a las 02:00 am)
-  // '0 2 * * *'
+  // 2. Escaneo de vulnerabilidades: Diario (02:00 am)
   cron.schedule('0 2 * * *', async () => {
     try {
-      await runSecurityScanAll();
+      const { triggerAgentMission } = await import('./agentService.js');
+      await triggerAgentMission('agent-sentinel');
     } catch (err) {
       console.error('[Cron] Error en pentesting automático:', err.message);
     }
   });
 
   // 3. Captador de leads y lluvia de ideas: Cada 6 horas
-  // '0 */6 * * *'
   cron.schedule('0 */6 * * *', async () => {
     try {
-      await runLeadGeneration();
+      const { triggerAgentMission } = await import('./agentService.js');
+      await triggerAgentMission('agent-hunter');
     } catch (err) {
       console.error('[Cron] Error en captación automática:', err.message);
     }

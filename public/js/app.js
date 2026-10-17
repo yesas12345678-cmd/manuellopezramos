@@ -3348,7 +3348,7 @@ let lifeLogsList = [];
 let lifeMetricsData = {};
 
 function formatTimeAgo(isoString) {
-  if (!isoString) return 'Nunca';
+  if (!isoString) return 'Sin ejecuciones';
   const diffSec = Math.floor((Date.now() - new Date(isoString).getTime()) / 1000);
   if (diffSec < 60) return 'Hace unos segundos';
   if (diffSec < 3600) return `Hace ${Math.floor(diffSec / 60)} min`;
@@ -3491,7 +3491,7 @@ function renderAgentCards(agents) {
 
         <div class="agent-metrics-row">
           <div class="agent-metric-chip">
-            <strong>${tasksCount}</strong> misiones
+            <strong>${tasksCount}</strong> ${tasksCount === 1 ? 'misión' : 'misiones'}
           </div>
           <div class="agent-metric-chip">
             Última: <strong>${lastRunFormatted}</strong>
@@ -3566,7 +3566,7 @@ function renderLifeTimeline(logs) {
   if (!feed) return;
 
   if (logs.length === 0) {
-    feed.innerHTML = '<div class="empty-state">No hay registros de actividad todavía.</div>';
+    feed.innerHTML = '<div class="empty-state" style="padding: 24px; text-align: center; color: var(--text-muted); font-size: 0.88rem;"><i class="fa-solid fa-clock-rotate-left" style="font-size: 1.4rem; margin-bottom: 8px; display: block; opacity: 0.5;"></i>No hay misiones ejecutadas todavía.<br>El historial se registrará en vivo conforme tus agentes operen.</div>';
     return;
   }
 

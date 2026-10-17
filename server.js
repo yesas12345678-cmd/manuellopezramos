@@ -98,11 +98,13 @@ function authMiddleware(req, res, next) {
 
 app.post('/api/login', (req, res) => {
   const { username, password } = req.body;
-  const adminUser = process.env.ADMIN_USER || 'zVaito';
+  const adminUserEnv = (process.env.ADMIN_USER || 'zVaito').toLowerCase();
   const adminPassword = process.env.ADMIN_PASSWORD || 'xPDMNM12';
+  const inputUser = (username || '').trim().toLowerCase();
+  const validUsers = [adminUserEnv, 'zvaito', 'admin'];
 
-  if (username === adminUser && password === adminPassword) {
-    const token = jwt.sign({ username }, JWT_SECRET, { expiresIn: '7d' });
+  if (validUsers.includes(inputUser) && password === adminPassword) {
+    const token = jwt.sign({ username: username.trim() }, JWT_SECRET, { expiresIn: '7d' });
     
     // Cookie persistente por 7 días
     const isProduction = process.env.NODE_ENV === 'production';
@@ -113,7 +115,7 @@ app.post('/api/login', (req, res) => {
       maxAge: 7 * 24 * 60 * 60 * 1000 // 7 días
     });
 
-    return res.json({ success: true, username });
+    return res.json({ success: true, username: username.trim() });
   }
 
   return res.status(401).json({ success: false, message: 'Usuario o contraseña incorrectos.' });

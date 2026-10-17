@@ -99,8 +99,8 @@ export const DEFAULT_LIFE_LOGS = [
     agentName: "Hunter AI",
     icon: "fa-magnifying-glass-chart",
     color: "#8c52ff",
-    title: "Nueva empresa cualificada en Ávila",
-    description: "Detectada Frigotécnica Almanzor con score 86 (Prioridad A). Señal: urgencias 24h a supermercados.",
+    title: "Nueva empresa cualificada en Madrid",
+    description: "Detectada Hernández & Asociados · Asesoría con score 89 (Prioridad A). Señal: web desactualizada sin pasarela de reservas ni automatización.",
     timestamp: new Date(Date.now() - 1000 * 60 * 35).toISOString()
   },
   {

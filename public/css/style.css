@@ -5877,6 +5877,416 @@ tr:hover td {
   }
 }
 
+/* =====================================================================
+   ESTACIONES INDEPENDIENTES (STATION HUB & LIFE HUB)
+   ===================================================================== */
+
+/* Intro */
+.stations-hub-intro {
+  margin-bottom: 24px;
+}
+.stations-hub-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(0, 245, 160, 0.1);
+  border: 1px solid rgba(0, 245, 160, 0.3);
+  color: #00f5a0;
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 4px 12px;
+  border-radius: 20px;
+  margin-bottom: 10px;
+}
+
+/* Grid de Estaciones */
+.stations-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 22px;
+  margin-bottom: 30px;
+}
+
+.station-card {
+  background: linear-gradient(170deg, rgba(22, 27, 46, 0.85) 0%, rgba(11, 15, 29, 0.95) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 18px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+}
+.station-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  opacity: 0.85;
+  transition: height 0.25s ease;
+}
+.station-card-sales::before {
+  background: linear-gradient(90deg, #00f5a0 0%, #00d2ff 100%);
+}
+.station-card-life::before {
+  background: linear-gradient(90deg, #f59e0b 0%, #ec4899 100%);
+}
+.station-card-agents::before {
+  background: linear-gradient(90deg, #8c52ff 0%, #6366f1 100%);
+}
+
+.station-card:hover {
+  transform: translateY(-5px);
+  border-color: rgba(255, 255, 255, 0.22);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.5);
+}
+.station-card-sales:hover {
+  border-color: rgba(0, 245, 160, 0.4);
+  box-shadow: 0 18px 40px rgba(0, 245, 160, 0.12);
+}
+.station-card-life:hover {
+  border-color: rgba(245, 158, 11, 0.4);
+  box-shadow: 0 18px 40px rgba(245, 158, 11, 0.12);
+}
+.station-card-agents:hover {
+  border-color: rgba(140, 82, 255, 0.4);
+  box-shadow: 0 18px 40px rgba(140, 82, 255, 0.12);
+}
+
+.station-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 18px;
+}
+.station-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  padding: 4px 10px;
+  border-radius: 8px;
+  text-transform: uppercase;
+}
+.badge-sales {
+  background: rgba(0, 245, 160, 0.12);
+  color: #00f5a0;
+  border: 1px solid rgba(0, 245, 160, 0.3);
+}
+.badge-life {
+  background: rgba(245, 158, 11, 0.12);
+  color: #f59e0b;
+  border: 1px solid rgba(245, 158, 11, 0.3);
+}
+.badge-agents {
+  background: rgba(140, 82, 255, 0.12);
+  color: #a78bfa;
+  border: 1px solid rgba(140, 82, 255, 0.3);
+}
+
+.station-status-pill {
+  font-size: 0.76rem;
+  color: var(--text-muted);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.station-status-pill .pulse.purple {
+  background: #a78bfa;
+  box-shadow: 0 0 8px #a78bfa;
+}
+
+.station-card-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+.station-icon-wrapper {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  margin-bottom: 16px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+}
+.sales-gradient {
+  background: linear-gradient(135deg, rgba(0, 245, 160, 0.2) 0%, rgba(0, 210, 255, 0.2) 100%);
+  color: #00f5a0;
+  border: 1px solid rgba(0, 245, 160, 0.35);
+}
+.life-gradient {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.2) 0%, rgba(236, 72, 153, 0.2) 100%);
+  color: #f59e0b;
+  border: 1px solid rgba(245, 158, 11, 0.35);
+}
+.agents-gradient {
+  background: linear-gradient(135deg, rgba(140, 82, 255, 0.2) 0%, rgba(99, 102, 241, 0.2) 100%);
+  color: #8c52ff;
+  border: 1px solid rgba(140, 82, 255, 0.35);
+}
+
+.station-info h3 {
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: #fff;
+  margin: 0 0 6px 0;
+}
+.station-specialty {
+  font-size: 0.86rem;
+  color: #94a3b8;
+  line-height: 1.45;
+  margin-bottom: 16px;
+  min-height: 38px;
+}
+.station-features-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 20px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.station-features-list li {
+  font-size: 0.82rem;
+  color: #cbd5e1;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  line-height: 1.4;
+}
+.station-features-list li i {
+  color: #00f5a0;
+  font-size: 0.78rem;
+  margin-top: 3px;
+  flex-shrink: 0;
+}
+.station-card-life .station-features-list li i {
+  color: #f59e0b;
+}
+.station-card-agents .station-features-list li i {
+  color: #a78bfa;
+}
+
+.station-card-footer {
+  margin-top: auto;
+}
+.btn-station-enter {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 18px;
+  font-size: 0.92rem;
+  font-weight: 700;
+  border-radius: 12px;
+  transition: all 0.2s ease;
+}
+.sales-btn {
+  background: linear-gradient(135deg, rgba(0, 245, 160, 0.25) 0%, rgba(0, 210, 255, 0.25) 100%);
+  border: 1px solid #00f5a0;
+  color: #fff;
+}
+.sales-btn:hover {
+  background: linear-gradient(135deg, #00f5a0 0%, #00d2ff 100%);
+  color: #070913;
+  box-shadow: 0 0 20px rgba(0, 245, 160, 0.4);
+}
+.life-btn {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.25) 0%, rgba(236, 72, 153, 0.25) 100%);
+  border: 1px solid #f59e0b;
+  color: #fff;
+}
+.life-btn:hover {
+  background: linear-gradient(135deg, #f59e0b 0%, #ec4899 100%);
+  color: #070913;
+  box-shadow: 0 0 20px rgba(245, 158, 11, 0.4);
+}
+.agents-btn {
+  background: linear-gradient(135deg, rgba(140, 82, 255, 0.25) 0%, rgba(99, 102, 241, 0.25) 100%);
+  border: 1px solid #8c52ff;
+  color: #fff;
+}
+.agents-btn:hover {
+  background: linear-gradient(135deg, #8c52ff 0%, #6366f1 100%);
+  color: #fff;
+  box-shadow: 0 0 20px rgba(140, 82, 255, 0.4);
+}
+
+/* ================= PANEL DE VIDA HUB ================= */
+.station-inner-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  background: rgba(15, 23, 42, 0.65);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  padding: 14px 20px;
+  margin-bottom: 24px;
+  backdrop-filter: blur(12px);
+}
+.station-inner-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.station-inner-title h2 {
+  font-size: 1.25rem;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #fff;
+}
+.station-inner-title span {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}
+.station-inner-nav {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.life-subtab-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: var(--text-muted);
+  font-size: 0.82rem;
+  font-weight: 600;
+  padding: 6px 14px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.life-subtab-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.25);
+}
+.life-subtab-btn.active {
+  background: rgba(245, 158, 11, 0.2);
+  border-color: #f59e0b;
+  color: #f59e0b;
+}
+
+/* Life Hub Cards Grid */
+.life-hub-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+.life-hub-card {
+  background: linear-gradient(170deg, rgba(22, 27, 46, 0.85) 0%, rgba(11, 15, 29, 0.95) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  padding: 22px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: all 0.24s ease;
+}
+.life-hub-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(245, 158, 11, 0.35);
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.4);
+}
+.life-hub-card-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 18px;
+}
+.life-hub-card-header h3 {
+  font-size: 1.15rem;
+  margin: 0 0 4px 0;
+  color: #fff;
+}
+.life-hub-card-header p {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  margin: 0;
+}
+.lhc-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  flex-shrink: 0;
+}
+.gym-color {
+  background: rgba(245, 158, 11, 0.15);
+  color: #f59e0b;
+  border: 1px solid rgba(245, 158, 11, 0.3);
+}
+.arcade-color {
+  background: rgba(236, 72, 153, 0.15);
+  color: #ec4899;
+  border: 1px solid rgba(236, 72, 153, 0.3);
+}
+.grades-color {
+  background: rgba(167, 139, 250, 0.15);
+  color: #a78bfa;
+  border: 1px solid rgba(167, 139, 250, 0.3);
+}
+.lhc-stats {
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+  padding: 12px 16px;
+  margin-bottom: 18px;
+  display: flex;
+  flex-direction: column;
+}
+.lhc-stat-val {
+  font-size: 1.45rem;
+  font-weight: 800;
+  color: #fff;
+}
+.lhc-stat-lbl {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
+/* Responsividad para móviles */
+@media (max-width: 1024px) {
+  .stations-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  .life-hub-grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+  .station-inner-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .station-inner-nav {
+    width: 100%;
+    flex-wrap: wrap;
+  }
+}
+
 
 
 

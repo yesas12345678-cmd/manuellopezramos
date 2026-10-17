@@ -5,8 +5,8 @@ dotenv.config();
 
 // Prompt G · Contexto común
 const COMMON_CONTEXT = `
-Trabajas dentro del CRM de prospección de Verox Systems, una empresa especializada en optimización y digitalización de procesos para pymes (servicios técnicos con técnicos en campo, logística y distribución, entre otros). Los comerciales llaman en frío para cerrar un diagnóstico gratuito de 30 minutos por videollamada.
-Reglas de estilo: español de España, frases cortas que se puedan decir en voz alta, tono humano y concreto. Nunca vendas «IA por IA»: habla de partes de trabajo, pedidos, facturación y tiempo de oficina. Nunca inventes cifras, porcentajes, horas ahorradas ni nombres de clientes: solo usa lo que dijo el cliente y lo que está en la ficha.
+Trabajas dentro de la Cabina de Ventas de zVaito, especializada en desarrollo web de alta conversión, automatizaciones con IA y software a medida para pymes y empresas de servicios profesionales. Los comerciales llaman en frío para cerrar una demo interactiva de 15 minutos enseñando en pantalla cómo lo resolvió una empresa de su sector.
+Reglas de estilo: español de España, frases cortas y contundentes que se puedan decir en voz alta con naturalidad, tono humano, cercano y profesional. Nunca vendas «IA por vender humo»: habla de clientes que entran automáticamente, horas de oficina ahorradas picando facturas/citas, presupuestos en 2 minutos y rentabilidad. Nunca inventes cifras ni porcentajes: solo usa lo que dijo el cliente y lo que está en su ficha.
 `.trim();
 
 /**
@@ -85,9 +85,9 @@ export async function getLiveCoachAdvice({
 ${COMMON_CONTEXT}
 
 B.1 · Reglas del coach en directo:
-Eres el coach en directo de un comercial de Verox que está en plena llamada en frío. El objetivo de la llamada es cerrar un diagnóstico gratuito de 30 minutos por videollamada, con fecha.
+Eres el coach en directo de un comercial de Verox que está en plena llamada en frío. El objetivo de la llamada es cerrar una demo interactiva de 15 minutos enseñando cómo lo resolvió una empresa de su sector (desarrollo web, automatizaciones con IA y software a medida), con fecha concreta.
 Lees lo último que se ha dicho y devuelves un objeto JSON con:
-- «decir»: la frase que el comercial puede decir YA. Máximo 2 frases cortas, naturales, de tú, en español de España. Si el cliente pone una objeción, reconócela sin discutir y termina con una pregunta. Si da una cifra, devuélvesela con sus palabras y pasa a la siguiente pregunta o al cierre. Si muestra interés, propón el diagnóstico con las dos horas disponibles. Si el comercial va bien y no hace falta nada, deja «decir» vacío "".
+- «decir»: la frase que el comercial puede decir YA. Máximo 2 frases cortas, naturales, de tú, en español de España. Si el cliente pone una objeción, reconócela sin discutir y termina con una pregunta. Si da una cifra, devuélvesela con sus palabras y pasa a la siguiente pregunta o al cierre. Si muestra interés, propón la demo interactiva con las dos horas disponibles. Si el comercial va bien y no hace falta nada, deja «decir» vacío "".
 - «motivo»: uno de ["objecion", "pregunta", "cifra", "interes", "decisor", "cierre", "nada"].
 - «objecion»: si el cliente acaba de poner una objeción, su etiqueta corta de 3-6 palabras. Si no, vacío "".
 - «cifras»: array de objetos [{ "id": "d1", "valor": "60 a la semana" }]. Solo números que haya dicho el CLIENTE (nunca los que dice el comercial), y solo de sus últimas intervenciones. Escríbelos SIEMPRE con dígitos: «sesenta» = 60, «media hora» = 30 minutos, «seis horas y media» = 6,5 horas.
@@ -97,12 +97,12 @@ Lees lo último que se ha dicho y devuelves un objeto JSON con:
 
   const userMessage = `
 Empresa: ${prospect.empresa} (${prospect.subsector || prospect.nicho || 'Servicios'}).
-Qué hacen: ${prospect.que_hacen || 'Mantenimiento y servicios técnicos'}.
+Qué hacen: ${prospect.que_hacen || 'Servicios profesionales y pymes'}.
 Decisor: ${prospect.decisor?.nombre ? `${prospect.decisor.nombre} (${prospect.decisor.cargo || 'Responsable'})` : 'desconocido'}.
-Lo que le encaja: ${prospect.solucion_propuesta?.principal || 'Partes de trabajo digitales en tablet'}.
-Prueba que se puede contar: ${prospect.solucion_propuesta?.prueba_a_citar || 'Un servicio técnico similar ahorró 12 horas de oficina a la semana.'}.
+Lo que le encaja: ${prospect.solucion_propuesta?.principal || 'Desarrollo web moderno y automatizaciones con IA'}.
+Prueba que se puede contar: ${prospect.solucion_propuesta?.prueba_a_citar || 'Una asesoría en Madrid automatizó la recepción de facturas ahorrando 14h semanales.'}.
 Paso del guion ahora: Paso ${step} de 4.
-Huecos para el diagnóstico: ${slots.slot1} o ${slots.slot2}.
+Huecos para la demo interactiva (15 min): ${slots.slot1} o ${slots.slot2}.
 Preguntas de cifra: ${prospect.dolores?.map((d, i) => `d${i + 1}: ${d.pregunta_cuantificacion}`).join(' | ') || 'd1: ¿Cuántas horas a la semana se van en esto?'}.
 Banco de objeciones: ${objections.map(o => o.etiqueta).join(' · ')}.
 

@@ -16,7 +16,7 @@
   <!-- FontAwesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <!-- Estilos CSS -->
-  <link rel="stylesheet" href="css/style.css?v=2.2">
+  <link rel="stylesheet" href="css/style.css?v=2.3">
 </head>
 <body>
 
@@ -50,25 +50,36 @@
     <!-- Barra Superior -->
     <!-- Barra Superior -->
     <header class="app-header">
-      <div class="header-logo" id="btn-logo-home">
+      <div class="header-logo" id="btn-logo-home" title="Ir al selector de Estaciones">
         <i class="fa-solid fa-cubes-split"></i>
         <span>zVaito<span class="dot">.</span></span>
       </div>
       
       <div class="header-nav-center">
-        <button id="nav-btn-life" class="nav-pill-btn active" title="Ir al Panel de Vida">
-          <i class="fa-solid fa-brain-circuit"></i>
-          <span>Panel de Vida</span>
-          <span class="nav-badge" id="nav-active-agents-badge">6 IA</span>
+        <button id="nav-btn-hub" class="nav-pill-btn active" title="Selector de Estaciones">
+          <i class="fa-solid fa-shapes"></i>
+          <span>Estaciones</span>
         </button>
-        <button id="nav-btn-cabina" class="nav-pill-btn" title="Ir a Cabina Ventas">
+        <button id="nav-btn-cabina" class="nav-pill-btn" title="Ir a Cabina de Ventas">
           <i class="fa-solid fa-headset"></i>
           <span>Cabina Ventas</span>
+        </button>
+        <button id="nav-btn-life" class="nav-pill-btn" title="Ir a Panel de Vida Personal">
+          <i class="fa-solid fa-heart-pulse"></i>
+          <span>Panel de Vida</span>
+        </button>
+        <button id="nav-btn-agents" class="nav-pill-btn" title="Ir a Centro de Agentes IA">
+          <i class="fa-solid fa-robot"></i>
+          <span>Agentes IA</span>
+          <span class="nav-badge" id="nav-active-agents-badge">3 IA</span>
         </button>
       </div>
 
       <!-- Perfil y Menú -->
       <div class="user-menu">
+        <button id="btn-nav-config" class="btn-icon-subtle" title="Configuración y Credenciales">
+          <i class="fa-solid fa-gear"></i>
+        </button>
         <button id="btn-logout" class="btn-logout" title="Cerrar Sesión">
           <span>Salir</span> <i class="fa-solid fa-power-off"></i>
         </button>
@@ -78,124 +89,166 @@
     <!-- Área de Contenido Principal -->
     <main class="app-main">
       
-      <!-- ================= SECCIÓN 0: DASHBOARD INICIAL ================= -->
+      <!-- ================= SECCIÓN 0: SELECTOR CENTRAL DE ESTACIONES ================= -->
       <section id="panel-dashboard" class="panel active">
-        <div class="panel-header-intro">
-          <h2>Hola, zVaito</h2>
-          <p>Bienvenido a tu centro de control operativo personal y enjambre de IA. ¿Qué vas a gestionar hoy?</p>
+        <div class="panel-header-intro stations-hub-intro">
+          <div class="stations-hub-pill"><span class="pulse green"></span> ENTORNO OPERATIVO INDEPENDIENTE</div>
+          <h2>Estaciones de Trabajo de zVaito</h2>
+          <p>Tus herramientas están organizadas en 3 estaciones completamente separadas. Elige dónde operar:</p>
         </div>
 
-        <!-- Banner Central de Vida -->
-        <div class="life-hero-banner" id="banner-open-agents">
-          <div class="life-hero-content">
-            <div class="life-hero-badge">
-              <span class="pulse green"></span> ENJAMBRE DE AGENTES IA ACTIVO
+        <div class="stations-grid">
+          <!-- ESTACIÓN 1: CABINA DE VENTAS (Motor Verox) -->
+          <div class="station-card station-card-sales" data-target="panel-sales" id="card-station-sales">
+            <div class="station-card-top">
+              <div class="station-badge badge-sales"><i class="fa-solid fa-headset"></i> ESTACIÓN DE VENTAS</div>
+              <span class="station-status-pill"><span class="pulse"></span> 3 Empresas en Cola</span>
             </div>
-            <h2>Panel de Vida & Centro de Mando IA</h2>
-            <p>6 agentes autónomos coordinando tu captación de clientes, cabina de ventas, ciberseguridad, sitemaps, estudio y entrenamiento.</p>
-            <div class="life-hero-stats">
-              <div class="life-stat-item">
-                <span class="stat-num" id="stat-active-agents">6</span>
-                <span class="stat-lbl">Agentes Activos</span>
+            <div class="station-card-body">
+              <div class="station-icon-wrapper sales-gradient">
+                <i class="fa-solid fa-phone-volume"></i>
               </div>
-              <div class="life-stat-item">
-                <span class="stat-num" id="stat-prospects-queue">3</span>
-                <span class="stat-lbl">Prospectos Cabina</span>
+              <div class="station-info">
+                <h3>Cabina de Ventas</h3>
+                <p class="station-specialty">Venta B2B de Desarrollo Web, Automatizaciones IA & Software a Medida para Pymes</p>
+                <ul class="station-features-list">
+                  <li><i class="fa-solid fa-check"></i> Ficha del prospecto, decisor confirmado y dolores</li>
+                  <li><i class="fa-solid fa-check"></i> Guion en 4 pasos con calculadora de horas de impacto</li>
+                  <li><i class="fa-solid fa-check"></i> Cierre orientado a <strong>Demo interactiva de 15 minutos</strong></li>
+                  <li><i class="fa-solid fa-check"></i> Live Coach con IA Gemini, objeciones y resultados</li>
+                </ul>
               </div>
-              <div class="life-stat-item">
-                <span class="stat-num" id="stat-sec-targets">8</span>
-                <span class="stat-lbl">Objetivos Pentest</span>
-              </div>
-              <div class="life-stat-item">
-                <span class="stat-num" id="stat-gym-sessions">38</span>
-                <span class="stat-lbl">Sesiones Gym</span>
-              </div>
+            </div>
+            <div class="station-card-footer">
+              <button class="btn btn-primary btn-station-enter sales-btn">
+                <span>Entrar a la Cabina de Ventas</span>
+                <i class="fa-solid fa-arrow-right"></i>
+              </button>
             </div>
           </div>
-          <div class="life-hero-actions">
-            <button class="btn btn-primary btn-glow" id="btn-hero-agents">
-              <i class="fa-solid fa-microchip"></i> Abrir Panel de Vida
-            </button>
-            <button class="btn btn-secondary" id="btn-hero-chat">
-              <i class="fa-solid fa-comment-dots"></i> Hablar con Orquestador
-            </button>
+
+          <!-- ESTACIÓN 2: PANEL DE VIDA PERSONAL -->
+          <div class="station-card station-card-life" data-target="panel-life-hub" id="card-station-life">
+            <div class="station-card-top">
+              <div class="station-badge badge-life"><i class="fa-solid fa-heart-pulse"></i> ESTACIÓN PERSONAL</div>
+              <span class="station-status-pill"><span class="pulse green"></span> Hábitos & Rendimiento</span>
+            </div>
+            <div class="station-card-body">
+              <div class="station-icon-wrapper life-gradient">
+                <i class="fa-solid fa-dumbbell"></i>
+              </div>
+              <div class="station-info">
+                <h3>Panel de Vida</h3>
+                <p class="station-specialty">Gestión de entrenamientos, tiempo de estudio y rendimiento académico</p>
+                <ul class="station-features-list">
+                  <li><i class="fa-solid fa-check"></i> <strong>Gym Tracker:</strong> Rutinas de pesas, cargas y seguimiento</li>
+                  <li><i class="fa-solid fa-check"></i> <strong>StudySync Arcade:</strong> Calendario, exámenes y pesca</li>
+                  <li><i class="fa-solid fa-check"></i> <strong>Mis Calificaciones:</strong> Registro de notas y media automática</li>
+                  <li><i class="fa-solid fa-check"></i> Espacio 100% personal, sin mezclar con ventas ni clientes</li>
+                </ul>
+              </div>
+            </div>
+            <div class="station-card-footer">
+              <button class="btn btn-primary btn-station-enter life-btn">
+                <span>Entrar al Panel de Vida</span>
+                <i class="fa-solid fa-arrow-right"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- ESTACIÓN 3: ENJAMBRE DE AGENTES IA -->
+          <div class="station-card station-card-agents" data-target="panel-agents" id="card-station-agents">
+            <div class="station-card-top">
+              <div class="station-badge badge-agents"><i class="fa-solid fa-robot"></i> ESTACIÓN DE INTELIGENCIA</div>
+              <span class="station-status-pill"><span class="pulse purple"></span> 3 Agentes Autónomos</span>
+            </div>
+            <div class="station-card-body">
+              <div class="station-icon-wrapper agents-gradient">
+                <i class="fa-solid fa-brain-circuit"></i>
+              </div>
+              <div class="station-info">
+                <h3>Centro de Agentes IA</h3>
+                <p class="station-specialty">Automatización 24/7 y Orquestador de Operaciones Gemini</p>
+                <ul class="station-features-list">
+                  <li><i class="fa-solid fa-check"></i> <strong>Hunter AI:</strong> Captador B2B e ideas de SaaS</li>
+                  <li><i class="fa-solid fa-check"></i> <strong>Radar SEO:</strong> Auditor de Sitemaps y caídas web</li>
+                  <li><i class="fa-solid fa-check"></i> <strong>Sentinel Cyber:</strong> Pentesting bot y puertos 24/7</li>
+                  <li><i class="fa-solid fa-check"></i> Chat directo con el Orquestador Maestro</li>
+                </ul>
+              </div>
+            </div>
+            <div class="station-card-footer">
+              <button class="btn btn-primary btn-station-enter agents-btn">
+                <span>Entrar al Centro de Agentes</span>
+                <i class="fa-solid fa-arrow-right"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= SECCIÓN: PANEL DE VIDA PERSONAL (HABITOS & GYM & STUDYSYNC) ================= -->
+      <section id="panel-life-hub" class="panel">
+        <div class="station-inner-header">
+          <div class="station-inner-left">
+            <button class="btn-back btn-back-home"><i class="fa-solid fa-chevron-left"></i> Volver a Estaciones</button>
+            <div class="station-inner-title">
+              <h2><i class="fa-solid fa-heart-pulse"></i> Panel de Vida Personal</h2>
+              <span>Espacio privado de salud, tiempo y superación académica de zVaito</span>
+            </div>
+          </div>
+          <div class="station-inner-nav">
+            <button class="life-subtab-btn" data-subpanel="panel-gym"><i class="fa-solid fa-dumbbell"></i> Gym Tracker</button>
+            <button class="life-subtab-btn" data-subpanel="panel-studysync"><i class="fa-solid fa-gamepad"></i> StudySync Arcade</button>
+            <button class="life-subtab-btn" data-subpanel="panel-grades"><i class="fa-solid fa-chart-line"></i> Calificaciones</button>
           </div>
         </div>
 
-        <div class="dashboard-grid">
-          <!-- Tarjeta 0: Panel de Vida & Agentes IA -->
-          <div class="dash-card dash-card-life" data-target="panel-agents">
-            <div class="card-status status-ok"><span class="pulse green"></span>6 Agentes</div>
-            <div class="card-icon life-icon"><i class="fa-solid fa-brain-circuit"></i></div>
-            <h3>Panel de Vida & Agentes IA</h3>
-            <p>Supervisa tu enjambre de 6 agentes de IA. Dispara misiones manuales, añade nuevos agentes y coordina tu vida con el Orquestador.</p>
-            <button class="btn btn-card btn-life-card">Abrir Centro de Mando</button>
+        <!-- Cards de acceso directo y resumen rápido de vida -->
+        <div class="life-hub-grid">
+          <div class="life-hub-card" data-target="panel-gym">
+            <div class="life-hub-card-header">
+              <div class="lhc-icon gym-color"><i class="fa-solid fa-dumbbell"></i></div>
+              <div>
+                <h3>Gym Tracker</h3>
+                <p>Rutinas, ejercicios y sobrecarga progresiva</p>
+              </div>
+            </div>
+            <div class="lhc-stats">
+              <span class="lhc-stat-val" id="lhc-gym-count">38</span>
+              <span class="lhc-stat-lbl">Sesiones registradas</span>
+            </div>
+            <button class="btn btn-secondary btn-block">Abrir Gym Tracker →</button>
           </div>
 
-          <!-- Tarjeta 1: Ventas en Directo -->
-          <div class="dash-card" data-target="panel-sales">
-            <div class="card-status status-ok"><span class="pulse"></span>En vivo</div>
-            <div class="card-icon"><i class="fa-solid fa-headset"></i></div>
-            <h3>Cabina Ventas</h3>
-            <p>Escucha tu llamada en tiempo real y te da consejos psicológicos y frases específicas para cerrar la venta.</p>
-            <button class="btn btn-card">Abrir Módulo</button>
+          <div class="life-hub-card" data-target="panel-studysync">
+            <div class="life-hub-card-header">
+              <div class="lhc-icon arcade-color"><i class="fa-solid fa-graduation-cap"></i></div>
+              <div>
+                <h3>StudySync ARCADE</h3>
+                <p>Time blocking con Google Calendar</p>
+              </div>
+            </div>
+            <div class="lhc-stats">
+              <span class="lhc-stat-val">Sincronizado</span>
+              <span class="lhc-stat-lbl">Exámenes y jornadas de pesca</span>
+            </div>
+            <button class="btn btn-secondary btn-block">Abrir StudySync Arcade →</button>
           </div>
 
-          <!-- Tarjeta 2: Captador B2B (Agente Hunter) -->
-          <div class="dash-card dash-card-agent-lead" data-target="panel-leads">
-            <div class="card-status status-ok"><span class="pulse green"></span>Agente IA Autónomo</div>
-            <div class="card-icon" style="background: rgba(140, 82, 255, 0.15); color: #8c52ff; border-color: rgba(140, 82, 255, 0.4);"><i class="fa-solid fa-magnifying-glass-chart"></i></div>
-            <h3>Agente: Captador B2B & Ideas</h3>
-            <span class="agent-role-pill" style="margin-bottom: 6px;">Hunter AI · Cada 6 horas</span>
-            <p>Agente autónomo que rastrea empresas con webs obsoletas, extrae decisores e inventa conceptos viables de micro-SaaS.</p>
-            <button class="btn btn-card" style="background: rgba(140, 82, 255, 0.2); border-color: #8c52ff; color: #fff;">Abrir Agente Captador</button>
-          </div>
-
-          <!-- Tarjeta 3: Gym App -->
-          <div class="dash-card" data-target="panel-gym">
-            <div class="card-status status-neutral">Seguimiento</div>
-            <div class="card-icon"><i class="fa-solid fa-dumbbell"></i></div>
-            <h3>Gym Tracker</h3>
-            <p>Planifica tus rutinas, gestiona tus ejercicios, pesos históricos y anota observaciones de rendimiento.</p>
-            <button class="btn btn-card">Abrir Módulo</button>
-          </div>
-
-          <!-- Tarjeta 5: Revisor Sitemaps (Agente Radar) -->
-          <div class="dash-card dash-card-agent-radar" data-target="panel-sitemaps">
-            <div class="card-status status-ok"><span class="pulse green"></span>Agente IA Autónomo</div>
-            <div class="card-icon" style="background: rgba(0, 219, 139, 0.15); color: #00db8b; border-color: rgba(0, 219, 139, 0.4);"><i class="fa-solid fa-sitemap"></i></div>
-            <h3>Agente: Auditor de Sitemaps</h3>
-            <span class="agent-role-pill" style="margin-bottom: 6px;">Radar SEO AI · Semanal domingos</span>
-            <p>Agente autónomo que audita y compara las URLs de sitemaps XML contra el sitio web real y dispara alertas por Gmail si hay caídas.</p>
-            <button class="btn btn-card" style="background: rgba(0, 219, 139, 0.2); border-color: #00db8b; color: #fff;">Abrir Agente Auditor</button>
-          </div>
-
-          <!-- Tarjeta 6: Hack/Pentest Bot (Agente Sentinel) -->
-          <div class="dash-card dash-card-agent-sentinel" data-target="panel-security">
-            <div class="card-status status-ok"><span class="pulse green"></span>Agente IA Autónomo</div>
-            <div class="card-icon" style="background: rgba(255, 71, 87, 0.15); color: #ff4757; border-color: rgba(255, 71, 87, 0.4);"><i class="fa-solid fa-shield-halved"></i></div>
-            <h3>Agente: Pentesting Bot 24/7</h3>
-            <span class="agent-role-pill" style="margin-bottom: 6px;">Sentinel Cyber AI · Diario 02:00</span>
-            <p>Agente autónomo de ciberseguridad que analiza puertos abiertos, certificados SSL, cabeceras y archivos .env expuestos 24/7.</p>
-            <button class="btn btn-card" style="background: rgba(255, 71, 87, 0.2); border-color: #ff4757; color: #fff;">Abrir Agente Pentesting</button>
-          </div>
-
-          <!-- Tarjeta 7: StudySync ARCADE -->
-          <div class="dash-card dash-card-arcade" data-target="panel-studysync">
-            <div class="card-status status-arcade"><span class="pulse"></span>Arcade</div>
-            <div class="card-icon arcade-icon"><i class="fa-solid fa-graduation-cap"></i></div>
-            <h3>StudySync <span class="arcade-label">ARCADE</span></h3>
-            <p>Planifica tus exámenes y jornadas de pesca con Google Calendar. Time Blocking inteligente con estilo Cyber-Arcade.</p>
-            <button class="btn btn-card btn-arcade-card">Abrir Módulo</button>
-          </div>
-
-          <!-- Tarjeta 8: Calificaciones -->
-          <div class="dash-card dash-card-grades" data-target="panel-grades">
-            <div class="card-status status-grades"><i class="fa-solid fa-star"></i> Curso 2026</div>
-            <div class="card-icon grades-icon"><i class="fa-solid fa-chart-bar"></i></div>
-            <h3>Mis Calificaciones</h3>
-            <p>Registra y sigue la evolución de tus notas por asignatura a lo largo del curso. Media automática en tiempo real.</p>
-            <button class="btn btn-card btn-grades-card">Abrir Módulo</button>
+          <div class="life-hub-card" data-target="panel-grades">
+            <div class="life-hub-card-header">
+              <div class="lhc-icon grades-color"><i class="fa-solid fa-star"></i></div>
+              <div>
+                <h3>Mis Calificaciones</h3>
+                <p>Control de notas y media académica</p>
+              </div>
+            </div>
+            <div class="lhc-stats">
+              <span class="lhc-stat-val" id="lhc-grades-val">8.5</span>
+              <span class="lhc-stat-lbl">Media actual del curso</span>
+            </div>
+            <button class="btn btn-secondary btn-block">Ver Mis Calificaciones →</button>
           </div>
         </div>
       </section>
@@ -205,7 +258,7 @@
         <!-- Barra de Control Superior -->
         <div class="cabina-top-bar">
           <div class="cabina-top-left">
-            <button class="btn-back btn-back-home"><i class="fa-solid fa-chevron-left"></i> Volver</button>
+            <button class="btn-back btn-back-home"><i class="fa-solid fa-chevron-left"></i> Volver a Estaciones</button>
             <div class="cabina-queue-stepper">
               <button id="cabina-btn-prev" class="btn-mini" title="Empresa anterior"><i class="fa-solid fa-chevron-left"></i></button>
               <span id="cabina-queue-indicator" class="queue-label">Empresa 1 de 3</span>
@@ -217,7 +270,7 @@
           <div class="cabina-top-stats">
             <div class="stat-pill"><i class="fa-solid fa-phone"></i> Llamadas: <strong id="stat-calls">0</strong></div>
             <div class="stat-pill"><i class="fa-solid fa-user-check"></i> Decisores: <strong id="stat-decision-makers">0</strong></div>
-            <div class="stat-pill highlight-success"><i class="fa-solid fa-calendar-check"></i> Diagnósticos: <strong id="stat-diagnostics">0</strong></div>
+            <div class="stat-pill highlight-success"><i class="fa-solid fa-calendar-check"></i> Demos 15m: <strong id="stat-diagnostics">0</strong></div>
             <div class="stat-pill timer-pill"><i class="fa-solid fa-stopwatch"></i> <span id="cabina-call-timer">00:00</span></div>
           </div>
 
@@ -245,14 +298,14 @@
             <!-- Header Ficha -->
             <div class="ficha-header-card">
               <div class="ficha-top-row">
-                <div class="score-badge" id="ficha-score" title="Puntuación de encaje (0-100)">86</div>
+                <div class="score-badge" id="ficha-score" title="Puntuación de encaje (0-100)">89</div>
                 <div class="ficha-title-block">
                   <div class="title-with-priority">
-                    <h3 id="ficha-empresa-nombre">Frigotécnica Almanzor</h3>
+                    <h3 id="ficha-empresa-nombre">Hernández & Asociados · Asesoría</h3>
                     <span id="ficha-prioridad-tag" class="priority-tag prio-A">Prioridad A</span>
                   </div>
                   <div class="ficha-subsector-row">
-                    <span id="ficha-subsector">Mantenimiento y frío industrial</span> · <span id="ficha-provincia">Ávila</span>
+                    <span id="ficha-subsector">Asesoría laboral, fiscal y contable</span> · <span id="ficha-provincia">Madrid</span>
                     <a id="ficha-web-link" href="#" target="_blank" class="web-link" title="Abrir web"><i class="fa-solid fa-arrow-up-right-from-square"></i></a>
                   </div>
                 </div>
@@ -261,7 +314,7 @@
               <!-- Decisor y Contacto -->
               <div class="ficha-decisor-box">
                 <div class="decisor-label">DECISOR:</div>
-                <div class="decisor-name"><strong id="ficha-decisor-nombre">Andrés Sanz</strong> · <span id="ficha-decisor-cargo">Gerente</span></div>
+                <div class="decisor-name"><strong id="ficha-decisor-nombre">Carlos Hernández</strong> · <span id="ficha-decisor-cargo">Socio Director</span></div>
               </div>
 
               <!-- Teléfonos y Acción de Llamada -->
@@ -501,7 +554,7 @@
 
                 <div class="script-reading-box">
                   <p id="script-text-cierre" class="script-hero-text">
-                    «Te propongo 30 minutos por videollamada: te enseño cómo lo resolvió una empresa de tu sector y te digo con tus números si en tu caso compensa o no. ¿Te va mejor el martes a las 09:00 o el jueves a las 16:30?»
+                    «Te propongo una demo interactiva de 15 minutos: te enseño cómo lo resolvió una empresa de tu sector con desarrollo web y automatizaciones a medida, y vemos si en vuestro caso compensa. ¿Te va mejor el martes a las 09:00 o el jueves a las 16:30?»
                   </p>
                 </div>
 
@@ -682,8 +735,8 @@
             <div class="modal-card-header">
               <div class="modal-icon-success"><i class="fa-solid fa-circle-check"></i></div>
               <div>
-                <h3>¡Diagnóstico Agendado!</h3>
-                <p id="modal-diag-company-summary">Frigotécnica Almanzor · Martes 13 a las 09:00</p>
+                <h3>¡Demo Interactiva Agendada!</h3>
+                <p id="modal-diag-company-summary">Hernández & Asociados · Martes 13 a las 09:00</p>
               </div>
               <button class="btn-close-modal" id="btn-close-diag-modal">&times;</button>
             </div>
@@ -696,7 +749,7 @@
                   <i class="fa-brands fa-whatsapp"></i>
                   <div class="action-btn-texts">
                     <strong>Confirmar por WhatsApp</strong>
-                    <span>Envía el mensaje de confirmación con la fecha y hora</span>
+                    <span>Envía el mensaje de confirmación con la fecha y enlace de la demo</span>
                   </div>
                 </a>
 
@@ -704,14 +757,14 @@
                   <i class="fa-solid fa-calendar-plus"></i>
                   <div class="action-btn-texts">
                     <strong>Añadir a Google Calendar (con Meet)</strong>
-                    <span>Crea el evento de 30 minutos con las notas y cifras</span>
+                    <span>Crea el evento de la demo interactiva (15 min) con las notas y cifras</span>
                   </div>
                 </a>
 
                 <button id="btn-diag-print" class="btn-action-big btn-print-action">
                   <i class="fa-solid fa-print"></i>
                   <div class="action-btn-texts">
-                    <strong>Ficha previa al diagnóstico</strong>
+                    <strong>Ficha previa a la demo interactiva</strong>
                     <span>Lista para imprimir o exportar a PDF con las cifras</span>
                   </div>
                 </button>
@@ -1393,10 +1446,10 @@
       <section id="panel-agents" class="panel">
         <div class="agents-header-bar">
           <div class="agents-header-left">
-            <button class="btn-back btn-back-home"><i class="fa-solid fa-chevron-left"></i> Volver</button>
+            <button class="btn-back btn-back-home"><i class="fa-solid fa-chevron-left"></i> Volver a Estaciones</button>
             <div class="agents-title-wrap">
-              <h2><i class="fa-solid fa-brain-circuit"></i> Panel de Vida & Enjambre IA</h2>
-              <span class="agents-subtitle">Gestión unificada de tus 6 agentes autónomos y operaciones personales de zVaito</span>
+              <h2><i class="fa-solid fa-robot"></i> Centro de Agentes de IA & Orquestador</h2>
+              <span class="agents-subtitle">Enjambre autónomo de agentes de captación B2B, sitemaps y ciberseguridad 24/7 coordinado por Gemini</span>
             </div>
           </div>
           <div class="agents-header-right">
@@ -1573,6 +1626,6 @@
     </main>
   </div>
 
-  <script src="js/app.js?v=2.2"></script>
+  <script src="js/app.js?v=2.3"></script>
 </body>
 </html>

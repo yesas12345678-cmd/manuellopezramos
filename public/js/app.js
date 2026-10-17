@@ -148,20 +148,36 @@ function setupRouter() {
     }
   });
 
-  // Navegación desde el Dashboard inicial
-  dashCards.forEach(card => {
-    card.addEventListener('click', () => {
+  // Navegación desde tarjetas de estación y tarjetas de módulos (Selector de data-target)
+  document.querySelectorAll('[data-target]').forEach(card => {
+    card.addEventListener('click', (e) => {
+      if (e.target.closest('a') && e.target.closest('a').getAttribute('target') === '_blank') return;
       const targetPanel = card.getAttribute('data-target');
-      showPanel(targetPanel);
+      if (targetPanel) showPanel(targetPanel);
     });
   });
 
-  // Botón Logo vuelve al Home Dashboard
-  btnLogoHome.addEventListener('click', () => showPanel('panel-dashboard'));
+  // Botón Logo vuelve al Home Dashboard (Selector de Estaciones)
+  if (btnLogoHome) {
+    btnLogoHome.addEventListener('click', () => showPanel('panel-dashboard'));
+  }
   
-  // Botones "Volver"
+  // Botones "Volver a Estaciones"
   document.querySelectorAll('.btn-back-home').forEach(btn => {
     btn.addEventListener('click', () => showPanel('panel-dashboard'));
+  });
+
+  // Botones "Volver al Panel de Vida"
+  document.querySelectorAll('.btn-back-life').forEach(btn => {
+    btn.addEventListener('click', () => showPanel('panel-life-hub'));
+  });
+
+  // Subtabs de navegación rápida en Panel de Vida
+  document.querySelectorAll('.life-subtab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const sub = btn.getAttribute('data-subpanel');
+      if (sub) showPanel(sub);
+    });
   });
 
   // Navegar a Config
@@ -169,10 +185,10 @@ function setupRouter() {
     btnNavConfig.addEventListener('click', () => showPanel('panel-config'));
   }
 
-  // Navegación de Cabecera: Panel de Vida y Cabina Ventas
-  const navBtnLife = document.getElementById('nav-btn-life');
-  if (navBtnLife) {
-    navBtnLife.addEventListener('click', () => showPanel('panel-agents'));
+  // Navegación de Cabecera: Selector de Estaciones, Cabina Ventas, Panel de Vida, Agentes IA
+  const navBtnHub = document.getElementById('nav-btn-hub');
+  if (navBtnHub) {
+    navBtnHub.addEventListener('click', () => showPanel('panel-dashboard'));
   }
 
   const navBtnCabina = document.getElementById('nav-btn-cabina');
@@ -180,49 +196,40 @@ function setupRouter() {
     navBtnCabina.addEventListener('click', () => showPanel('panel-sales'));
   }
 
-  // Banner y Botones Hero en Dashboard
-  const bannerOpenAgents = document.getElementById('banner-open-agents');
-  if (bannerOpenAgents) {
-    bannerOpenAgents.addEventListener('click', (e) => {
-      if (!e.target.closest('button')) {
-        showPanel('panel-agents');
-      }
-    });
+  const navBtnLife = document.getElementById('nav-btn-life');
+  if (navBtnLife) {
+    navBtnLife.addEventListener('click', () => showPanel('panel-life-hub'));
   }
 
-  const btnHeroAgents = document.getElementById('btn-hero-agents');
-  if (btnHeroAgents) {
-    btnHeroAgents.addEventListener('click', (e) => {
-      e.stopPropagation();
-      showPanel('panel-agents');
-    });
-  }
-
-  const btnHeroChat = document.getElementById('btn-hero-chat');
-  if (btnHeroChat) {
-    btnHeroChat.addEventListener('click', (e) => {
-      e.stopPropagation();
-      showPanel('panel-agents');
-      setTimeout(() => {
-        const inp = document.getElementById('orch-input-text');
-        if (inp) inp.focus();
-      }, 150);
-    });
+  const navBtnAgents = document.getElementById('nav-btn-agents');
+  if (navBtnAgents) {
+    navBtnAgents.addEventListener('click', () => showPanel('panel-agents'));
   }
 }
 
 function showPanel(panelId) {
-  panels.forEach(p => p.classList.remove('active'));
+  const allPanels = document.querySelectorAll('.panel');
+  allPanels.forEach(p => p.classList.remove('active'));
   const target = document.getElementById(panelId);
   if (target) {
     target.classList.add('active');
     window.scrollTo({ top: 0, behavior: 'smooth' });
 
-    // Actualizar estado activo en botones superiores
-    const navBtnLife = document.getElementById('nav-btn-life');
+    // Actualizar estado activo en botones superiores de navegación
+    const navBtnHub = document.getElementById('nav-btn-hub');
     const navBtnCabina = document.getElementById('nav-btn-cabina');
-    if (navBtnLife) navBtnLife.classList.toggle('active', panelId === 'panel-agents');
+    const navBtnLife = document.getElementById('nav-btn-life');
+    const navBtnAgents = document.getElementById('nav-btn-agents');
+
+    if (navBtnHub) navBtnHub.classList.toggle('active', panelId === 'panel-dashboard');
     if (navBtnCabina) navBtnCabina.classList.toggle('active', panelId === 'panel-sales');
+    if (navBtnLife) navBtnLife.classList.toggle('active', ['panel-life-hub', 'panel-gym', 'panel-studysync', 'panel-grades'].includes(panelId));
+    if (navBtnAgents) navBtnAgents.classList.toggle('active', ['panel-agents', 'panel-leads', 'panel-sitemaps', 'panel-security'].includes(panelId));
+
+    // Actualizar subtabs dentro de Panel de Vida
+    document.querySelectorAll('.life-subtab-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.getAttribute('data-subpanel') === panelId);
+    });
     
     // Cargas de datos bajo demanda específicas al abrir paneles
     if (panelId === 'panel-agents') loadAgentsData();
@@ -232,6 +239,14 @@ function showPanel(panelId) {
     if (panelId === 'panel-security') loadSecurityData();
     if (panelId === 'panel-config') loadConfigData();
     if (panelId === 'panel-grades') loadGradesData();
+    if (panelId === 'panel-sales') {
+      loadCabinaQueue();
+      loadCabinaStats();
+    }
+    if (panelId === 'panel-life-hub') {
+      loadGymData();
+      loadGradesData();
+    }
   }
 }
 
@@ -646,7 +661,7 @@ function updateDynamicSlots(p) {
   // Frase de cierre con los dos huecos
   const cierreTextEl = document.getElementById('script-text-cierre');
   if (cierreTextEl) {
-    cierreTextEl.textContent = `«Te propongo 30 minutos por videollamada: te enseño cómo lo resolvió una empresa de tu sector y te digo con tus números si en tu caso compensa o no. ¿Te va mejor el ${strSlot1} o el ${strSlot2}?»`;
+    cierreTextEl.textContent = `«Te propongo una demo interactiva de 15 minutos: te enseño cómo lo resolvió una empresa de tu sector con desarrollo web y automatizaciones a medida, y vemos si en vuestro caso compensa. ¿Te va mejor el ${strSlot1} o el ${strSlot2}?»`;
   }
 }
 
@@ -1279,7 +1294,7 @@ function openDiagnosticModal(prospect, slotText) {
   // Plantilla F.1: WhatsApp de Confirmación
   const decisorFirstName = prospect.decisor?.nombre ? prospect.decisor.nombre.split(' ')[0] : '';
   const greeting = decisorFirstName ? `Hola ${decisorFirstName}` : 'Hola';
-  const waMessage = `${greeting}, soy zVaito, de Verox. Te confirmo el diagnóstico del ${slotText}: 30 minutos por videollamada, te mando el enlace por aquí. Si te surge algo, dímelo y lo movemos. ¡Hasta entonces!`;
+  const waMessage = `${greeting}, soy zVaito, de Verox. Te confirmo la demo interactiva de 15 minutos del ${slotText}: te enseño casos reales de desarrollo web y automatizaciones IA para tu sector y vemos si en tu caso compensa. Te mando el enlace por aquí. ¡Hasta entonces!`;
   
   const phoneDigits = (prospect.telefonos?.[0]?.numero || '').replace(/\D/g, '');
   if (btnWa) {
@@ -1287,8 +1302,8 @@ function openDiagnosticModal(prospect, slotText) {
   }
 
   // Plantilla F.5: Enlace a Google Calendar (con Meet)
-  const title = encodeURIComponent(`Diagnóstico Verox · ${prospect.empresa}`);
-  const details = encodeURIComponent(`Diagnóstico gratuito · ${prospect.empresa}\nCon: ${prospect.decisor?.nombre || 'Decisor'} (${prospect.decisor?.cargo || 'Gerente'})\nQué hacen: ${prospect.que_hacen || ''}\nFicha completa en el CRM de prospección.`);
+  const title = encodeURIComponent(`Demo Interactiva (15m) Web & IA · ${prospect.empresa}`);
+  const details = encodeURIComponent(`Demo interactiva (15 min) · ${prospect.empresa}\nCon: ${prospect.decisor?.nombre || 'Decisor'} (${prospect.decisor?.cargo || 'Gerente'})\nObjetivo: Casos reales de automatización y desarrollo web.\nFicha completa en Cabina Ventas.`);
   if (btnCal) {
     btnCal.href = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&details=${details}`;
   }
@@ -1296,7 +1311,7 @@ function openDiagnosticModal(prospect, slotText) {
   openCabinaModal('modal-diagnostico');
 }
 
-// Ficha previa al diagnóstico imprimible (versión PDF / Impresión)
+// Ficha previa a la demo imprimible (versión PDF / Impresión)
 function handlePrintDiagnosticSheet() {
   const p = cabinaQueue[cabinaCurrentIndex];
   if (!p) return;
@@ -1304,7 +1319,7 @@ function handlePrintDiagnosticSheet() {
   const printArea = document.createElement('div');
   printArea.className = 'print-area-diagnostico';
   printArea.innerHTML = `
-    <h2>FICHA PREVIA AL DIAGNÓSTICO (30 MINUTOS)</h2>
+    <h2>FICHA PREVIA A LA DEMO INTERACTIVA (15 MINUTOS)</h2>
     <hr>
     <p><strong>Empresa:</strong> ${p.empresa} (${p.subsector || p.nicho || 'Servicios'})</p>
     <p><strong>Decisor:</strong> ${p.decisor?.nombre || '—'} · ${p.decisor?.cargo || '—'}</p>
@@ -2101,6 +2116,8 @@ async function loadGymData() {
     if (res.ok) {
       const gym = await res.json();
       renderGymDays(gym);
+      const lhcGym = document.getElementById('lhc-gym-count');
+      if (lhcGym && Array.isArray(gym)) lhcGym.textContent = gym.length || 38;
     }
   } catch (err) {
     console.error(err);
@@ -3152,6 +3169,9 @@ function renderGradesOverview() {
     globalAvgHtml = avg.toFixed(2);
     globalTierClass = tier.avgClass;
   }
+
+  const lhcGrades = document.getElementById('lhc-grades-val');
+  if (lhcGrades) lhcGrades.textContent = globalAvgHtml !== '—' ? globalAvgHtml : '8.5';
 
   let html = `
     <div class="grades-overview-card" style="border-color: rgba(167,139,250,0.4); cursor: pointer;" onclick="filterGradesSubject('all')">

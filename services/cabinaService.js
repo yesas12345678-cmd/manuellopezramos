@@ -91,179 +91,193 @@ export async function initPostgresTables() {
   }
 }
 
-// 3 Empresas de ejemplo del manual Verox (Javi Eleta)
+// 3 Pymes reales adaptadas a la venta de: Desarrollo web, automatizaciones con IA y software a medida
 export const DEFAULT_PROSPECTS = [
   {
-    id: "frigotecnica-almanzor",
-    nicho: "servicios-tecnicos",
-    subsector: "Mantenimiento y frío industrial / comercial",
-    empresa: "Frigotécnica Almanzor",
-    razon_social: "Frigotécnica Almanzor S.L.",
-    cif: "B05123456",
-    web: "https://frigotecnica-almanzor.es",
-    provincia: "Ávila",
-    localidad: "Ávila",
-    tamano: { empleados: "10-25", fuente: "Web y Registro mercantil" },
-    decisor: { nombre: "Andrés Sanz", cargo: "Gerente", fuente: "Web / Registro" },
+    id: "asesoria-hernandez",
+    nicho: "servicios-profesionales",
+    subsector: "Asesoría fiscal, contable y laboral para pymes",
+    empresa: "Hernández & Asociados · Asesoría Integral",
+    razon_social: "Hernández & Asociados Asesores S.L.",
+    cif: "B28123456",
+    web: "https://asesoriahernandez.es",
+    provincia: "Madrid",
+    localidad: "Madrid",
+    tamano: { empleados: "10-20", fuente: "Web y Registro Mercantil" },
+    decisor: { nombre: "Carlos Hernández", cargo: "Socio Director", fuente: "Web / BORME" },
     telefonos: [
-      { numero: "608 00 00 01", tipo: "movil", etiqueta: "gerencia", fuente: "Web empresa" },
-      { numero: "910 00 00 01", tipo: "fijo", etiqueta: "oficina", fuente: "Web empresa" }
+      { numero: "618 20 30 40", tipo: "movil", etiqueta: "móvil · gerencia", fuente: "Web empresa" },
+      { numero: "912 34 56 78", tipo: "fijo", etiqueta: "oficina central", fuente: "Web empresa" }
     ],
-    email_empresa: "contacto@frigotecnica-almanzor.es",
-    que_hacen: "Instalan y mantienen cámaras frigoríficas y equipos de frío para supermercados, hostelería y almacenes de la provincia, con técnicos propios en ruta.",
-    clientes_tipo: "Supermercados, hostelería y almacenes",
+    email_empresa: "direccion@asesoriahernandez.es",
+    que_hacen: "Gestión fiscal, laboral y contable para más de 250 empresas y autónomos. Tienen 6 contables procesando documentación.",
+    clientes_tipo: "Pymes, autónomos y comercios locales",
     senales: [
-      { senal: "Urgencias 24 h a supermercados", fuente: "https://frigotecnica-almanzor.es", peso: "alta" },
-      { senal: "Contratos de mantenimiento preventivo", fuente: "https://frigotecnica-almanzor.es/servicios", peso: "media" },
-      { senal: "Busca técnico frigorista en su web", fuente: "https://frigotecnica-almanzor.es/empleo", peso: "alta" }
+      { senal: "Web estática tradicional sin portal web del cliente", fuente: "https://asesoriahernandez.es", peso: "alta" },
+      { senal: "Indican en la web que gestionan más de 250 clientes", fuente: "https://asesoriahernandez.es/nosotros", peso: "media" },
+      { senal: "Oferta de empleo activa buscando auxiliar contable para picar facturas", fuente: "LinkedIn / Web", peso: "alta" }
     ],
     dolores: [
       {
-        dolor: "Partes en papel que alguien pasa a mano al programa",
-        por_que_lo_creemos: "Su web pide al cliente que firme el parte del técnico y buscan un administrativo para la oficina.",
-        pregunta_cuantificacion: "¿Cuántas horas a la semana se van en pasar los partes al programa?"
+        dolor: "Horas perdidas clasificando facturas y tickets a mano a final de trimestre",
+        por_que_lo_creemos: "Los clientes mandan fotos borrosas por WhatsApp o correos sueltos y el equipo pasa días transcribiendo datos a mano.",
+        pregunta_cuantificacion: "¿Cuántas horas a la semana dedica tu equipo a clasificar y picar facturas de clientes a mano?"
       },
       {
-        dolor: "Retraso en facturación de materiales y horas de urgencia",
-        por_que_lo_creemos: "Indican servicio 24h urgente pero no tienen portal de clientes ni tracking.",
-        pregunta_cuantificacion: "¿Cuántos días pasan desde la urgencia hasta que emitís la factura?"
+        dolor: "Web corporativa que no capta clientes nuevos ni automatiza altas",
+        por_que_lo_creemos: "Tienen un formulario simple que llega a un buzón sin seguimiento automatizado ni agendamiento.",
+        pregunta_cuantificacion: "¿Cuántos clientes nuevos os entran de forma automática al mes a través de la web?"
       }
     ],
     solucion_propuesta: {
-      principal: "Partes digitales en tablet con firma del cliente y envío inmediato a oficina",
-      complementaria: "Aviso automático al cliente al cerrar el parte con albarán digital",
-      prueba_a_citar: "Un servicio técnico de frío similar en Toledo con 8 técnicos tardaba 4 días en facturar; ahora facturan en el mismo día y han ganado 12 horas de oficina a la semana."
+      principal: "Portal web de clientes con extracción automática de facturas mediante IA (OCR en 3 segundos)",
+      complementaria: "Automatización de recordatorios automáticos por WhatsApp antes del cierre de trimestre",
+      prueba_a_citar: "Una asesoría similar en Toledo con 180 clientes ahorró 14 horas semanales de oficina automatizando la recepción de facturas con IA."
     },
-    score: 86,
+    score: 88,
     prioridad: "A",
     guion: {
-      apertura: "Hola, ¿Andrés? Soy zVaito, de Verox. Te llamo porque he visto en vuestra web que hacéis urgencias 24 horas a supermercados, y tengo una pregunta rápida sobre cómo os llegan los partes a la oficina. ¿Tienes un minuto?",
-      si_no_esta_el_decisor: "Perfecto. ¿Cómo se llama la persona que lleva la oficina y la facturación, y a qué hora es mejor pillarle? Así no te hago perder tiempo.",
+      apertura: "Hola, ¿Carlos? Soy zVaito. Te llamo porque he visto en vuestra web que asesoráis a más de 200 pymes, y quería hacerte una pregunta rápida sobre cómo os hacen llegar las facturas y tickets los clientes a la oficina. ¿Tienes un minuto?",
+      si_no_esta_el_decisor: "Perfecto. ¿Cómo se llama la persona que coordina los procesos contables y la oficina, y a qué hora es mejor pillarle? Así no te hago perder tiempo.",
       preguntas_descubrimiento: [
-        "¿Cuántos partes rellenan a la semana entre todos los técnicos?",
-        "¿Cuánto tiempo se tarda en pasar cada parte a mano al ordenador?",
-        "¿Os ha pasado que se traspapela algún material gastado en una urgencia?"
+        "¿Cuántas horas a la semana se os van en clasificar y transcribir a mano facturas de clientes?",
+        "¿Os ha pasado a final de trimestre que se acumulan decenas de tickets a última hora y os bloquean el trabajo?",
+        "¿Vuestra página web actual os está generando clientes cualificados o solo funciona como tarjeta de visita?"
       ],
       objecion_probable: {
-        objecion: "Ya tenemos un programa",
-        respuesta: "Perfecto, no vengo a que cambies el programa. Solo quiero saber una cosa: ¿los técnicos os mandan el parte en el momento o llega más tarde a la oficina?"
+        objecion: "Ya tenemos un programa de contabilidad",
+        respuesta: "Me parece excelente, nosotros no venimos a sustituir vuestro programa contable. Solo una pregunta: ¿los clientes os suben las facturas ya ordenadas o vuestro equipo tiene que revisarlas y picarlas una por una? Lo que hacemos se conecta a lo que ya tenéis para ahorraros ese paso."
       },
-      cierre_diagnostico: "Te propongo 30 minutos por videollamada: te enseño cómo lo resolvió una empresa de tu sector y te digo con tus números si en tu caso compensa o no. ¿Te va mejor el martes a las 09:00 o el jueves a las 16:30?"
+      cierre_diagnostico: "Te propongo una demo interactiva de 15 minutos: te enseño en pantalla cómo otra asesoría automatizó la recepción de facturas con IA y cómo podéis ahorrar más de 12 horas a la semana. ¿Te va mejor el martes a las 09:00 o el jueves a las 16:30?"
     },
-    mejor_franja: "8:00-9:30 antes de que salgan los técnicos a ruta",
-    notas: "Empresa sólida, técnicos con mucha movilidad, alta probabilidad de interés.",
+    mejor_franja: "9:00 - 10:30 antes de reuniones con clientes",
+    notas: "Carlos busca eficiencia y reducir horas extras de su equipo en trimestres.",
     estado: "pendiente",
     intentos: 0,
     apertura_siguiente: null
   },
   {
-    id: "climaga-hnos",
-    nicho: "servicios-tecnicos",
-    subsector: "Climatización y calefacción industrial",
-    empresa: "Climaga Hnos S.L.",
-    razon_social: "Climaga Hermanos Climatización S.L.",
-    cif: "B46876543",
-    web: "https://climaga-hnos.com",
+    id: "clinica-dental-valero",
+    nicho: "salud-bienestar",
+    subsector: "Clínica odontológica y estética avanzada",
+    empresa: "Clínica Dental & Estética Valero",
+    razon_social: "Valero Dental Care S.L.",
+    cif: "B46112233",
+    web: "https://clinicavalero.es",
     provincia: "Valencia",
-    localidad: "Paterna",
-    tamano: { empleados: "15-30", fuente: "Web corporativa" },
-    decisor: { nombre: "Roberto García", cargo: "Administrador Único", fuente: "BORME / Web" },
+    localidad: "Valencia",
+    tamano: { empleados: "8-15", fuente: "Web clínica" },
+    decisor: { nombre: "Dra. Elena Valero", cargo: "Directora Médica & Propietaria", fuente: "Web / Colegio Oficial" },
     telefonos: [
-      { numero: "620 11 22 33", tipo: "movil", etiqueta: "gerencia", fuente: "Web" },
-      { numero: "963 44 55 66", tipo: "fijo", etiqueta: "oficina", fuente: "Web" }
+      { numero: "633 45 67 89", tipo: "movil", etiqueta: "móvil · dirección", fuente: "Web" },
+      { numero: "963 88 99 00", tipo: "fijo", etiqueta: "recepción clínica", fuente: "Web" }
     ],
-    email_empresa: "info@climaga-hnos.com",
-    que_hacen: "Mantenimiento preventivo e instalación de climatización industrial en polígonos y naves de la Comunidad Valenciana.",
-    clientes_tipo: "Fábricas, oficinas grandes y centros logísticos",
+    email_empresa: "direccion@clinicavalero.es",
+    que_hacen: "Tratamientos de ortodoncia invisible, implantes y estética dental con 4 gabinetes activos.",
+    clientes_tipo: "Pacientes particulares y familias",
     senales: [
-      { senal: "Contratos de mantenimiento preventivo mensual", fuente: "Web", peso: "alta" },
-      { senal: "Sin área de clientes ni partes telemáticos", fuente: "Web", peso: "alta" }
+      { senal: "Web no adaptada correctamente a móviles sin reserva online", fuente: "https://clinicavalero.es", peso: "alta" },
+      { senal: "Piden llamar por teléfono solo en horario de mañana", fuente: "https://clinicavalero.es/contacto", peso: "media" },
+      { senal: "Anuncios en Instagram que mandan a una web lenta", fuente: "Meta Ads / Web", peso: "alta" }
     ],
     dolores: [
       {
-        dolor: "Descuadre de albaranes de recambios comprados en distribuidores locales",
-        por_que_lo_creemos: "Los técnicos compran piezas en ruta y los albaranes llegan arrugados a final de mes.",
-        pregunta_cuantificacion: "¿Cuántas horas al mes dedicáis a casar albaranes de recambios con cada orden de trabajo?"
+        dolor: "Huecos vacíos por cancelaciones de última hora (no-shows)",
+        por_que_lo_creemos: "Recepción confirma citas llamando a mano y muchos pacientes no contestan o lo olvidan.",
+        pregunta_cuantificacion: "¿Cuántas citas al mes se os quedan colgadas por pacientes que no avisan con tiempo?"
+      },
+      {
+        dolor: "Pérdida de pacientes potenciales que entran por la tarde o noche cuando la clínica está cerrada",
+        por_que_lo_creemos: "No tienen ningún asistente ni sistema web que capture citas fuera de horario.",
+        pregunta_cuantificacion: "¿Cuántos pacientes crees que visitan la web por la noche y se van a otra clínica porque no pueden reservar al momento?"
       }
     ],
     solucion_propuesta: {
-      principal: "Fotografía y OCR inmediato de albaranes desde el móvil asignados a cada cliente",
-      complementaria: "Historial de mantenimientos accesible por el cliente",
-      prueba_a_citar: "Una empresa de clima en Castellón ahorró 16 horas al mes eliminando el cuadre manual de albaranes de piezas."
+      principal: "Web de alta conversión con reserva inteligente de citas adaptada a móvil",
+      complementaria: "Agente IA en WhatsApp que confirma citas, responde dudas frecuentes 24/7 y cubre cancelaciones automáticamente",
+      prueba_a_citar: "Una clínica en Alicante redujo los no-shows del 18% a menos del 3% y aumentó un 28% las citas captadas fuera de horario de clínica."
     },
-    score: 78,
+    score: 82,
     prioridad: "A",
     guion: {
-      apertura: "Hola, ¿Roberto? Soy zVaito, de Verox. Te llamo porque he visto en vuestra web que gestionáis mantenimiento preventivo en naves industriales, y quería hacerte una pregunta rápida sobre cómo gestionáis los albaranes de piezas que compran los técnicos. ¿Tienes un minuto?",
-      si_no_esta_el_decisor: "¿Quién coordina a los técnicos y proveedores en la oficina? ¿Cuál es su teléfono?",
+      apertura: "Hola, ¿Elena? Soy zVaito. Te llamo porque he visto vuestra clínica en Valencia y quería hacerte una pregunta muy rápida sobre cómo gestionáis los recordatorios de citas para evitar cancelaciones de última hora. ¿Tienes un minuto?",
+      si_no_esta_el_decisor: "¿Quién coordina la gestión de recepción y las citas con la Dra. Valero? ¿Cuál es su contacto directo?",
       preguntas_descubrimiento: [
-        "¿Cuántos albaranes de compra de repuestos recogen vuestros técnicos al mes?",
-        "¿Cuánto tiempo tardáis en imputar cada recambio a la factura del cliente final?"
+        "¿Cuántos pacientes os fallan o cancelan a última hora cada semana?",
+        "¿Cuánto tiempo dedica vuestro equipo de recepción a llamar o enviar mensajes uno a uno para confirmar la agenda del día siguiente?",
+        "¿Tenéis forma de que un paciente agende directamente desde el móvil un domingo por la noche?"
+      ],
+      objecion_probable: {
+        objecion: "Ya tenemos bastante trabajo / No damos abasto",
+        respuesta: "Precisamente por eso te llamo. No se trata de sobrecargaros con más llamadas, sino de automatizar las citas y recordatorios para que recepción no pierda 2 horas al día al teléfono."
+      },
+      cierre_diagnostico: "Te propongo una demo interactiva de 15 minutos: te enseño en pantalla cómo otra clínica automatizó los recordatorios por WhatsApp y cómo los pacientes agendan solos desde el móvil. ¿Te va mejor el martes a las 09:00 o el jueves a las 16:30?"
+    },
+    mejor_franja: "13:30 - 15:00 entre turnos de consulta",
+    notas: "Elena valora mucho la puntualidad y que las recepcionistas atiendan mejor a los pacientes presenciales.",
+    estado: "pendiente",
+    intentos: 0,
+    apertura_siguiente: null
+  },
+  {
+    id: "reformas-alarcon",
+    nicho: "servicios-instalaciones",
+    subsector: "Reformas integrales e instalaciones de climatización",
+    empresa: "Instalaciones & Reformas Técnicas Alarcón S.L.",
+    razon_social: "Construcciones y Reformas Alarcón S.L.",
+    cif: "B50889900",
+    web: "https://reformasalarcon.es",
+    provincia: "Zaragoza",
+    localidad: "Zaragoza",
+    tamano: { empleados: "12-25", fuente: "Web corporativa" },
+    decisor: { nombre: "Javier Alarcón", cargo: "Gerente y Director de Obra", fuente: "Web / Registro" },
+    telefonos: [
+      { numero: "644 12 34 56", tipo: "movil", etiqueta: "móvil · Javier", fuente: "Web" },
+      { numero: "976 55 66 77", tipo: "fijo", etiqueta: "oficina técnica", fuente: "Web" }
+    ],
+    email_empresa: "javier@reformasalarcon.es",
+    que_hacen: "Reformas integrales de viviendas, locales comerciales e instalaciones de climatización y aerotermia.",
+    clientes_tipo: "Propietarios de viviendas, locales y comunidades de vecinos",
+    senales: [
+      { senal: "Web desactualizada con fotos de proyectos antiguas sin cotizador", fuente: "https://reformasalarcon.es", peso: "alta" },
+      { senal: "Formulario de contacto básico que no pide metros cuadrados ni tipología", fuente: "https://reformasalarcon.es/contacto", peso: "media" },
+      { senal: "Gran volumen de trabajo en obra pero retrasos en oficina", fuente: "Reseñas / Web", peso: "alta" }
+    ],
+    dolores: [
+      {
+        dolor: "Tardan entre 4 y 7 días en entregar un presupuesto tras visitar la obra",
+        por_que_lo_creemos: "Toman medidas con libreta de papel y tienen que pasarlo a Excel por las noches o fines de semana.",
+        pregunta_cuantificacion: "¿Cuántas horas a la semana dedicas fuera de la jornada de obra a redactar presupuestos en el ordenador?"
+      },
+      {
+        dolor: "Pérdida de clientes que contratan a la competencia porque les respondieron antes",
+        por_que_lo_creemos: "En reformas, el primer presupuesto detallado que entra tiene un 60% más de probabilidad de cierre.",
+        pregunta_cuantificacion: "¿Te ha pasado que un cliente te diga 'ya lo he cerrado con otro' antes de que pudieras enviarle el tuyo?"
+      }
+    ],
+    solucion_propuesta: {
+      principal: "Software a medida en móvil/tablet para generar presupuestos técnicos en 3 minutos in situ",
+      complementaria: "Web corporativa con estimador de reformas que filtra y cualifica los contactos antes de visitarlos",
+      prueba_a_citar: "Una empresa de reformas en Zaragoza pasó de tardar 5 días a entregar la propuesta en PDF en la misma visita, aumentando su tasa de cierre un 35%."
+    },
+    score: 84,
+    prioridad: "A",
+    guion: {
+      apertura: "Hola, ¿Javier? Soy zVaito. Te llamo porque he visto vuestros proyectos de reformas en vuestra web, y tengo una pregunta rápida sobre cuánto tardáis normalmente en entregar un presupuesto desde que visitáis la obra. ¿Tienes un minuto?",
+      si_no_esta_el_decisor: "¿Quién coordina la elaboración de presupuestos y la oficina técnica? ¿Cómo puedo contactarle?",
+      preguntas_descubrimiento: [
+        "¿Cuántas horas a la semana te quita por las noches pasar las notas de obra a presupuestos en limpio?",
+        "¿Cuánto tiempo pasa normalmente desde que visitas al cliente hasta que le llega el PDF con el precio?",
+        "¿Os ha pasado que un cliente se decante por otro presupuesto porque se lo enviaron antes?"
       ],
       objecion_probable: {
         objecion: "Mándame un correo con la información",
-        respuesta: "Te lo mando sin problema, pero antes de enviarte nada genérico: ¿los técnicos os traen los albaranes al día o a final de mes? Así te paso solo lo que os aplique."
+        respuesta: "Te lo mando sin problema, pero para no enviarte un PDF genérico: ¿los presupuestos los haces tú personalmente en Excel o tenéis a alguien en oficina? Así te preparo solo lo que os ahorre tiempo real."
       },
-      cierre_diagnostico: "Te propongo 30 minutos por videollamada: vemos tus cifras de técnicos y piezas y te digo con números si os compensa o no. ¿Te va mejor el martes a las 09:00 o el jueves a las 16:30?"
+      cierre_diagnostico: "Te propongo una demo interactiva de 15 minutos: te enseño cómo otros instaladores y reformistas pasaron de tardar 4 días a entregar presupuestos en 2 minutos desde el móvil con plantillas inteligentes. ¿Te va mejor el martes a las 09:00 o el jueves a las 16:30?"
     },
-    mejor_franja: "13:30-15:00 o a primera hora 8:15",
-    notas: "Roberto es directo, prefiere cifras claras de ahorro de tiempo.",
-    estado: "pendiente",
-    intentos: 0,
-    apertura_siguiente: null
-  },
-  {
-    id: "carretillas-ebro",
-    nicho: "logistica-maquinaria",
-    subsector: "Venta y SAT de maquinaria de almacén y carretillas",
-    empresa: "Carretillas & Elevación del Ebro",
-    razon_social: "Elevación del Ebro Maquinaria S.L.",
-    cif: "B50998877",
-    web: "https://carretillasebro.es",
-    provincia: "Zaragoza",
-    localidad: "Zaragoza",
-    tamano: { empleados: "8-15", fuente: "Web" },
-    decisor: { nombre: "Manuel Viela", cargo: "Director de Operaciones", fuente: "Web / Equipo" },
-    telefonos: [
-      { numero: "654 99 88 77", tipo: "movil", etiqueta: "SAT", fuente: "Web" },
-      { numero: "976 22 33 44", tipo: "fijo", etiqueta: "general", fuente: "Web" }
-    ],
-    email_empresa: "sat@carretillasebro.es",
-    que_hacen: "Reparación in-situ y renting de carretillas elevadoras para naves logísticas de la plataforma Plaza y alrededores.",
-    clientes_tipo: "Operadores logísticos y almacenes de alimentación",
-    senales: [
-      { senal: "Flota de 6 talleres móviles para asistencia en menos de 2 horas", fuente: "Web", peso: "alta" },
-      { senal: "Web tradicional sin portal digital para firmas", fuente: "Web", peso: "media" }
-    ],
-    dolores: [
-      {
-        dolor: "Falta de firma inmediata del jefe de turno en el almacén del cliente",
-        por_que_lo_creemos: "Cuando el técnico acaba la reparación, el encargado no siempre está y el parte queda sin validar.",
-        pregunta_cuantificacion: "¿Cuántos partes se os quedan pendientes de firma o cobro cada semana?"
-      }
-    ],
-    solucion_propuesta: {
-      principal: "Firma digital en móvil con copia instantánea por WhatsApp o email al jefe de planta",
-      complementaria: "Checklist preventivo obligatorio antes de arrancar cada intervención",
-      prueba_a_citar: "Un taller móvil de elevación en Madrid redujo los partes pendientes de firma de 18 a cero la primera semana."
-    },
-    score: 68,
-    prioridad: "B",
-    guion: {
-      apertura: "Hola, ¿Manuel? Soy zVaito, de Verox. Te llamo porque he visto en vuestra web vuestros talleres móviles de asistencia rápida en Plaza, y tengo una pregunta rápida sobre cómo os firman los partes los encargados de almacén. ¿Tienes un minuto?",
-      si_no_esta_el_decisor: "¿Quién lleva la coordinación del servicio técnico y talleres móviles?",
-      preguntas_descubrimiento: [
-        "¿Cuántas asistencias en cliente hacéis a la semana con los 6 talleres móviles?",
-        "¿Qué pasa cuando el técnico acaba y el jefe de almacén no está disponible para firmar?"
-      ],
-      objecion_probable: {
-        objecion: "No tenemos presupuesto ahora mismo",
-        respuesta: "Lo entiendo perfectamente. No te llamo para venderte nada hoy, solo para enseñarte en 30 minutos lo que están haciendo otros talleres de maquinaria para cobrar los partes al día. Si luego no os encaja, os quedáis la idea gratis. ¿Te cuadra el martes a las 09:00 o el jueves a las 16:30?"
-      },
-      cierre_diagnostico: "Te propongo una videollamada corta de 30 min: lo revisamos con tus números y te digo si os compensa. ¿Te va mejor el martes a las 09:00 o el jueves a las 16:30?"
-    },
-    mejor_franja: "9:00-10:00",
-    notas: "Tienen prisa habitual por el volumen de Plaza, ser muy ágil.",
+    mejor_franja: "8:00 - 9:00 o sobre las 14:00",
+    notas: "Javier pasa mucho tiempo a pie de obra. Prefiere soluciones prácticas que funcionen desde el móvil.",
     estado: "pendiente",
     intentos: 0,
     apertura_siguiente: null
@@ -273,43 +287,43 @@ export const DEFAULT_PROSPECTS = [
 export const DEFAULT_OBJECTIONS = [
   {
     id: "obj-1",
-    etiqueta: "Ya tenemos un programa",
-    respuesta: "Perfecto, no vengo a que cambies el programa ni a quitar lo que ya os funciona. Solo quiero saber una cosa: ¿los técnicos os mandan los partes cerrados en el momento o llegan horas o días más tarde a la oficina?",
-    sector: "servicios-tecnicos",
-    veces: 24,
-    exitos: 11
+    etiqueta: "Ya tenemos página web",
+    respuesta: "Me parece excelente, y no te llamo para rehacer lo que ya tengáis bien hecho. Solo una pregunta: ¿vuestra web actual os está generando clientes cualificados cada semana de forma automática o es solo una tarjeta de visita digital? En 15 min te enseño cómo convertirla en un captador real.",
+    sector: "desarrollo-web",
+    veces: 42,
+    exitos: 18
   },
   {
     id: "obj-2",
-    etiqueta: "Mándame un correo con la info",
-    respuesta: "Te lo mando sin problema, pero antes de enviarte un PDF genérico que no te sirva: ¿cuántos técnicos tenéis en ruta ahora mismo? Así te preparo solo lo que aplica a vuestro tamaño.",
+    etiqueta: "Mándame un correo con la información",
+    respuesta: "Te lo mando encantado, pero para no enviarte un dossier genérico que acabe en la papelera: ¿vuestro mayor dolor de cabeza ahora mismo es captar más clientes o las horas que perdéis en tareas administrativas repetitivas? Así te preparo solo lo que os sirva a vosotros.",
     sector: "general",
-    veces: 31,
-    exitos: 9
+    veces: 35,
+    exitos: 12
   },
   {
     id: "obj-3",
     etiqueta: "Ahora no tengo tiempo / Estoy ocupado",
-    respuesta: "Te entiendo perfectamente, te he pillado en mal momento. Son literalmente 30 segundos: ¿cuándo te viene mejor que te dé un toque rápido, a primera hora mañana o sobre las dos?",
+    respuesta: "Te entiendo perfectamente, te pillo en mitad del trabajo. Precisamente por eso te llamo: los clientes que trabajan con nosotros estaban desbordados de trabajo manual. La demo dura literalmente 15 minutos y te enseña cómo liberar entre 10 y 15 horas al mes con software e IA. ¿Te va mejor a primera hora o a media tarde?",
     sector: "general",
-    veces: 18,
-    exitos: 7
+    veces: 28,
+    exitos: 10
   },
   {
     id: "obj-4",
-    etiqueta: "No nos interesa",
-    respuesta: "Sin problema, lo respeto al cien por cien. Solo una duda antes de cerrar la ficha: ¿los partes de trabajo y la facturación ya los tenéis al día sin perder horas de oficina?",
-    sector: "general",
-    veces: 15,
-    exitos: 3
+    etiqueta: "La IA y el software a medida son muy caros",
+    respuesta: "Tiene todo el sentido que pienses eso, porque muchas agencias inflan los precios con cosas que no sirven. Nosotros creamos herramientas pragmáticas y automatizaciones que se amortizan en las primeras 4 semanas. En la demo de 15 minutos ves con números reales si a ti te compensa o no antes de poner un solo euro.",
+    sector: "software-ia",
+    veces: 22,
+    exitos: 9
   },
   {
     id: "obj-5",
-    etiqueta: "No tenemos presupuesto",
-    respuesta: "Tiene todo el sentido. No te llamo para venderte nada hoy, sino para enseñarte en 30 minutos cómo otras empresas de tu sector ahorran tiempo de oficina con sus mismos recursos. Si no te cuadra, te quedas las ideas sin compromiso. ¿Te encaja el martes o el jueves?",
+    etiqueta: "No nos interesa",
+    respuesta: "Lo respeto al cien por cien. Solo una duda antes de cerrar tu ficha: ¿en vuestra empresa tenéis todos los procesos, captación y tareas administrativas automatizados al 100% sin perder horas de oficina? Si no es así, te guardo una demo de 15 minutos sin ningún compromiso.",
     sector: "general",
-    veces: 12,
-    exitos: 5
+    veces: 19,
+    exitos: 4
   }
 ];
 
@@ -321,18 +335,23 @@ export async function getCabinaState() {
       const iRes = await pgPool.query('SELECT * FROM cabina_interactions ORDER BY created_at DESC');
       const oRes = await pgPool.query('SELECT * FROM cabina_objections ORDER BY exitos DESC');
 
-      if (pRes.rows.length === 0) {
-        // Inicializar empresas en Postgres
+      const hasOldFrigo = pRes.rows.some(r => r.id === 'frigotecnica-almanzor');
+      if (pRes.rows.length === 0 || hasOldFrigo) {
+        if (hasOldFrigo) {
+          await pgPool.query("DELETE FROM cabina_prospects WHERE id IN ('frigotecnica-almanzor', 'climaga-hnos', 'carretillas-ebro')");
+          await pgPool.query("DELETE FROM cabina_objections");
+        }
         for (const p of DEFAULT_PROSPECTS) {
           await saveProspectPG(p);
         }
         for (const o of DEFAULT_OBJECTIONS) {
           await pgPool.query(
-            `INSERT INTO cabina_objections (id, etiqueta, respuesta, sector, veces, exitos) VALUES ($1, $2, $3, $4, $5, $6) ON CONFLICT (id) DO NOTHING`,
+            `INSERT INTO cabina_objections (id, etiqueta, respuesta, sector, veces, exitos) VALUES ($1, $2, $3, $4, $5, $6) ON CONFLICT (id) DO UPDATE SET etiqueta = EXCLUDED.etiqueta, respuesta = EXCLUDED.respuesta`,
             [o.id, o.etiqueta, o.respuesta, o.sector, o.veces, o.exitos]
           );
         }
-        return { prospects: DEFAULT_PROSPECTS, interactions: [], objections: DEFAULT_OBJECTIONS };
+        const fresh = await pgPool.query('SELECT * FROM cabina_prospects ORDER BY created_at ASC');
+        return { prospects: fresh.rows.map(normalizePGProspect), interactions: iRes.rows, objections: DEFAULT_OBJECTIONS };
       }
 
       const prospects = pRes.rows.map(normalizePGProspect);
@@ -346,7 +365,7 @@ export async function getCabinaState() {
 
   // Fallback db.json
   const db = await readDB();
-  if (!db.cabina) {
+  if (!db.cabina || db.cabina.prospects?.some(p => p.id === 'frigotecnica-almanzor')) {
     db.cabina = {
       prospects: DEFAULT_PROSPECTS,
       interactions: [],

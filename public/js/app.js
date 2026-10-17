@@ -16,19 +16,24 @@ const btnLogout = document.getElementById('btn-logout');
 const statusGeminiVal = document.querySelector('#status-gemini .val');
 const statusGmailVal = document.querySelector('#status-gmail .val');
 
-// Carga Inicial
+// Carga Inicial Resiliente
 document.addEventListener('DOMContentLoaded', async () => {
-  await verifySession();
-  setupRouter();
-  setupAgentsModule();
-  setupGymModule();
-  setupSitemapsModule();
-  setupSecurityModule();
-  setupSalesModule();
-  setupConfigModule();
-  setupLeadsModule();
-  setupStudySyncModule();
-  setupGradesModule();
+  // Configurar ruteador y botones primero para respuesta táctil instantánea
+  try { setupRouter(); } catch(e) { console.error('Error al inicializar router:', e); }
+
+  // Cada módulo se inicializa de forma aislada para que un fallo nunca congele la app
+  try { setupAgentsModule(); } catch(e) { console.error('Error en setupAgentsModule:', e); }
+  try { setupGymModule(); } catch(e) { console.error('Error en setupGymModule:', e); }
+  try { setupSitemapsModule(); } catch(e) { console.error('Error en setupSitemapsModule:', e); }
+  try { setupSecurityModule(); } catch(e) { console.error('Error en setupSecurityModule:', e); }
+  try { setupSalesModule(); } catch(e) { console.error('Error en setupSalesModule:', e); }
+  try { setupConfigModule(); } catch(e) { console.error('Error en setupConfigModule:', e); }
+  try { setupLeadsModule(); } catch(e) { console.error('Error en setupLeadsModule:', e); }
+  try { setupStudySyncModule(); } catch(e) { console.error('Error en setupStudySyncModule:', e); }
+  try { setupGradesModule(); } catch(e) { console.error('Error en setupGradesModule:', e); }
+
+  // Verificación de sesión en segundo plano sin bloquear interacción
+  verifySession().catch(e => console.error('Error en verifySession:', e));
 });
 
 // Verificar si hay sesión activa
@@ -1807,21 +1812,28 @@ function setupGymModule() {
   
   // Cerrar Modales
   document.querySelectorAll('.btn-close-modal').forEach(btn => {
-    btn.addEventListener('click', () => gymModal.classList.add('hidden'));
+    btn.addEventListener('click', () => gymModal && gymModal.classList.add('hidden'));
   });
 
-  btnAddDay.addEventListener('click', () => {
-    document.getElementById('gym-day-id').value = '';
-    document.getElementById('gym-day-name').value = '';
-    exercisesInputsContainer.innerHTML = '';
-    document.getElementById('gym-modal-title').textContent = 'Añadir Día de Entrenamiento';
-    const submitBtn = gymForm.querySelector('button[type="submit"]');
-    if (submitBtn) submitBtn.textContent = 'Crear Rutina';
-    gymModal.classList.remove('hidden');
-    addExerciseInputField(); // Campo inicial
-  });
+  if (btnAddDay) {
+    btnAddDay.addEventListener('click', () => {
+      const idEl = document.getElementById('gym-day-id');
+      const nameEl = document.getElementById('gym-day-name');
+      const titleEl = document.getElementById('gym-modal-title');
+      if (idEl) idEl.value = '';
+      if (nameEl) nameEl.value = '';
+      if (exercisesInputsContainer) exercisesInputsContainer.innerHTML = '';
+      if (titleEl) titleEl.textContent = 'Añadir Día de Entrenamiento';
+      const submitBtn = gymForm ? gymForm.querySelector('button[type="submit"]') : null;
+      if (submitBtn) submitBtn.textContent = 'Crear Rutina';
+      if (gymModal) gymModal.classList.remove('hidden');
+      addExerciseInputField(); // Campo inicial
+    });
+  }
 
-  btnAddExerciseField.addEventListener('click', () => addExerciseInputField());
+  if (btnAddExerciseField) {
+    btnAddExerciseField.addEventListener('click', () => addExerciseInputField());
+  }
 
   function addExerciseInputField(nameValue = '', exId = '', weight = 0, notes = '') {
     const rowId = 'ex_row_' + Math.random().toString(36).substr(2, 9);
@@ -2165,45 +2177,49 @@ function setupSitemapsModule() {
   const formAddSitemap = document.getElementById('form-add-sitemap');
   const btnSitemapCheckNow = document.getElementById('btn-sitemap-check-now');
 
-  formAddSitemap.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const url = document.getElementById('sitemap-site-url').value.trim();
-    const sitemapUrl = document.getElementById('sitemap-xml-url').value.trim();
+  if (formAddSitemap) {
+    formAddSitemap.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const url = document.getElementById('sitemap-site-url').value.trim();
+      const sitemapUrl = document.getElementById('sitemap-xml-url').value.trim();
 
-    try {
-      const res = await fetch('/api/sitemaps', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ url, sitemapUrl })
-      });
+      try {
+        const res = await fetch('/api/sitemaps', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ url, sitemapUrl })
+        });
 
-      if (res.ok) {
-        const data = await res.json();
-        renderSitemaps(data.sitemaps);
-        formAddSitemap.reset();
+        if (res.ok) {
+          const data = await res.json();
+          renderSitemaps(data.sitemaps);
+          formAddSitemap.reset();
+        }
+      } catch (err) {
+        console.error(err);
       }
-    } catch (err) {
-      console.error(err);
-    }
-  });
+    });
+  }
 
-  btnSitemapCheckNow.addEventListener('click', async () => {
-    btnSitemapCheckNow.disabled = true;
-    btnSitemapCheckNow.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Auditando...';
-    
-    try {
-      const res = await fetch('/api/sitemaps/check-now', { method: 'POST' });
-      if (res.ok) {
-        const data = await res.json();
-        renderSitemaps(data.sitemaps);
+  if (btnSitemapCheckNow) {
+    btnSitemapCheckNow.addEventListener('click', async () => {
+      btnSitemapCheckNow.disabled = true;
+      btnSitemapCheckNow.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Auditando...';
+      
+      try {
+        const res = await fetch('/api/sitemaps/check-now', { method: 'POST' });
+        if (res.ok) {
+          const data = await res.json();
+          renderSitemaps(data.sitemaps);
+        }
+      } catch (e) {
+        console.error(e);
       }
-    } catch (e) {
-      console.error(e);
-    }
 
-    btnSitemapCheckNow.disabled = false;
-    btnSitemapCheckNow.innerHTML = '<i class="fa-solid fa-magnifying-glass"></i> Auditar Todos Ahora';
-  });
+      btnSitemapCheckNow.disabled = false;
+      btnSitemapCheckNow.innerHTML = '<i class="fa-solid fa-magnifying-glass"></i> Auditar Todos Ahora';
+    });
+  }
 
   window.deleteSitemapSite = async (id) => {
     if (confirm('¿Seguro que deseas eliminar este sitio de sitemaps?')) {
@@ -2273,90 +2289,94 @@ function setupSecurityModule() {
     });
   }
 
-  formAddTarget.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const url = document.getElementById('security-target-url').value.trim();
+  if (formAddTarget) {
+    formAddTarget.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const url = document.getElementById('security-target-url').value.trim();
 
-    try {
-      const res = await fetch('/api/security/targets', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ url })
-      });
+      try {
+        const res = await fetch('/api/security/targets', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ url })
+        });
 
-      if (res.ok) {
-        const data = await res.json();
-        allSecurityTargets = data.targets;
-        renderSecurityTargets(allSecurityTargets);
-        updateSecurityFilterDropdown();
-        formAddTarget.reset();
-        showToast('Web objetivo añadida al Pentesting Bot.');
-      }
-    } catch (e) {
-      console.error(e);
-    }
-  });
-
-  btnRunPentest.addEventListener('click', async () => {
-    btnRunPentest.disabled = true;
-    btnRunPentest.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Ejecutando...';
-
-    // Efecto interactivo de consola
-    const consoleBox = document.getElementById('security-console');
-    consoleBox.innerHTML = '';
-    
-    appendConsoleLine('[+] Iniciando Bot de Pentesting 24/7...', 'text-success');
-    await sleep(600);
-    appendConsoleLine('[+] Recuperando objetivos de auditoría activos...', 'text-success');
-    await sleep(500);
-    
-    // Iniciar escaneo en backend
-    try {
-      const res = await fetch('/api/security/scan-now', { method: 'POST' });
-      if (res.ok) {
-        const data = await res.json();
-        allSecurityTargets = data.targets;
-        allSecurityLogs = data.logs;
-        
-        // Simular salida interactiva en consola antes de mostrar resultados
-        for (const target of data.targets) {
-          appendConsoleLine(`[+] Cargando objetivo: ${target.url}`, 'text-success');
-          await sleep(400);
-          appendConsoleLine(`[~] Escaneando puertos abiertos de ${target.url}...`, 'text-warn');
-          await sleep(500);
-          appendConsoleLine(`[~] Comprobando HTTPS y certificados SSL...`, 'text-warn');
-          await sleep(400);
-          appendConsoleLine(`[~] Solicitando cabeceras de respuesta HTTP y políticas CSP...`, 'text-warn');
-          await sleep(500);
-          appendConsoleLine(`[~] Escaneando directorios y archivos sensibles (.env, .git, config)...`, 'text-warn');
-          await sleep(400);
-          
-          const logsOfTarget = data.logs.filter(l => l.url === target.url);
-          if (logsOfTarget.length > 0) {
-            appendConsoleLine(`[!] ¡FALLO DE SEGURIDAD DETECTADO en ${target.url}!`, 'text-err');
-            logsOfTarget.forEach(vuln => {
-              appendConsoleLine(`    - [${vuln.severity}] ${vuln.title}`, 'text-err');
-            });
-          } else {
-            appendConsoleLine(`[+] Escaneo completado para ${target.url}: SIN VULNERABILIDADES CRÍTICAS.`, 'text-success');
-          }
-          await sleep(300);
+        if (res.ok) {
+          const data = await res.json();
+          allSecurityTargets = data.targets;
+          renderSecurityTargets(allSecurityTargets);
+          updateSecurityFilterDropdown();
+          formAddTarget.reset();
+          showToast('Web objetivo añadida al Pentesting Bot.');
         }
-        
-        appendConsoleLine('[+] Todos los escaneos de vulnerabilidades han finalizado correctamente.', 'text-success');
-        
-        // Renderizar datos finales y actualizar selector
-        renderSecurityTargets(allSecurityTargets);
-        updateSecurityFilterDropdown();
-        renderFilteredSecurityLogs();
+      } catch (e) {
+        console.error(e);
       }
-    } catch (e) {
-      appendConsoleLine('[x] Error al ejecutar el pentest de red.', 'text-err');
-    }
+    });
+  }
 
-    btnRunPentest.disabled = false;
-    btnRunPentest.innerHTML = '<i class="fa-solid fa-user-secret"></i> Lanzar Escaneo Completo';
-  });
+  if (btnRunPentest) {
+    btnRunPentest.addEventListener('click', async () => {
+      btnRunPentest.disabled = true;
+      btnRunPentest.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Ejecutando...';
+
+      // Efecto interactivo de consola
+      const consoleBox = document.getElementById('security-console');
+      if (consoleBox) consoleBox.innerHTML = '';
+      
+      appendConsoleLine('[+] Iniciando Bot de Pentesting 24/7...', 'text-success');
+      await sleep(600);
+      appendConsoleLine('[+] Recuperando objetivos de auditoría activos...', 'text-success');
+      await sleep(500);
+      
+      // Iniciar escaneo en backend
+      try {
+        const res = await fetch('/api/security/scan-now', { method: 'POST' });
+        if (res.ok) {
+          const data = await res.json();
+          allSecurityTargets = data.targets;
+          allSecurityLogs = data.logs;
+          
+          // Simular salida interactiva en consola antes de mostrar resultados
+          for (const target of data.targets) {
+            appendConsoleLine(`[+] Cargando objetivo: ${target.url}`, 'text-success');
+            await sleep(400);
+            appendConsoleLine(`[~] Escaneando puertos abiertos de ${target.url}...`, 'text-warn');
+            await sleep(500);
+            appendConsoleLine(`[~] Comprobando HTTPS y certificados SSL...`, 'text-warn');
+            await sleep(400);
+            appendConsoleLine(`[~] Solicitando cabeceras de respuesta HTTP y políticas CSP...`, 'text-warn');
+            await sleep(500);
+            appendConsoleLine(`[~] Escaneando directorios y archivos sensibles (.env, .git, config)...`, 'text-warn');
+            await sleep(400);
+            
+            const logsOfTarget = data.logs.filter(l => l.url === target.url);
+            if (logsOfTarget.length > 0) {
+              appendConsoleLine(`[!] ¡FALLO DE SEGURIDAD DETECTADO en ${target.url}!`, 'text-err');
+              logsOfTarget.forEach(vuln => {
+                appendConsoleLine(`    - [${vuln.severity}] ${vuln.title}`, 'text-err');
+              });
+            } else {
+              appendConsoleLine(`[+] Escaneo completado para ${target.url}: SIN VULNERABILIDADES CRÍTICAS.`, 'text-success');
+            }
+            await sleep(300);
+          }
+          
+          appendConsoleLine('[+] Todos los escaneos de vulnerabilidades han finalizado correctamente.', 'text-success');
+          
+          // Renderizar datos finales y actualizar selector
+          renderSecurityTargets(allSecurityTargets);
+          updateSecurityFilterDropdown();
+          renderFilteredSecurityLogs();
+        }
+      } catch (e) {
+        appendConsoleLine('[x] Error al ejecutar el pentest de red.', 'text-err');
+      }
+
+      btnRunPentest.disabled = false;
+      btnRunPentest.innerHTML = '<i class="fa-solid fa-user-secret"></i> Lanzar Escaneo Completo';
+    });
+  }
 
   window.deleteSecurityTarget = async (id) => {
     if (confirm('¿Seguro que deseas eliminar esta web auditada? Se borrarán sus vulnerabilidades.')) {
@@ -2567,10 +2587,13 @@ function setupConfigModule() {
   const form = document.getElementById('config-form');
   const msg = document.getElementById('config-status-msg');
 
-  form.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    msg.textContent = '';
-    msg.className = 'status-msg';
+  if (form) {
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (msg) {
+        msg.textContent = '';
+        msg.className = 'status-msg';
+      }
 
     const geminiApiKey = document.getElementById('config-gemini-key').value.trim();
     const gmailUser = document.getElementById('config-gmail-user').value.trim();
@@ -2603,10 +2626,13 @@ function setupConfigModule() {
         msg.classList.add('error');
       }
     } catch (err) {
-      msg.textContent = 'Error de red.';
-      msg.classList.add('error');
+      if (msg) {
+        msg.textContent = 'Error de red.';
+        msg.classList.add('error');
+      }
     }
   });
+  }
 }
 
 async function loadConfigData() {

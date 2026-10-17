@@ -6610,9 +6610,10 @@ body {
 .talk-bar-track {
   background: #e2e8f0 !important;
 }
-.call-outcome-bar {
+.cabina-bottom-bar, .call-outcome-bar {
   background: #ffffff !important;
-  border-top: 1px solid #e2e8f0 !important;
+  border: 1px solid #e2e8f0 !important;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.05) !important;
 }
 .btn-outcome {
   background: #f8fafc !important;
@@ -6623,6 +6624,27 @@ body {
   background: #f1f5f9 !important;
   border-color: #cbd5e1 !important;
   color: #0f172a !important;
+}
+.btn-next-inline {
+  background: #2563eb !important;
+  color: #ffffff !important;
+  border: 1px solid #1d4ed8 !important;
+}
+.live-transcript-card {
+  background: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+}
+.transcript-header-row {
+  color: #64748b !important;
+  border-bottom: 1px solid #e2e8f0 !important;
+}
+.transcript-chat-box {
+  background: #f8fafc !important;
+  border: 1px solid #e2e8f0 !important;
+  color: #0f172a !important;
+}
+.transcript-msg.system {
+  color: #64748b !important;
 }
 
 /* Panel de Vida Hub */

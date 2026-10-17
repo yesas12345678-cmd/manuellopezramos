@@ -29,6 +29,12 @@
   --blur-amount: 15px;
 }
 
+html {
+  -webkit-tap-highlight-color: transparent;
+  scroll-behavior: smooth;
+  overscroll-behavior-y: none;
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -42,8 +48,37 @@ body {
   background-attachment: fixed;
   color: var(--text-main);
   min-height: 100vh;
+  min-height: 100dvh;
+  width: 100%;
+  max-width: 100vw;
   overflow-x: hidden;
   line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  overscroll-behavior-y: none;
+}
+
+/* Optimización táctil, prevención de demoras y feedback nativo */
+button, a, [role="button"], .tappable, .dash-card, .btn, .step-btn, .atab-btn, .ftab-btn, .btn-outcome, .slot-pick-btn {
+  touch-action: manipulation;
+}
+
+button, [role="button"], .tab, .chip, .nav-pill-btn, .btn, .step-btn, .atab-btn, .ftab-btn, .btn-outcome, .slot-pick-btn, .drag-handle {
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
+
+/* Feedback instantáneo al pulsar (Press feedback nativo) */
+button:active, .btn:active, .nav-pill-btn:active, .step-btn:active, .atab-btn:active, .ftab-btn:active, .btn-outcome:active, .slot-pick-btn:active, .btn-mini:active {
+  transform: scale(0.97);
+  transition: transform 100ms cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+/* Evitar zoom automático indeseado en inputs en iOS Safari */
+@media (max-width: 768px), (pointer: coarse) {
+  input, textarea, select {
+    font-size: 16px !important;
+  }
 }
 
 /* Scrollbar personalizado */
@@ -1568,26 +1603,7 @@ tr:hover td {
 .status-msg.success { color: var(--color-success); }
 .status-msg.error { color: var(--color-danger); }
 
-/* Adaptabilidad Responsiva */
-@media (max-width: 1024px) {
-  .sales-workspace, .security-workspace {
-    grid-template-columns: 1fr;
-  }
-  .app-header {
-    padding: 0 20px;
-  }
-  .app-main {
-    padding: 20px;
-  }
-}
-@media (max-width: 600px) {
-  .form-row {
-    flex-direction: column;
-  }
-  .dashboard-grid {
-    grid-template-columns: 1fr;
-  }
-}
+/* Adaptabilidad Responsiva Consolidada (Ver final del archivo para el sistema responsivo maestro) */
 
 /* ================= STUDYSYNC ARCADE MODULE ================= */
 
@@ -5064,16 +5080,803 @@ tr:hover td {
   gap: 10px;
   flex-shrink: 0;
 }
-@media (max-width: 900px) {
-  .agent-panel-banner {
-    flex-direction: column;
-    align-items: flex-start;
+/* =====================================================================
+   SISTEMA RESPONSIVO MAESTRO & ADAPTACIÓN NATIVA PARA MÓVILES
+   (Basado en principios Mobile-Native de diseño táctil e ingeniería fluida)
+   ===================================================================== */
+
+/* 1. Prevención de estados :hover pegajosos en dispositivos táctiles */
+@media (hover: hover) and (pointer: fine) {
+  .btn:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.1);
   }
-  .apb-right {
-    width: 100%;
-    justify-content: flex-start;
+  .nav-pill-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    border-color: rgba(255, 255, 255, 0.25);
+  }
+  .dash-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.4);
+  }
+  .agent-card:hover {
+    border-color: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+  }
+  .btn-outcome:hover {
+    transform: translateY(-1px);
+    border-color: rgba(255, 255, 255, 0.2);
   }
 }
+
+/* 2. Pantallas Medianas y Tablets (max-width: 1024px) */
+@media (max-width: 1024px) {
+  /* Cabina Ventas: Flujo Vertical fluido (Adiós a las 3 columnas aplastadas) */
+  .cabina-panel-root {
+    height: auto !important;
+    max-height: none !important;
+    overflow: visible !important;
+    padding: 12px 8px calc(24px + env(safe-area-inset-bottom, 0px)) 8px !important;
+  }
+  .cabina-grid-layout {
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
+    overflow: visible !important;
+    min-height: auto !important;
+  }
+  .cabina-col {
+    max-height: none !important;
+    overflow: visible !important;
+  }
+  .guion-content-area,
+  .ammo-tab-content,
+  .ficha-tab-content {
+    overflow: visible !important;
+    max-height: none !important;
+  }
+
+  /* Layout de Agentes (Panel de Vida) */
+  .agents-layout-grid {
+    grid-template-columns: 1fr !important;
+    gap: 20px !important;
+  }
+
+  /* Workspaces de Módulos */
+  .sales-workspace,
+  .security-workspace,
+  .sitemaps-workspace,
+  .leads-workspace,
+  .arcade-grid,
+  .grades-main-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .agent-panel-banner {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 16px !important;
+  }
+  .apb-right {
+    width: 100% !important;
+    justify-content: flex-start !important;
+    flex-wrap: wrap !important;
+  }
+}
+
+/* 3. Teléfonos Inteligentes y Smartphones (max-width: 768px) */
+@media (max-width: 768px) {
+  /* Header de la App: Formato Barra de Aplicación Nativa con Tabs en Segmento */
+  .app-header {
+    height: auto !important;
+    min-height: 56px !important;
+    padding: max(10px, env(safe-area-inset-top, 0px)) 16px 12px 16px !important;
+    display: flex !important;
+    flex-wrap: wrap !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    gap: 10px 0 !important;
+    position: sticky !important;
+    top: 0 !important;
+    z-index: 100 !important;
+    background: rgba(7, 9, 19, 0.92) !important;
+    backdrop-filter: blur(16px) !important;
+    -webkit-backdrop-filter: blur(16px) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+  }
+  .header-logo {
+    order: 1 !important;
+    font-size: 1.35rem !important;
+  }
+  .user-menu {
+    order: 2 !important;
+  }
+  .btn-logout {
+    padding: 6px 14px !important;
+    font-size: 0.82rem !important;
+    min-height: 38px !important;
+    border-radius: 8px !important;
+  }
+  .header-nav-center {
+    order: 3 !important;
+    width: 100% !important;
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 8px !important;
+    margin-top: 2px !important;
+  }
+  .nav-pill-btn {
+    width: 100% !important;
+    justify-content: center !important;
+    min-height: 44px !important;
+    padding: 10px 12px !important;
+    font-size: 0.88rem !important;
+    border-radius: 12px !important;
+  }
+
+  /* Contenedor Principal */
+  .app-main {
+    padding: 14px 12px calc(28px + env(safe-area-inset-bottom, 0px)) 12px !important;
+    max-width: 100vw !important;
+    overflow-x: clip !important;
+    box-sizing: border-box !important;
+  }
+
+  .section-title-bar {
+    flex-wrap: wrap !important;
+    gap: 10px !important;
+    align-items: center !important;
+    margin-bottom: 18px !important;
+    padding-bottom: 12px !important;
+  }
+  .section-title-bar h2 {
+    font-size: 1.25rem !important;
+    flex: 1 !important;
+  }
+  .btn-back {
+    min-height: 40px !important;
+    padding: 6px 12px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+  }
+
+  /* ------------------- DASHBOARD MÓVIL ------------------- */
+  .panel-header-intro {
+    margin-bottom: 16px !important;
+  }
+  .panel-header-intro h2 {
+    font-size: 1.35rem !important;
+  }
+  .panel-header-intro p {
+    font-size: 0.86rem !important;
+  }
+
+  /* Life Hero Banner */
+  .life-hero-banner {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    padding: 18px 16px !important;
+    gap: 16px !important;
+    border-radius: 14px !important;
+  }
+  .life-hero-content h2 {
+    font-size: 1.25rem !important;
+    line-height: 1.3 !important;
+  }
+  .life-hero-content p {
+    font-size: 0.85rem !important;
+    line-height: 1.45 !important;
+  }
+  .life-hero-stats {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 8px !important;
+    width: 100% !important;
+  }
+  .life-stat-item {
+    padding: 8px 10px !important;
+    border-radius: 8px !important;
+  }
+  .life-stat-item .stat-num {
+    font-size: 1.2rem !important;
+  }
+  .life-hero-actions {
+    width: 100% !important;
+    flex-direction: column !important;
+    gap: 8px !important;
+  }
+  .life-hero-actions .btn {
+    width: 100% !important;
+    min-height: 46px !important;
+    justify-content: center !important;
+    font-size: 0.92rem !important;
+  }
+
+  /* Grid del Dashboard */
+  .dashboard-grid {
+    grid-template-columns: 1fr !important;
+    gap: 14px !important;
+  }
+  .dash-card {
+    padding: 16px !important;
+    border-radius: 14px !important;
+  }
+  .card-header h3 {
+    font-size: 1.1rem !important;
+  }
+  .card-footer .btn {
+    width: 100% !important;
+    min-height: 44px !important;
+    justify-content: center !important;
+  }
+
+  /* ------------------- CABINA VENTAS MÓVIL ------------------- */
+  .cabina-top-bar {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 10px !important;
+    padding: 12px !important;
+    border-radius: 12px !important;
+  }
+  .cabina-top-left {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 8px !important;
+    width: 100% !important;
+  }
+  .cabina-queue-stepper {
+    min-height: 40px !important;
+    padding: 4px 10px !important;
+  }
+  .cabina-select-inline {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-height: 44px !important;
+    font-size: 16px !important;
+    margin-top: 4px !important;
+  }
+  .cabina-top-stats {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 6px !important;
+    width: 100% !important;
+  }
+  .stat-pill {
+    justify-content: center !important;
+    padding: 8px 8px !important;
+    font-size: 0.76rem !important;
+    min-height: 38px !important;
+  }
+  .cabina-top-actions {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 8px !important;
+    width: 100% !important;
+  }
+  .cabina-top-actions .btn {
+    width: 100% !important;
+    justify-content: center !important;
+    min-height: 42px !important;
+    font-size: 0.8rem !important;
+  }
+  .undo-banner {
+    flex-direction: column !important;
+    gap: 8px !important;
+    align-items: stretch !important;
+    text-align: center !important;
+  }
+  .btn-undo {
+    width: 100% !important;
+    min-height: 40px !important;
+  }
+
+  /* Ficha de Empresa (Columna 1) */
+  .ficha-header-card {
+    padding: 14px 12px !important;
+  }
+  .ficha-top-row {
+    gap: 10px !important;
+    align-items: flex-start !important;
+  }
+  .score-badge {
+    width: 44px !important;
+    height: 44px !important;
+    font-size: 1.05rem !important;
+    flex-shrink: 0 !important;
+  }
+  .ficha-title-block h3 {
+    font-size: 1.15rem !important;
+    word-break: break-word !important;
+  }
+  .ficha-phones-group {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 8px !important;
+  }
+  .btn-call-action {
+    width: 100% !important;
+    min-height: 56px !important;
+    padding: 12px 14px !important;
+  }
+  .btn-call-action .call-text-box strong {
+    font-size: 1.25rem !important;
+  }
+  .secondary-contacts {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 8px !important;
+    width: 100% !important;
+  }
+  .contact-pill-btn,
+  .contact-secondary-pill {
+    min-height: 44px !important;
+    justify-content: center !important;
+    padding: 8px 12px !important;
+    font-size: 0.84rem !important;
+  }
+  .ficha-tab-nav {
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 4px !important;
+    padding: 4px !important;
+  }
+  .ftab-btn {
+    padding: 10px 4px !important;
+    font-size: 0.78rem !important;
+    min-height: 42px !important;
+    justify-content: center !important;
+  }
+  .info-block {
+    padding: 12px !important;
+  }
+
+  /* Guión de Llamada (Columna 2) */
+  .guion-stepper-bar {
+    display: grid !important;
+    grid-template-columns: repeat(4, 1fr) !important;
+    gap: 4px !important;
+    padding: 6px !important;
+  }
+  .step-btn {
+    padding: 8px 2px !important;
+    min-height: 52px !important;
+    justify-content: center !important;
+  }
+  .step-title {
+    font-size: 0.74rem !important;
+    text-align: center !important;
+  }
+  .step-key {
+    display: none !important; /* Ocultar teclas físicas en móviles */
+  }
+  .script-reading-box {
+    padding: 14px !important;
+  }
+  .script-hero-text {
+    font-size: 1.05rem !important;
+    line-height: 1.5 !important;
+  }
+  .sub-branch-box {
+    padding: 12px !important;
+  }
+  .inputs-inline-row {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 8px !important;
+  }
+  .inputs-inline-row input {
+    width: 100% !important;
+    min-height: 44px !important;
+    font-size: 16px !important;
+  }
+  .calculator-card {
+    padding: 12px !important;
+  }
+  .calc-inputs-row {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 8px !important;
+  }
+  .calc-field input,
+  .calc-field select {
+    min-height: 44px !important;
+    font-size: 16px !important;
+  }
+  .slots-selection-card {
+    padding: 12px !important;
+  }
+  .slots-buttons-row {
+    grid-template-columns: 1fr !important;
+    gap: 8px !important;
+  }
+  .slot-pick-btn {
+    min-height: 48px !important;
+    justify-content: flex-start !important;
+    padding: 10px 14px !important;
+    font-size: 0.88rem !important;
+  }
+  .slot-custom-row {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 6px !important;
+  }
+  .slot-custom-row input {
+    width: 100% !important;
+    min-height: 44px !important;
+    font-size: 16px !important;
+  }
+  .call-notes-input-box textarea {
+    min-height: 70px !important;
+    font-size: 16px !important;
+  }
+  .btn-next-step {
+    width: 100% !important;
+    min-height: 46px !important;
+    justify-content: center !important;
+  }
+  .btn-next-step kbd {
+    display: none !important;
+  }
+
+  /* Munición / Coach (Columna 3) */
+  .ammo-tab-nav {
+    display: grid !important;
+    grid-template-columns: repeat(4, 1fr) !important;
+    gap: 4px !important;
+    padding: 4px !important;
+  }
+  .atab-btn {
+    padding: 8px 2px !important;
+    font-size: 0.72rem !important;
+    min-height: 48px !important;
+    flex-direction: column !important;
+    gap: 3px !important;
+    justify-content: center !important;
+    text-align: center !important;
+  }
+  .coach-control-bar {
+    flex-direction: column !important;
+    gap: 8px !important;
+    width: 100% !important;
+  }
+  .btn-listen-toggle,
+  .btn-audio-test {
+    width: 100% !important;
+    min-height: 46px !important;
+    justify-content: center !important;
+  }
+  .audio-badge {
+    align-self: center !important;
+  }
+  .say-now-card {
+    padding: 14px !important;
+  }
+  .say-now-body {
+    font-size: 0.95rem !important;
+  }
+  .live-transcript-card {
+    padding: 12px !important;
+  }
+  .transcript-chat-box {
+    max-height: 220px !important;
+  }
+
+  /* Barra Inferior Fija de Resultados (Bottom Sticky Sheet para el Pulgar) */
+  .cabina-bottom-bar {
+    position: sticky !important;
+    bottom: 0 !important;
+    z-index: 90 !important;
+    margin-top: 14px !important;
+    margin-left: -12px !important;
+    margin-right: -12px !important;
+    border-radius: 16px 16px 0 0 !important;
+    padding: 12px 12px calc(12px + env(safe-area-inset-bottom, 0px)) 12px !important;
+    background: rgba(7, 9, 19, 0.96) !important;
+    backdrop-filter: blur(16px) !important;
+    -webkit-backdrop-filter: blur(16px) !important;
+    box-shadow: 0 -8px 30px rgba(0, 0, 0, 0.7) !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.12) !important;
+  }
+  .results-buttons-row {
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 6px !important;
+    width: 100% !important;
+  }
+  .btn-outcome {
+    min-height: 48px !important;
+    padding: 8px 4px !important;
+    flex-direction: column !important;
+    gap: 2px !important;
+    justify-content: center !important;
+  }
+  .outcome-text {
+    font-size: 0.72rem !important;
+    text-align: center !important;
+    font-weight: 700 !important;
+    line-height: 1.1 !important;
+  }
+  .outcome-key {
+    display: none !important; /* Ocultar letra Z, A, D, etc. en móvil */
+  }
+  .btn-next-inline {
+    grid-column: 1 / -1 !important;
+    width: 100% !important;
+    min-height: 46px !important;
+    justify-content: center !important;
+    margin-top: 4px !important;
+    font-weight: 800 !important;
+    font-size: 0.9rem !important;
+  }
+
+  /* ------------------- PANEL DE VIDA MÓVIL ------------------- */
+  .agents-header-bar {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 12px !important;
+  }
+  .agents-title-wrap h2 {
+    font-size: 1.25rem !important;
+  }
+  .agents-header-right {
+    width: 100% !important;
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 8px !important;
+  }
+  .agents-header-right .btn {
+    width: 100% !important;
+    justify-content: center !important;
+    min-height: 44px !important;
+    font-size: 0.84rem !important;
+  }
+  .life-kpis-strip {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 8px !important;
+  }
+  .kpi-box {
+    padding: 10px 12px !important;
+    gap: 10px !important;
+  }
+  .kpi-icon {
+    width: 38px !important;
+    height: 38px !important;
+    font-size: 1rem !important;
+  }
+  .kpi-val {
+    font-size: 1.15rem !important;
+  }
+  .kpi-tag {
+    font-size: 0.68rem !important;
+  }
+  .agents-cards-grid {
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+  }
+  .agent-card {
+    padding: 16px !important;
+    border-radius: 12px !important;
+  }
+  .agent-card-actions {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 8px !important;
+    width: 100% !important;
+  }
+  .agent-card-actions .btn {
+    width: 100% !important;
+    justify-content: center !important;
+    min-height: 42px !important;
+    font-size: 0.82rem !important;
+  }
+  .orchestrator-card {
+    padding: 16px !important;
+  }
+  .orchestrator-suggestions {
+    display: flex !important;
+    gap: 8px !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    scrollbar-width: none !important;
+    padding-bottom: 6px !important;
+    touch-action: pan-y !important;
+  }
+  .orch-chip-btn {
+    flex-shrink: 0 !important;
+    min-height: 38px !important;
+    padding: 6px 12px !important;
+    font-size: 0.78rem !important;
+  }
+  .orch-chat-input-box {
+    display: flex !important;
+    gap: 6px !important;
+  }
+  .orch-chat-input-box input {
+    min-height: 44px !important;
+    font-size: 16px !important;
+  }
+  .orch-chat-input-box .btn {
+    min-height: 44px !important;
+    padding: 0 16px !important;
+    flex-shrink: 0 !important;
+  }
+
+  /* ------------------- AGENT PANEL COMMAND BANNERS ------------------- */
+  .agent-panel-banner {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    padding: 16px !important;
+    gap: 14px !important;
+    border-radius: 12px !important;
+  }
+  .apb-left {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 12px !important;
+  }
+  .apb-avatar {
+    width: 44px !important;
+    height: 44px !important;
+    font-size: 1.25rem !important;
+  }
+  .apb-title-row h3 {
+    font-size: 1.05rem !important;
+  }
+  .apb-desc {
+    font-size: 0.82rem !important;
+  }
+  .apb-right {
+    width: 100% !important;
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 8px !important;
+  }
+  .apb-right .btn {
+    width: 100% !important;
+    justify-content: center !important;
+    min-height: 44px !important;
+    font-size: 0.82rem !important;
+  }
+
+  /* ------------------- TABLAS Y CONTENEDORES CON SCROLL TÁCTIL ------------------- */
+  .section-card-header-row {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 10px !important;
+  }
+  .batch-controls {
+    width: 100% !important;
+    justify-content: space-between !important;
+  }
+  .btn-nav-batch {
+    min-height: 40px !important;
+    min-width: 40px !important;
+  }
+  .table-container {
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    display: block !important;
+    border-radius: 8px !important;
+    touch-action: pan-x !important;
+  }
+  table {
+    min-width: 540px !important;
+    font-size: 0.82rem !important;
+  }
+  th, td {
+    padding: 10px 12px !important;
+  }
+  .form-row {
+    flex-direction: column !important;
+    gap: 8px !important;
+    width: 100% !important;
+  }
+  .form-row input,
+  .form-row select,
+  .form-row button {
+    width: 100% !important;
+    min-height: 44px !important;
+    font-size: 16px !important;
+  }
+  .form-row-2 {
+    grid-template-columns: 1fr !important;
+    gap: 8px !important;
+  }
+
+  /* ------------------- MODALES MÓVILES (Estilo Bottom Sheet) ------------------- */
+  .modal-overlay,
+  .cabina-modal-overlay {
+    padding: 10px !important;
+    align-items: flex-end !important;
+  }
+  .modal-box,
+  .cabina-modal-card,
+  .cabina-modal-box {
+    width: 100% !important;
+    max-width: 100% !important;
+    max-height: 88dvh !important;
+    border-radius: 20px 20px 12px 12px !important;
+    padding: 18px 14px calc(18px + env(safe-area-inset-bottom, 0px)) 14px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    overflow: hidden !important;
+    box-sizing: border-box !important;
+  }
+  .modal-body,
+  .modal-card-body,
+  .cabina-modal-body {
+    overflow-y: auto !important;
+    overscroll-behavior: contain !important;
+    -webkit-overflow-scrolling: touch !important;
+    flex: 1 !important;
+    padding: 10px 0 !important;
+  }
+  .modal-actions,
+  .modal-card-footer,
+  .cabina-modal-footer {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 8px !important;
+    width: 100% !important;
+    margin-top: 14px !important;
+  }
+  .modal-actions .btn,
+  .modal-card-footer .btn,
+  .cabina-modal-footer .btn {
+    width: 100% !important;
+    min-height: 44px !important;
+    justify-content: center !important;
+  }
+
+  /* ------------------- PANTALLA LOGIN MÓVIL ------------------- */
+  .login-box {
+    padding: 24px 18px !important;
+    max-width: 100% !important;
+    width: 92% !important;
+    border-radius: 16px !important;
+  }
+  .login-box h1 {
+    font-size: 1.45rem !important;
+  }
+  .login-box input {
+    min-height: 46px !important;
+    font-size: 16px !important;
+  }
+  .login-box .btn-primary {
+    min-height: 48px !important;
+  }
+}
+
+/* 4. Teléfonos Pequeños (max-width: 400px - iPhone SE, etc.) */
+@media (max-width: 400px) {
+  .life-hero-stats {
+    grid-template-columns: 1fr !important;
+  }
+  .life-kpis-strip {
+    grid-template-columns: 1fr !important;
+  }
+  .cabina-top-actions {
+    grid-template-columns: 1fr !important;
+  }
+  .apb-right {
+    grid-template-columns: 1fr !important;
+  }
+  .results-buttons-row {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+  .agents-header-right {
+    grid-template-columns: 1fr !important;
+  }
+  .header-nav-center {
+    grid-template-columns: 1fr !important;
+  }
+}
+
 
 
 

@@ -6,7 +6,8 @@
   "type": "module",
   "scripts": {
     "start": "node server.js",
-    "dev": "node server.js"
+    "dev": "node server.js",
+    "test": "node -c server.js && node -c services/agentService.js && node -c services/cronTasks.js && node -c public/js/app.js && node test-services.js"
   },
   "dependencies": {
     "cookie-parser": "^1.4.7",

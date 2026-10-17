@@ -1,0 +1,41 @@
+name: CI - Integración Continua
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  verify:
+    name: Verificación, Sintaxis y Pruebas
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout del repositorio
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Instalar dependencias
+        run: npm install
+
+      - name: Comprobación de sintaxis
+        run: |
+          node -c server.js
+          node -c services/agentService.js
+          node -c services/cronTasks.js
+          node -c services/dbHelper.js
+          node -c services/pentest.js
+          node -c services/sitemapChecker.js
+          node -c public/js/app.js
+
+      - name: Ejecutar pruebas de servicios
+        run: npm test
+
+      - name: Validar compilación de Dockerfile
+        run: docker build -t test-build .

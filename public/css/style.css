@@ -2624,6 +2624,9 @@ tr:hover td {
    ===================================================================== */
 
 .cabina-panel-root {
+  display: none;
+}
+.cabina-panel-root.active {
   display: flex;
   flex-direction: column;
   height: calc(100vh - 75px);
@@ -5113,7 +5116,8 @@ tr:hover td {
 /* 2. Pantallas Medianas y Tablets (max-width: 1024px) */
 @media (max-width: 1024px) {
   /* Cabina Ventas: Flujo Vertical fluido (Adiós a las 3 columnas aplastadas) */
-  .cabina-panel-root {
+  .cabina-panel-root.active {
+    display: flex !important;
     height: auto !important;
     max-height: none !important;
     overflow: visible !important;

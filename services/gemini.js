@@ -3,57 +3,93 @@ dotenv.config();
 
 /**
  * Helper to call Gemini API directly using native fetch.
- * Uses gemini-3.5-flash (or configured GEMINI_MODEL) for speed and reliability.
+ * Implements multi-model fallback chain and auto-retry on 503 (High Demand) / 429 (Rate Limits).
  */
 export async function callGemini(prompt, systemInstruction = '') {
   const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey) {
-    throw new Error('GEMINI_API_KEY no está configurada en el archivo .env');
+    throw new Error('GEMINI_API_KEY no está configurada en las variables de entorno.');
   }
 
-  const model = process.env.GEMINI_MODEL || 'gemini-3.5-flash';
-  const url = `https://generativelanguage.googleapis.com/v1/models/${model}:generateContent?key=${apiKey}`;
-  console.log('[DEBUG Gemini] Model being used:', model);
-  console.log('[DEBUG Gemini] URL:', url.replace(apiKey, 'REDACTED'));
-  
-  const payload = {
-    contents: [
-      {
-        parts: [
-          { text: prompt }
-        ]
+  // Modelos de Gemini ordenados por velocidad y disponibilidad en Google Generative Language API
+  const candidateModels = [
+    process.env.GEMINI_MODEL,
+    'gemini-2.5-flash',
+    'gemini-2.0-flash',
+    'gemini-1.5-flash',
+    'gemini-2.5-pro',
+    'gemini-1.5-pro'
+  ].filter((m, idx, arr) => m && arr.indexOf(m) === idx);
+
+  let lastError = null;
+
+  for (const model of candidateModels) {
+    for (let attempt = 1; attempt <= 2; attempt++) {
+      try {
+        const url = `https://generativelanguage.googleapis.com/v1/models/${model}:generateContent?key=${apiKey}`;
+        const payload = {
+          contents: [
+            {
+              parts: [{ text: prompt }]
+            }
+          ]
+        };
+
+        if (systemInstruction) {
+          payload.systemInstruction = {
+            parts: [{ text: systemInstruction }]
+          };
+        }
+
+        const response = await fetch(url, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(payload)
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
+          if (text) {
+            return text;
+          }
+        }
+
+        const status = response.status;
+        const errText = await response.text();
+
+        // 503 (Alta demanda en Google) o 429 (Límite temporal de peticiones)
+        if (status === 503 || status === 429) {
+          console.warn(`[Gemini API] Modelo ${model} devolvió ${status} (alta demanda). Reintento ${attempt}/2...`);
+          lastError = new Error(`El modelo ${model} está saturado temporalmente (${status}).`);
+          await new Promise(r => setTimeout(r, 1000 * attempt));
+          continue; // reintenta una vez con el mismo modelo
+        }
+
+        // 404 (Modelo no disponible en esta versión de la API): saltar al siguiente inmediatamente
+        if (status === 404) {
+          console.warn(`[Gemini API] Modelo ${model} no disponible (404). Pasando al siguiente modelo...`);
+          lastError = new Error(`Modelo ${model} no disponible.`);
+          break; // pasa al siguiente modelo en candidateModels
+        }
+
+        // Otros errores HTTP (400, 401, 403, etc.)
+        throw new Error(`Error de Gemini API (${status}): ${errText}`);
+      } catch (err) {
+        lastError = err;
+        if (attempt === 2) break; // si fallan 2 intentos, pasar al siguiente modelo
       }
-    ]
-  };
-
-  if (systemInstruction) {
-    payload.systemInstruction = {
-      parts: [
-        { text: systemInstruction }
-      ]
-    };
-  }
-
-  try {
-    const response = await fetch(url, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(payload)
-    });
-
-    if (!response.ok) {
-      const errText = await response.text();
-      throw new Error(`Error de Gemini API (${response.status}): ${errText}`);
     }
-
-    const data = await response.json();
-    return data.candidates?.[0]?.content?.parts?.[0]?.text || '';
-  } catch (error) {
-    console.error('Error al llamar a Gemini:', error);
-    throw error;
   }
+
+  console.error('[Gemini API] Todos los modelos candidatos de Gemini fallaron:', lastError?.message);
+  const isHighDemand = lastError?.message?.includes('503') || lastError?.message?.includes('saturado') || lastError?.message?.includes('high demand');
+  if (isHighDemand) {
+    throw new Error('Los servidores de Google Gemini están experimentando una saturación temporal de demanda en este momento. Por favor, vuelve a intentarlo en unos instantes.');
+  }
+  throw lastError || new Error('No se pudo conectar con la API de Gemini.');
 }
 
 /**

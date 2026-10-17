@@ -3529,7 +3529,11 @@ function renderAgentCards(agents) {
           alert(`✅ ${data.message || 'Misión ejecutada con éxito.'}`);
           await loadAgentsData();
         } else {
-          alert(`❌ Error al ejecutar: ${data.message || 'Fallo desconocido'}`);
+          let errorMsg = data.message || 'Fallo desconocido';
+          if (errorMsg.includes('503') || errorMsg.includes('high demand') || errorMsg.includes('saturado')) {
+            errorMsg = 'Los servidores de Google Gemini están experimentando alta demanda en este momento. El sistema reintentará con otros modelos; vuelve a pulsar en unos instantes.';
+          }
+          alert(`❌ ${errorMsg}`);
         }
       } catch (err) {
         alert('❌ Error de conexión al disparar misión.');

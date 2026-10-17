@@ -11,13 +11,12 @@ export async function callGemini(prompt, systemInstruction = '') {
     throw new Error('GEMINI_API_KEY no está configurada en las variables de entorno.');
   }
 
-  // Modelos de Gemini ordenados por velocidad y disponibilidad en Google Generative Language API
+  // Modelos oficiales de Gemini ordenados por estabilidad y velocidad
   const candidateModels = [
     process.env.GEMINI_MODEL,
-    'gemini-2.5-flash',
-    'gemini-2.0-flash',
     'gemini-1.5-flash',
-    'gemini-2.5-pro',
+    'gemini-2.0-flash',
+    'gemini-1.5-flash-8b',
     'gemini-1.5-pro'
   ].filter((m, idx, arr) => m && arr.indexOf(m) === idx);
 
@@ -26,7 +25,6 @@ export async function callGemini(prompt, systemInstruction = '') {
   for (const model of candidateModels) {
     for (let attempt = 1; attempt <= 2; attempt++) {
       try {
-        const url = `https://generativelanguage.googleapis.com/v1/models/${model}:generateContent?key=${apiKey}`;
         const payload = {
           contents: [
             {
@@ -36,18 +34,32 @@ export async function callGemini(prompt, systemInstruction = '') {
         };
 
         if (systemInstruction) {
-          payload.systemInstruction = {
+          payload.system_instruction = {
             parts: [{ text: systemInstruction }]
           };
         }
 
-        const response = await fetch(url, {
+        // Probar primero el endpoint estándar v1beta de Google GenAI
+        let url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
+        let response = await fetch(url, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
           },
           body: JSON.stringify(payload)
         });
+
+        // Si devuelve 404 en v1beta, probar en v1 como alternativa
+        if (response.status === 404) {
+          url = `https://generativelanguage.googleapis.com/v1/models/${model}:generateContent?key=${apiKey}`;
+          response = await fetch(url, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(payload)
+          });
+        }
 
         if (response.ok) {
           const data = await response.json();
@@ -65,21 +77,21 @@ export async function callGemini(prompt, systemInstruction = '') {
           console.warn(`[Gemini API] Modelo ${model} devolvió ${status} (alta demanda). Reintento ${attempt}/2...`);
           lastError = new Error(`El modelo ${model} está saturado temporalmente (${status}).`);
           await new Promise(r => setTimeout(r, 1000 * attempt));
-          continue; // reintenta una vez con el mismo modelo
+          continue;
         }
 
-        // 404 (Modelo no disponible en esta versión de la API): saltar al siguiente inmediatamente
+        // 404 persistente (Modelo no disponible para esta clave/versión)
         if (status === 404) {
           console.warn(`[Gemini API] Modelo ${model} no disponible (404). Pasando al siguiente modelo...`);
           lastError = new Error(`Modelo ${model} no disponible.`);
-          break; // pasa al siguiente modelo en candidateModels
+          break; // probar siguiente modelo
         }
 
-        // Otros errores HTTP (400, 401, 403, etc.)
+        // Otros errores (400, 403, etc.)
         throw new Error(`Error de Gemini API (${status}): ${errText}`);
       } catch (err) {
         lastError = err;
-        if (attempt === 2) break; // si fallan 2 intentos, pasar al siguiente modelo
+        if (attempt === 2) break;
       }
     }
   }

@@ -168,11 +168,16 @@ export async function runLeadGeneration() {
   const newLeads = await generateClientLeads(selectedNiche);
 
   if (!Array.isArray(db.leads.leadsList)) db.leads.leadsList = [];
+  if (!db.cabina) db.cabina = { prospects: [], interactions: [], objections: [] };
+  if (!Array.isArray(db.cabina.prospects)) db.cabina.prospects = [];
+
+  const { leadToCabinaProspect } = await import('./cabinaService.js');
   newLeads.forEach(lead => {
     lead.id = 'l_' + Math.random().toString(36).substr(2, 9);
     lead.status = 'Nuevo';
     lead.foundAt = new Date().toISOString();
     db.leads.leadsList.unshift(lead);
+    db.cabina.prospects.unshift(leadToCabinaProspect(lead));
   });
 
   await writeDB(db);

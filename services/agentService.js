@@ -65,30 +65,6 @@ export const DEFAULT_AGENTS = [
     description: "Agente autónomo que compara el recuento real de URLs de blogs y webs contra sus sitemaps XML y envía alertas por Gmail si hay discrepancias o caídas.",
     systemPrompt: "Eres el Agente Autónomo Auditor de Sitemaps (Radar SEO AI). Garantizas que todo el contenido publicado por zVaito esté correctamente indexado sin páginas huérfanas.",
     metrics: { tasksExecuted: 0, lastRun: null }
-  },
-  {
-    id: "agent-studysync",
-    name: "StudySync & Life AI (Google Calendar)",
-    role: "Planificador de Vida, Estudio y Pesca",
-    icon: "fa-graduation-cap",
-    color: "#00f2fe",
-    status: "active",
-    cadence: "Sincronizado con Google Calendar",
-    description: "Aplica time-blocking inteligente entre fechas de exámenes, bloques de estudio por asignatura y jornadas libres de pesca/desconexión.",
-    systemPrompt: "Eres StudySync AI. Optimizas el tiempo de estudio de zVaito garantizando también días de pesca y descanso.",
-    metrics: { tasksExecuted: 0, lastRun: null }
-  },
-  {
-    id: "agent-fitness",
-    name: "Fitness Coach AI (Gym Tracker)",
-    role: "Entrenamiento & Progresión de Cargas",
-    icon: "fa-dumbbell",
-    color: "#ec4899",
-    status: "active",
-    cadence: "Semanal / Registro tras sesión",
-    description: "Supervisa las progresiones de fuerza en banca, dominadas y militar, recomendando ajustes de volumen e intensidad en las rutinas de gym.",
-    systemPrompt: "Eres Fitness Coach AI. Maximizas el rendimiento en el gimnasio de zVaito con sobrecarga progresiva estricta.",
-    metrics: { tasksExecuted: 0, lastRun: null }
   }
 ];
 
@@ -126,7 +102,7 @@ export async function getAgentsState() {
 
       // Limpiar cualquier métrica ficticia y agentes obsoletos
       await pgPool.query(`
-        DELETE FROM life_agents WHERE id IN ('agent-closer', 'agent-hunter');
+        DELETE FROM life_agents WHERE id IN ('agent-closer', 'agent-hunter', 'agent-studysync', 'agent-fitness');
         UPDATE life_agents 
         SET metrics = jsonb_build_object('tasksExecuted', 0, 'lastRun', null)
         WHERE (metrics->>'tasksExecuted')::int IN (142, 86, 62, 28, 74, 51);
@@ -183,7 +159,7 @@ export async function getAgentsState() {
 
   // Fallback db.json
   const db = await readDB();
-  if (!db.lifeAgents || !Array.isArray(db.lifeAgents.agents) || db.lifeAgents.agents.some(a => a.id === 'agent-closer' || a.id === 'agent-hunter')) {
+  if (!db.lifeAgents || !Array.isArray(db.lifeAgents.agents) || db.lifeAgents.agents.some(a => ['agent-closer', 'agent-hunter', 'agent-studysync', 'agent-fitness'].includes(a.id))) {
     db.lifeAgents = db.lifeAgents || {};
     // Preservar métricas existentes si coinciden los ids
     const existingMetrics = {};
@@ -378,8 +354,6 @@ Estructura de mando:
 - Antigravity Agency: Factoría de ingeniería de software local con 111 especialistas (100% del desarrollo de software en c:\\PROYECTOS).
 - Sentinel Cyber AI: Pentesting y auditoría de seguridad perimetral diaria.
 - Radar SEO AI: Auditoría de sitemaps XML e indexación web semanal.
-- StudySync & Life AI: Sincronización académica con Google Calendar y jornadas de pesca.
-- Fitness Coach AI: Seguimiento de cargas y sobrecarga progresiva en el gimnasio.
 
 Tu rol:
 1. Responder con tono ejecutivo, resolutivo, directo y de máxima lealtad hacia Manuel (zVaito).

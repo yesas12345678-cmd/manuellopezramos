@@ -3515,18 +3515,6 @@ function renderAgentCards(agents) {
           <i class="fa-solid fa-shield-halved"></i> Abrir Sentinel Ciberseguridad
         </button>
       `;
-    } else if (agent.id === 'agent-studysync') {
-      workspaceBtn = `
-        <button class="btn-agent-workspace btn-ws-studysync" data-target="panel-studysync" title="Abrir StudySync Arcade">
-          <i class="fa-solid fa-gamepad"></i> Abrir StudySync Arcade
-        </button>
-      `;
-    } else if (agent.id === 'agent-fitness') {
-      workspaceBtn = `
-        <button class="btn-agent-workspace btn-ws-gym" data-target="panel-gym" title="Abrir Gym Tracker">
-          <i class="fa-solid fa-dumbbell"></i> Abrir Gym Tracker
-        </button>
-      `;
     }
 
     return `

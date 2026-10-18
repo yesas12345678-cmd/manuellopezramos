@@ -603,36 +603,6 @@
           "tasksExecuted": 0,
           "lastRun": null
         }
-      },
-      {
-        "id": "agent-studysync",
-        "name": "StudySync & Life AI (Google Calendar)",
-        "role": "Planificador de Vida, Estudio y Pesca",
-        "icon": "fa-graduation-cap",
-        "color": "#00f2fe",
-        "status": "active",
-        "cadence": "Sincronizado con Google Calendar",
-        "description": "Aplica time-blocking inteligente entre fechas de exámenes, bloques de estudio por asignatura y jornadas libres de pesca/desconexión.",
-        "systemPrompt": "Eres StudySync AI. Optimizas el tiempo de estudio de zVaito garantizando también días de pesca y descanso.",
-        "metrics": {
-          "tasksExecuted": 0,
-          "lastRun": null
-        }
-      },
-      {
-        "id": "agent-fitness",
-        "name": "Fitness Coach AI (Gym Tracker)",
-        "role": "Entrenamiento & Progresión de Cargas",
-        "icon": "fa-dumbbell",
-        "color": "#ec4899",
-        "status": "active",
-        "cadence": "Semanal / Registro tras sesión",
-        "description": "Supervisa las progresiones de fuerza en banca, dominadas y militar, recomendando ajustes de volumen e intensidad en las rutinas de gym.",
-        "systemPrompt": "Eres Fitness Coach AI. Maximizas el rendimiento en el gimnasio de zVaito con sobrecarga progresiva estricta.",
-        "metrics": {
-          "tasksExecuted": 0,
-          "lastRun": null
-        }
       }
     ],
     "logs": [

@@ -31,18 +31,6 @@ export const DEFAULT_AGENTS = [
     metrics: { tasksExecuted: 0, lastRun: null }
   },
   {
-    id: "agent-closer",
-    name: "Sales Closer Coach AI",
-    role: "Coach en Directo para Cabina Ventas",
-    icon: "fa-headset",
-    color: "#2563eb",
-    status: "active",
-    cadence: "Bajo demanda (Durante llamadas)",
-    description: "Escucha las llamadas en frío, reconoce objeciones en 2 segundos, calcula impacto en horas/año y evalúa las llamadas con la rúbrica sobre 100 de Verox.",
-    systemPrompt: "Eres Sales Closer Coach AI. Ayudas a zVaito a cerrar diagnósticos por videollamada sin discutir objeciones y cuantificando horas.",
-    metrics: { tasksExecuted: 0, lastRun: null }
-  },
-  {
     id: "agent-sentinel",
     name: "Pentesting Bot 24/7 (Sentinel Cyber AI)",
     role: "Agente Autónomo de Ciberseguridad & Pentesting 24/7",
@@ -124,8 +112,9 @@ export async function getAgentsState() {
         );
       `);
 
-      // Limpiar cualquier métrica de muestra en PostgreSQL para asegurar datos 100% reales
+      // Limpiar cualquier métrica de muestra y agentes obsoletos como agent-closer
       await pgPool.query(`
+        DELETE FROM life_agents WHERE id = 'agent-closer';
         UPDATE life_agents 
         SET metrics = jsonb_build_object('tasksExecuted', 0, 'lastRun', null)
         WHERE (metrics->>'tasksExecuted')::int IN (142, 86, 62, 28, 74, 51);
@@ -171,6 +160,9 @@ export async function getAgentsState() {
       agents: DEFAULT_AGENTS,
       logs: DEFAULT_LIFE_LOGS
     };
+    await writeDB(db);
+  } else if (Array.isArray(db.lifeAgents.agents) && db.lifeAgents.agents.some(a => a.id === 'agent-closer')) {
+    db.lifeAgents.agents = db.lifeAgents.agents.filter(a => a.id !== 'agent-closer');
     await writeDB(db);
   }
   return db.lifeAgents;

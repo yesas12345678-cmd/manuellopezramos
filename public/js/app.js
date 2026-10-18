@@ -170,8 +170,21 @@ function setupRouter() {
     btn.addEventListener('click', () => showPanel('panel-life-hub'));
   });
 
+  // Botones "Volver al Centro de Agentes"
+  document.querySelectorAll('.btn-back-agents').forEach(btn => {
+    btn.addEventListener('click', () => showPanel('panel-agents'));
+  });
+
   // Subtabs de navegación rápida en Panel de Vida
   document.querySelectorAll('.life-subtab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const sub = btn.getAttribute('data-subpanel');
+      if (sub) showPanel(sub);
+    });
+  });
+
+  // Subtabs de navegación rápida en Centro de Agentes IA (Cartera, Sitemaps, Ciberseguridad)
+  document.querySelectorAll('.agents-subtab-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       const sub = btn.getAttribute('data-subpanel');
       if (sub) showPanel(sub);
@@ -223,6 +236,11 @@ function showPanel(panelId) {
 
     // Actualizar subtabs dentro de Panel de Vida
     document.querySelectorAll('.life-subtab-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.getAttribute('data-subpanel') === panelId);
+    });
+
+    // Actualizar subtabs dentro de Agentes IA (Enjambre, Cartera, Radar, Sentinel)
+    document.querySelectorAll('.agents-subtab-btn').forEach(btn => {
       btn.classList.toggle('active', btn.getAttribute('data-subpanel') === panelId);
     });
     
@@ -3464,6 +3482,41 @@ function renderAgentCards(agents) {
     const tasksCount = agent.metrics?.tasksExecuted || 0;
     const lastRunFormatted = formatTimeAgo(agent.metrics?.lastRun);
 
+    // Botón de acceso directo al espacio de trabajo del agente
+    let workspaceBtn = '';
+    if (agent.id === 'agent-hunter') {
+      const leadsCount = (typeof allLeadsList !== 'undefined' && Array.isArray(allLeadsList) && allLeadsList.length > 0) ? ` (${allLeadsList.length} clientes)` : '';
+      workspaceBtn = `
+        <button class="btn-agent-workspace btn-ws-leads" data-target="panel-leads" title="Abrir Cartera de Clientes B2B e Ideas">
+          <i class="fa-solid fa-folder-open"></i> Abrir Cartera B2B & Ideas${leadsCount}
+        </button>
+      `;
+    } else if (agent.id === 'agent-radar') {
+      workspaceBtn = `
+        <button class="btn-agent-workspace btn-ws-sitemaps" data-target="panel-sitemaps" title="Abrir Auditoría de Sitemaps y Radar SEO">
+          <i class="fa-solid fa-sitemap"></i> Abrir Radar Sitemaps
+        </button>
+      `;
+    } else if (agent.id === 'agent-sentinel') {
+      workspaceBtn = `
+        <button class="btn-agent-workspace btn-ws-security" data-target="panel-security" title="Abrir Perímetro de Ciberseguridad">
+          <i class="fa-solid fa-shield-halved"></i> Abrir Sentinel Ciberseguridad
+        </button>
+      `;
+    } else if (agent.id === 'agent-studysync') {
+      workspaceBtn = `
+        <button class="btn-agent-workspace btn-ws-studysync" data-target="panel-studysync" title="Abrir StudySync Arcade">
+          <i class="fa-solid fa-gamepad"></i> Abrir StudySync Arcade
+        </button>
+      `;
+    } else if (agent.id === 'agent-fitness') {
+      workspaceBtn = `
+        <button class="btn-agent-workspace btn-ws-gym" data-target="panel-gym" title="Abrir Gym Tracker">
+          <i class="fa-solid fa-dumbbell"></i> Abrir Gym Tracker
+        </button>
+      `;
+    }
+
     return `
       <div class="agent-card ${isActive ? 'status-active' : 'status-paused'}" data-agent-id="${agent.id}">
         <div class="agent-card-top">
@@ -3506,11 +3559,21 @@ function renderAgentCards(agents) {
             <i class="fa-solid ${isActive ? 'fa-pause' : 'fa-play'}"></i>
           </button>
         </div>
+        ${workspaceBtn}
       </div>
     `;
   }).join('');
 
-  // Vincular eventos de botones
+  // Vincular eventos de botones de espacio de trabajo directo
+  container.querySelectorAll('.btn-agent-workspace').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const target = btn.getAttribute('data-target');
+      if (target) showPanel(target);
+    });
+  });
+
+  // Vincular eventos de botones de ejecución
   container.querySelectorAll('.btn-trigger-agent').forEach(btn => {
     btn.addEventListener('click', async (e) => {
       e.stopPropagation();
@@ -3526,8 +3589,26 @@ function renderAgentCards(agents) {
         });
         const data = await res.json();
         if (data.success) {
-          alert(`✅ ${data.message || 'Misión ejecutada con éxito.'}`);
           await loadAgentsData();
+
+          if (agentId === 'agent-hunter') {
+            await loadLeadsData();
+            if (confirm(`✅ ${data.message || 'Misión completada: Generadas 5 ideas de software y 5 prospectos en cartera.'}\n\n¿Quieres abrir la Cartera de Clientes B2B e Ideas ahora mismo para revisarlos?`)) {
+              showPanel('panel-leads');
+            }
+          } else if (agentId === 'agent-radar') {
+            await loadSitemapsData();
+            if (confirm(`✅ ${data.message || 'Misión completada.'}\n\n¿Quieres abrir la Auditoría de Sitemaps ahora?`)) {
+              showPanel('panel-sitemaps');
+            }
+          } else if (agentId === 'agent-sentinel') {
+            await loadSecurityData();
+            if (confirm(`✅ ${data.message || 'Misión completada.'}\n\n¿Quieres abrir el Perímetro de Ciberseguridad ahora?`)) {
+              showPanel('panel-security');
+            }
+          } else {
+            alert(`✅ ${data.message || 'Misión ejecutada con éxito.'}`);
+          }
         } else {
           let errorMsg = data.message || 'Fallo desconocido';
           if (errorMsg.includes('503') || errorMsg.includes('high demand') || errorMsg.includes('saturado')) {

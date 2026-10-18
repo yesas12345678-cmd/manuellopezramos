@@ -560,21 +560,6 @@
         }
       },
       {
-        "id": "agent-closer",
-        "name": "Sales Closer Coach AI",
-        "role": "Coach en Directo para Cabina Ventas",
-        "icon": "fa-headset",
-        "color": "#2563eb",
-        "status": "active",
-        "cadence": "Bajo demanda (Durante llamadas)",
-        "description": "Escucha las llamadas en frío, reconoce objeciones en 2 segundos, calcula impacto en horas/año y evalúa las llamadas con la rúbrica sobre 100 de Verox.",
-        "systemPrompt": "Eres Sales Closer Coach AI. Ayudas a zVaito a cerrar diagnósticos por videollamada sin discutir objeciones y cuantificando horas.",
-        "metrics": {
-          "tasksExecuted": 0,
-          "lastRun": null
-        }
-      },
-      {
         "id": "agent-sentinel",
         "name": "Pentesting Bot 24/7 (Sentinel Cyber AI)",
         "role": "Agente Autónomo de Ciberseguridad & Pentesting 24/7",

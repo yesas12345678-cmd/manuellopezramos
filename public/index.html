@@ -825,8 +825,11 @@
       <!-- ================= SECCIÓN 2: CAPTADOR Y BRAINSTORMING (AGENTE HUNTER) ================= -->
       <section id="panel-leads" class="panel">
         <div class="section-title-bar">
-          <button class="btn-back btn-back-home"><i class="fa-solid fa-chevron-left"></i> Volver</button>
-          <h2>Agente: Captador B2B & Ideas de Software</h2>
+          <div class="section-title-actions" style="display: flex; gap: 8px; align-items: center;">
+            <button class="btn-back btn-back-home"><i class="fa-solid fa-chevron-left"></i> Estaciones</button>
+            <button class="btn-back btn-back-agents"><i class="fa-solid fa-robot"></i> Volver a Agentes</button>
+          </div>
+          <h2>Cartera de Clientes B2B & Ideas de Software (Hunter AI)</h2>
         </div>
 
         <!-- Banner del Agente Asignado -->
@@ -964,8 +967,11 @@
       <!-- ================= SECCIÓN 5: SITEMAPS (AGENTE RADAR) ================= -->
       <section id="panel-sitemaps" class="panel">
         <div class="section-title-bar">
-          <button class="btn-back btn-back-home"><i class="fa-solid fa-chevron-left"></i> Volver</button>
-          <h2>Agente: Auditor de Sitemaps</h2>
+          <div class="section-title-actions" style="display: flex; gap: 8px; align-items: center;">
+            <button class="btn-back btn-back-home"><i class="fa-solid fa-chevron-left"></i> Estaciones</button>
+            <button class="btn-back btn-back-agents"><i class="fa-solid fa-robot"></i> Volver a Agentes</button>
+          </div>
+          <h2>Agente: Auditor de Sitemaps & Radar SEO</h2>
         </div>
 
         <!-- Banner del Agente Asignado -->
@@ -1037,8 +1043,11 @@
       <!-- ================= SECCIÓN 6: SEGURIDAD / PENTESTING (AGENTE SENTINEL) ================= -->
       <section id="panel-security" class="panel">
         <div class="section-title-bar">
-          <button class="btn-back btn-back-home"><i class="fa-solid fa-chevron-left"></i> Volver</button>
-          <h2>Agente: Pentesting Bot 24/7</h2>
+          <div class="section-title-actions" style="display: flex; gap: 8px; align-items: center;">
+            <button class="btn-back btn-back-home"><i class="fa-solid fa-chevron-left"></i> Estaciones</button>
+            <button class="btn-back btn-back-agents"><i class="fa-solid fa-robot"></i> Volver a Agentes</button>
+          </div>
+          <h2>Agente: Pentesting Bot 24/7 & Ciberseguridad</h2>
         </div>
 
         <!-- Banner del Agente Asignado -->
@@ -1422,12 +1431,28 @@
           </div>
         </div>
 
+        <!-- Subtabs de Navegación a Espacios de Trabajo de los Agentes -->
+        <div class="agents-subtabs-nav">
+          <button class="agents-subtab-btn active" data-subpanel="panel-agents">
+            <i class="fa-solid fa-robot"></i> Enjambre & Estado
+          </button>
+          <button class="agents-subtab-btn" data-subpanel="panel-leads">
+            <i class="fa-solid fa-folder-open"></i> Cartera B2B & Ideas (Hunter AI)
+          </button>
+          <button class="agents-subtab-btn" data-subpanel="panel-sitemaps">
+            <i class="fa-solid fa-sitemap"></i> Radar Sitemaps
+          </button>
+          <button class="agents-subtab-btn" data-subpanel="panel-security">
+            <i class="fa-solid fa-shield-halved"></i> Sentinel Ciberseguridad
+          </button>
+        </div>
+
         <!-- Life KPIs strip -->
         <div class="life-kpis-strip">
           <div class="kpi-box">
             <div class="kpi-icon blue"><i class="fa-solid fa-network-wired"></i></div>
             <div class="kpi-data">
-              <span class="kpi-val" id="kpi-agents-active">6 / 6</span>
+              <span class="kpi-val" id="kpi-agents-active">5 / 5</span>
               <span class="kpi-tag">Agentes en servicio</span>
             </div>
           </div>

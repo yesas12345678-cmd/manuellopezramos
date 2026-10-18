@@ -4802,112 +4802,173 @@ tr:hover td {
   border-radius: 12px;
 }
 
+/* Orquestador Suggestions Chips */
 .orchestrator-suggestions {
-  display: flex;
-  gap: 6px;
-  overflow-x: auto;
-  padding-bottom: 4px;
+  display: flex !important;
+  gap: 8px !important;
+  overflow-x: auto !important;
+  padding: 4px 2px 8px 2px !important;
 }
+
 .orch-chip-btn {
-  background: #f1f5f9;
-  border: 1px solid #cbd5e1;
-  color: #1e293b;
-  font-size: 0.75rem;
-  font-weight: 600;
-  padding: 5px 11px;
-  border-radius: 14px;
-  cursor: pointer;
-  white-space: nowrap;
-  transition: all 0.2s;
+  background: #f1f5f9 !important;
+  border: 1.5px solid #64748b !important;
+  color: #0f172a !important;
+  font-size: 0.84rem !important;
+  font-weight: 700 !important;
+  padding: 7px 14px !important;
+  border-radius: 12px !important;
+  cursor: pointer !important;
+  white-space: nowrap !important;
+  transition: all 0.2s ease !important;
 }
+
 .orch-chip-btn:hover {
-  background: #ede9fe;
-  border-color: #7c3aed;
-  color: #5b21b6;
+  background: #ede9fe !important;
+  border-color: #7c3aed !important;
+  color: #5b21b6 !important;
+  transform: translateY(-1px) !important;
 }
 
+/* Chat container */
 .orchestrator-chat-messages {
-  max-height: 280px;
-  min-height: 180px;
-  overflow-y: auto;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  padding-right: 6px;
-}
-.orch-msg {
-  display: flex;
-  gap: 10px;
-  align-items: flex-start;
-}
-.orch-msg-avatar {
-  width: 28px;
-  height: 28px;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.85rem;
-  flex-shrink: 0;
-}
-.orch-msg-ai .orch-msg-avatar {
-  background: #ede9fe;
-  color: #7c3aed;
-}
-.orch-msg-user {
-  flex-direction: row-reverse;
-}
-.orch-msg-user .orch-msg-avatar {
-  background: #eff6ff;
-  color: #2563eb;
-}
-.orch-msg-bubble {
-  background: #f8fafc;
-  border: 1.5px solid #cbd5e1;
-  border-radius: 12px;
-  padding: 10px 14px;
-  font-size: 0.86rem;
-  color: #0f172a;
-  line-height: 1.5;
-  font-weight: 450;
-  max-width: 85%;
-}
-.orch-msg-user .orch-msg-bubble {
-  background: #eff6ff;
-  border-color: #93c5fd;
-  color: #1e3a8a;
+  max-height: 340px !important;
+  min-height: 200px !important;
+  overflow-y: auto !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 14px !important;
+  padding: 16px 14px !important;
+  background: #f8fafc !important;
+  border: 2px solid #cbd5e1 !important;
+  border-radius: 14px !important;
 }
 
+.orch-msg {
+  display: flex !important;
+  gap: 12px !important;
+  align-items: flex-start !important;
+}
+
+.orch-msg-avatar {
+  width: 34px !important;
+  height: 34px !important;
+  border-radius: 10px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 1rem !important;
+  flex-shrink: 0 !important;
+}
+
+.orch-msg-ai .orch-msg-avatar {
+  background: #7c3aed !important;
+  color: #ffffff !important;
+  box-shadow: 0 2px 6px rgba(124, 58, 237, 0.3) !important;
+}
+
+.orch-msg-user {
+  flex-direction: row-reverse !important;
+}
+
+.orch-msg-user .orch-msg-avatar {
+  background: #2563eb !important;
+  color: #ffffff !important;
+  box-shadow: 0 2px 6px rgba(37, 99, 235, 0.3) !important;
+}
+
+/* AI Message Bubble: Solid white on grey container, dark border, deep black/slate text */
+.orch-msg-ai .orch-msg-bubble {
+  background: #ffffff !important;
+  border: 2px solid #94a3b8 !important;
+  border-radius: 14px !important;
+  padding: 12px 18px !important;
+  font-size: 0.94rem !important;
+  color: #0f172a !important;
+  line-height: 1.6 !important;
+  font-weight: 550 !important;
+  max-width: 88% !important;
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.08) !important;
+}
+
+.orch-msg-ai .orch-msg-bubble strong {
+  color: #581c87 !important;
+  font-weight: 800 !important;
+  font-size: 0.96rem !important;
+  display: inline-block !important;
+  margin-bottom: 4px !important;
+}
+
+.orch-msg-ai .orch-msg-bubble em {
+  color: #475569 !important;
+  font-weight: 600 !important;
+}
+
+/* User Message Bubble: High-contrast Solid Dark Blue with pure white text */
+.orch-msg-user .orch-msg-bubble {
+  background: #1e40af !important;
+  border: 2px solid #1e3a8a !important;
+  border-radius: 14px !important;
+  padding: 12px 18px !important;
+  font-size: 0.94rem !important;
+  color: #ffffff !important;
+  line-height: 1.5 !important;
+  font-weight: 600 !important;
+  max-width: 85% !important;
+  box-shadow: 0 2px 8px rgba(30, 64, 175, 0.3) !important;
+}
+
+.orch-msg-user .orch-msg-bubble strong {
+  color: #93c5fd !important;
+  font-weight: 800 !important;
+  font-size: 0.96rem !important;
+  display: inline-block !important;
+  margin-bottom: 4px !important;
+}
+
+/* Input Row */
 .orchestrator-input-row {
-  display: flex;
-  gap: 8px;
+  display: flex !important;
+  gap: 10px !important;
+  margin-top: 4px !important;
 }
+
 .orchestrator-input-row input {
-  flex: 1;
-  background: #ffffff;
-  border: 1.5px solid #cbd5e1;
-  border-radius: 10px;
-  padding: 10px 14px;
-  color: #0f172a;
-  font-size: 0.86rem;
-  font-weight: 500;
-  outline: none;
+  flex: 1 !important;
+  background: #ffffff !important;
+  border: 2px solid #64748b !important;
+  border-radius: 12px !important;
+  padding: 12px 16px !important;
+  color: #0f172a !important;
+  font-size: 0.94rem !important;
+  font-weight: 600 !important;
+  outline: none !important;
 }
+
+.orchestrator-input-row input::placeholder {
+  color: #64748b !important;
+  font-weight: 500 !important;
+}
+
 .orchestrator-input-row input:focus {
-  border-color: #7c3aed;
-  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.15);
+  border-color: #2563eb !important;
+  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.2) !important;
 }
+
 .orchestrator-input-row button {
-  background: #7c3aed;
-  border: 1px solid #6d28d9;
-  color: #ffffff;
-  border-radius: 10px;
-  padding: 0 16px;
-  cursor: pointer;
-  transition: all 0.2s;
+  background: #2563eb !important;
+  border: 2px solid #1d4ed8 !important;
+  color: #ffffff !important;
+  border-radius: 12px !important;
+  padding: 0 22px !important;
+  font-size: 1.1rem !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
 }
+
 .orchestrator-input-row button:hover {
-  background: #6d28d9;
+  background: #1d4ed8 !important;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3) !important;
 }
 
 /* Life Timeline Card */
@@ -6847,11 +6908,6 @@ body {
 .orch-title-box p, .timeline-time {
   color: #475569 !important;
   font-weight: 500 !important;
-}
-.orch-msg-bubble {
-  background: #f8fafc !important;
-  border: 1.5px solid #cbd5e1 !important;
-  color: #0f172a !important;
 }
 .timeline-item {
   background: #f8fafc !important;

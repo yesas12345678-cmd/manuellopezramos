@@ -3484,7 +3484,19 @@ function renderAgentCards(agents) {
 
     // Botón de acceso directo al espacio de trabajo del agente
     let workspaceBtn = '';
-    if (agent.id === 'agent-hunter') {
+    if (agent.id === 'agent-jude') {
+      workspaceBtn = `
+        <a href="https://t.me/JudeeeeeBot" target="_blank" class="btn-agent-workspace" style="display:flex; align-items:center; justify-content:center; gap:8px; text-decoration:none; background:rgba(37,99,235,0.15); border:1px solid rgba(37,99,235,0.35); color:#60a5fa;" title="Abrir Asistente Jude en Telegram">
+          <i class="fa-brands fa-telegram"></i> Abrir Chat @JudeeeeeBot
+        </a>
+      `;
+    } else if (agent.id === 'agent-antigravity') {
+      workspaceBtn = `
+        <button class="btn-agent-workspace btn-ws-agency" onclick="alert('Factoría de Software Antigravity: 111 especialistas de ingeniería activos en PC local (c:\\\\PROYECTOS). Orquestador universal de desarrollo por fases activado por defecto.')" style="background:rgba(140,82,255,0.15); border:1px solid rgba(140,82,255,0.35); color:#c084fc;" title="Factoría de Software Local">
+          <i class="fa-solid fa-microchip"></i> Factoría Local (111 Especialistas)
+        </button>
+      `;
+    } else if (agent.id === 'agent-hunter') {
       const leadsCount = (typeof allLeadsList !== 'undefined' && Array.isArray(allLeadsList) && allLeadsList.length > 0) ? ` (${allLeadsList.length} clientes)` : '';
       workspaceBtn = `
         <button class="btn-agent-workspace btn-ws-leads" data-target="panel-leads" title="Abrir Cartera de Clientes B2B e Ideas">

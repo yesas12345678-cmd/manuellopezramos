@@ -545,18 +545,33 @@
   "lifeAgents": {
     "agents": [
       {
-        "id": "agent-hunter",
-        "name": "Captador B2B & Ideas (Hunter AI)",
-        "role": "Agente Autónomo de Prospección B2B y Generación de Ideas",
-        "icon": "fa-magnifying-glass-chart",
+        "id": "agent-jude",
+        "name": "Jude (Chief of Staff & Telegram 24/7)",
+        "role": "Asistente Personal, Voz & Coordinación Ejecutiva (VPS 24/7)",
+        "icon": "fa-paper-plane",
+        "color": "#2563eb",
+        "status": "active",
+        "cadence": "24/7 en VPS Hetzner (@JudeeeeeBot Telegram & Webhook)",
+        "description": "Asistente ejecutivo personal en Telegram y VPS. Gestiona agenda, notas de voz, consultas rápidas y coordinación diaria de vida. No programa código; delega el desarrollo técnico en Antigravity.",
+        "systemPrompt": "Eres Jude, Asistente Personal y Chief of Staff de Manuel López Ramos (zVaito). Coordinas su vida personal, salud, finanzas y tareas diarias vía Telegram.",
+        "metrics": {
+          "tasksExecuted": 1,
+          "lastRun": "2026-10-18T08:43:58.234Z"
+        }
+      },
+      {
+        "id": "agent-antigravity",
+        "name": "Antigravity Agency (Factoría de Software)",
+        "role": "Desarrollo Autónomo Local & 111 Especialistas de Ingeniería",
+        "icon": "fa-microchip",
         "color": "#8c52ff",
         "status": "active",
-        "cadence": "Cada 6 horas (0 */6 * * *)",
-        "description": "Agente autónomo que rastrea pymes en internet, detecta fallas en sus webs, genera ideas de software micro-SaaS y alimenta la Cabina de Ventas.",
-        "systemPrompt": "Eres el Agente Autónomo Captador B2B & Ideas (Hunter AI). Tu objetivo para zVaito es identificar oportunidades comerciales B2B y generar conceptos viables de software analizando servicios técnicos.",
+        "cadence": "En ejecución continua en PC Local / Bajo demanda",
+        "description": "Factoría de ingeniería integral con 111 agentes especialistas orquestados por fases (Arquitectura, Backend, Frontend, QA, AppSec, Rendimiento). Encargado del 100% del código en c:\\PROYECTOS.",
+        "systemPrompt": "Eres Antigravity Agency, la factoría de ingeniería de software local de Manuel López Ramos.",
         "metrics": {
-          "tasksExecuted": 0,
-          "lastRun": null
+          "tasksExecuted": 1,
+          "lastRun": "2026-10-18T08:43:58.246Z"
         }
       },
       {
@@ -591,7 +606,7 @@
       },
       {
         "id": "agent-studysync",
-        "name": "StudySync & Life AI",
+        "name": "StudySync & Life AI (Google Calendar)",
         "role": "Planificador de Vida, Estudio y Pesca",
         "icon": "fa-graduation-cap",
         "color": "#00f2fe",
@@ -606,7 +621,7 @@
       },
       {
         "id": "agent-fitness",
-        "name": "Fitness Coach AI",
+        "name": "Fitness Coach AI (Gym Tracker)",
         "role": "Entrenamiento & Progresión de Cargas",
         "icon": "fa-dumbbell",
         "color": "#ec4899",
@@ -620,6 +635,1494 @@
         }
       }
     ],
-    "logs": []
+    "logs": [
+      {
+        "id": "log_1792313038250",
+        "agentId": "agent-antigravity",
+        "agentName": "Antigravity Agency (Factoría de Software)",
+        "icon": "fa-microchip",
+        "color": "#8c52ff",
+        "title": "Misión ejecutada (Antigravity Agency (Factoría de Software))",
+        "description": "Misión de Antigravity Agency completada: Factoría local activa con 111 especialistas de ingeniería listos para ejecución por fases (Arquitectura -> Backend -> Frontend -> QA).",
+        "timestamp": "2026-10-18T08:43:58.250Z"
+      },
+      {
+        "id": "log_1792313038239",
+        "agentId": "agent-jude",
+        "agentName": "Jude (Chief of Staff & Telegram 24/7)",
+        "icon": "fa-paper-plane",
+        "color": "#2563eb",
+        "title": "Misión ejecutada (Jude (Chief of Staff & Telegram 24/7))",
+        "description": "Misión de Jude verificada: Asistente ejecutivo 24/7 activo en VPS y conectado con Telegram (@JudeeeeeBot). Modo delegación de código activo.",
+        "timestamp": "2026-10-18T08:43:58.240Z"
+      }
+    ]
+  },
+  "cabina": {
+    "prospects": [
+      {
+        "id": "l_hx3tzfqkt",
+        "empresa": "Cabaña Verónica",
+        "razon_social": "Cabaña Verónica",
+        "cif": "Verificado",
+        "nicho": "Deportes de Montaña y Material Técnico",
+        "subsector": "Deportes de Montaña y Material Técnico",
+        "web": "https://www.cabanaveronica.com",
+        "provincia": "39002 Santander",
+        "localidad": "Calle de los Herreros",
+        "tamano": {
+          "empleados": "Pyme",
+          "fuente": "Web / Registro"
+        },
+        "decisor": {
+          "nombre": "Responsable / Gerencia",
+          "cargo": "Gerente / Dirección",
+          "fuente": "Web pública"
+        },
+        "telefonos": [
+          {
+            "numero": "+34 942 215 137",
+            "tipo": "movil",
+            "etiqueta": "teléfono empresa",
+            "fuente": "Web empresa"
+          }
+        ],
+        "email_empresa": "info@cabanaveronica.com",
+        "que_hacen": "Cabaña Verónica · Sector Deportes de Montaña y Material Técnico. Ubicación: Calle de los Herreros, 4, 39002 Santander.",
+        "clientes_tipo": "Clientes y usuarios del sector",
+        "senales": [
+          {
+            "senal": "Falta de optimización para la búsqueda y filtrado por tallas, especificaciones técnicas y material. Se propone un desarrollo a medida para la gestión de productos con variaciones complejas, integración automática de stock entre almacén local y web, y optimización SEO técnico enfocado en búsqueda local y catálogo especializado de montaña.",
+            "fuente": "www.cabanaveronica.com",
+            "peso": "alta"
+          }
+        ],
+        "dolores": [
+          {
+            "dolor": "Falta de optimización para la búsqueda y filtrado por tallas, especificaciones técnicas y material. Se propone un desarrollo a medida para la gestión de productos con variaciones complejas, integración automática de stock entre almacén local y web, y optimización SEO técnico enfocado en búsqueda local y catálogo especializado de montaña.",
+            "por_que_lo_creemos": "Auditado en su web (www.cabanaveronica.com): Falta de optimización para la búsqueda y filtrado por tallas, especificaciones técnicas y material. Se propone un desarrollo a medida para la gestión de productos con variaciones complejas, integración automática de stock entre almacén local y web, y optimización SEO técnico enfocado en búsqueda local y catálogo especializado de montaña.",
+            "pregunta_cuantificacion": "¿Cuántos clientes o consultas creéis que se pierden al mes por esta falta de optimización en www.cabanaveronica.com?"
+          }
+        ],
+        "solucion_propuesta": {
+          "principal": "Desarrollo y optimización web para Cabaña Verónica",
+          "complementaria": "Automatización de captación, reservas y pedidos online",
+          "prueba_a_citar": "Negocios del mismo sector aumentaron su facturación y clientes directos tras optimizar su web."
+        },
+        "score": 90,
+        "prioridad": "A",
+        "guion": {
+          "apertura": "Hola, buenos días. ¿Hablo con el responsable de Cabaña Verónica? Os llamo porque he estado auditando vuestra web (www.cabanaveronica.com) y he identificado un punto claro de mejora en Falta de optimización para la búsqueda y filtrado por tallas, especificaciones técnicas y material. ... ¿Tenéis un minuto?",
+          "si_no_esta_el_decisor": "Perfecto. ¿Cómo se llama la persona que coordina la página web o la gerencia, y a qué hora es mejor pillarle? Así no os hago perder tiempo.",
+          "preguntas_descubrimiento": [
+            "¿Cuántas consultas o pedidos os entran actualmente a través de vuestra web www.cabanaveronica.com?",
+            "¿Habéis notado que los clientes buscan procesos más directos y rápidos desde el móvil?",
+            "¿Os vendría bien automatizar esa parte para ahorrar horas de trabajo cada semana?"
+          ],
+          "objecion_probable": {
+            "objecion": "Mándame un correo con la información",
+            "respuesta": "Te lo mando sin problema a info@cabanaveronica.com, pero para no enviarte un PDF genérico: ¿vuestro mayor dolor de cabeza ahora es la captación o las horas que perdéis en tareas manuales? Así os preparo solo lo que os sirva."
+          },
+          "cierre_diagnostico": "Te propongo una demo interactiva de 15 minutos: te enseño cómo otros negocios del sector resolvieron esto y ahorran horas semanales. ¿Te viene bien el martes a las 10:00 o el jueves a las 16:00?"
+        },
+        "mejor_franja": "10:00 - 13:30 horario comercial",
+        "notas": "Prospecto real auditado por Hunter AI. Web: www.cabanaveronica.com. Dirección: Calle de los Herreros, 4, 39002 Santander.",
+        "estado": "pendiente",
+        "intentos": 0,
+        "apertura_siguiente": null
+      },
+      {
+        "id": "l_f3fz47ukt",
+        "empresa": "Colmado Quílez / La Fuente",
+        "razon_social": "Colmado Quílez / La Fuente",
+        "cif": "Verificado",
+        "nicho": "Alimentación Gourmet y Vinos",
+        "subsector": "Alimentación Gourmet y Vinos",
+        "web": "https://www.lafuente.es",
+        "provincia": "08007 Barcelona",
+        "localidad": "Rambla de Catalunya",
+        "tamano": {
+          "empleados": "Pyme",
+          "fuente": "Web / Registro"
+        },
+        "decisor": {
+          "nombre": "Responsable / Gerencia",
+          "cargo": "Gerente / Dirección",
+          "fuente": "Web pública"
+        },
+        "telefonos": [
+          {
+            "numero": "+34 932 152 145",
+            "tipo": "movil",
+            "etiqueta": "teléfono empresa",
+            "fuente": "Web empresa"
+          }
+        ],
+        "email_empresa": "info@lafuente.es",
+        "que_hacen": "Colmado Quílez / La Fuente · Sector Alimentación Gourmet y Vinos. Ubicación: Rambla de Catalunya, 65, 08007 Barcelona.",
+        "clientes_tipo": "Clientes y usuarios del sector",
+        "senales": [
+          {
+            "senal": "Su tienda online posee una interfaz anticuada que no refleja la experiencia de alta gama de su tienda física emblemática. Requiere una modernización integral del frontend con tecnología JAMstack/Next.js para carga instantánea, migración a una pasarela de pago para envíos refrigerados/especiales y desarrollo de un club de fidelización conectado al TPVP del local físico.",
+            "fuente": "www.lafuente.es",
+            "peso": "alta"
+          }
+        ],
+        "dolores": [
+          {
+            "dolor": "Su tienda online posee una interfaz anticuada que no refleja la experiencia de alta gama de su tienda física emblemática. Requiere una modernización integral del frontend con tecnología JAMstack/Next.js para carga instantánea, migración a una pasarela de pago para envíos refrigerados/especiales y desarrollo de un club de fidelización conectado al TPVP del local físico.",
+            "por_que_lo_creemos": "Auditado en su web (www.lafuente.es): Su tienda online posee una interfaz anticuada que no refleja la experiencia de alta gama de su tienda física emblemática. Requiere una modernización integral del frontend con tecnología JAMstack/Next.js para carga instantánea, migración a una pasarela de pago para envíos refrigerados/especiales y desarrollo de un club de fidelización conectado al TPVP del local físico.",
+            "pregunta_cuantificacion": "¿Cuántos clientes o consultas creéis que se pierden al mes por esta falta de optimización en www.lafuente.es?"
+          }
+        ],
+        "solucion_propuesta": {
+          "principal": "Desarrollo y optimización web para Colmado Quílez / La Fuente",
+          "complementaria": "Automatización de captación, reservas y pedidos online",
+          "prueba_a_citar": "Negocios del mismo sector aumentaron su facturación y clientes directos tras optimizar su web."
+        },
+        "score": 90,
+        "prioridad": "A",
+        "guion": {
+          "apertura": "Hola, buenos días. ¿Hablo con el responsable de Colmado Quílez / La Fuente? Os llamo porque he estado auditando vuestra web (www.lafuente.es) y he identificado un punto claro de mejora en Su tienda online posee una interfaz anticuada que no refleja la experiencia de alta gama de su tiend... ¿Tenéis un minuto?",
+          "si_no_esta_el_decisor": "Perfecto. ¿Cómo se llama la persona que coordina la página web o la gerencia, y a qué hora es mejor pillarle? Así no os hago perder tiempo.",
+          "preguntas_descubrimiento": [
+            "¿Cuántas consultas o pedidos os entran actualmente a través de vuestra web www.lafuente.es?",
+            "¿Habéis notado que los clientes buscan procesos más directos y rápidos desde el móvil?",
+            "¿Os vendría bien automatizar esa parte para ahorrar horas de trabajo cada semana?"
+          ],
+          "objecion_probable": {
+            "objecion": "Mándame un correo con la información",
+            "respuesta": "Te lo mando sin problema a info@lafuente.es, pero para no enviarte un PDF genérico: ¿vuestro mayor dolor de cabeza ahora es la captación o las horas que perdéis en tareas manuales? Así os preparo solo lo que os sirva."
+          },
+          "cierre_diagnostico": "Te propongo una demo interactiva de 15 minutos: te enseño cómo otros negocios del sector resolvieron esto y ahorran horas semanales. ¿Te viene bien el martes a las 10:00 o el jueves a las 16:00?"
+        },
+        "mejor_franja": "10:00 - 13:30 horario comercial",
+        "notas": "Prospecto real auditado por Hunter AI. Web: www.lafuente.es. Dirección: Rambla de Catalunya, 65, 08007 Barcelona.",
+        "estado": "pendiente",
+        "intentos": 0,
+        "apertura_siguiente": null
+      },
+      {
+        "id": "l_0tu2j8g7k",
+        "empresa": "Dooc Barcelona",
+        "razon_social": "Dooc Barcelona",
+        "cif": "Verificado",
+        "nicho": "Decoración, Muebles y Diseño de Interiores",
+        "subsector": "Decoración, Muebles y Diseño de Interiores",
+        "web": "https://www.dooc.es",
+        "provincia": "08008 Barcelona",
+        "localidad": "Carrer de Còrsega",
+        "tamano": {
+          "empleados": "Pyme",
+          "fuente": "Web / Registro"
+        },
+        "decisor": {
+          "nombre": "Responsable / Gerencia",
+          "cargo": "Gerente / Dirección",
+          "fuente": "Web pública"
+        },
+        "telefonos": [
+          {
+            "numero": "+34 932 181 832",
+            "tipo": "movil",
+            "etiqueta": "teléfono empresa",
+            "fuente": "Web empresa"
+          }
+        ],
+        "email_empresa": "info@dooc.es",
+        "que_hacen": "Dooc Barcelona · Sector Decoración, Muebles y Diseño de Interiores. Ubicación: Carrer de Còrsega, 285, 08008 Barcelona.",
+        "clientes_tipo": "Clientes y usuarios del sector",
+        "senales": [
+          {
+            "senal": "La tienda online carece de un sistema interactivo de recogida local (Click & Collect) con gestión de franjas horarias y disponibilidad inmediata en tienda física. Se propone el desarrollo de un módulo personalizado de geolocalización e inventario por tienda, mejora del tiempo de respuesta del servidor (Core Web Vitals) y personalizador interactivo de productos.",
+            "fuente": "www.dooc.es",
+            "peso": "alta"
+          }
+        ],
+        "dolores": [
+          {
+            "dolor": "La tienda online carece de un sistema interactivo de recogida local (Click & Collect) con gestión de franjas horarias y disponibilidad inmediata en tienda física. Se propone el desarrollo de un módulo personalizado de geolocalización e inventario por tienda, mejora del tiempo de respuesta del servidor (Core Web Vitals) y personalizador interactivo de productos.",
+            "por_que_lo_creemos": "Auditado en su web (www.dooc.es): La tienda online carece de un sistema interactivo de recogida local (Click & Collect) con gestión de franjas horarias y disponibilidad inmediata en tienda física. Se propone el desarrollo de un módulo personalizado de geolocalización e inventario por tienda, mejora del tiempo de respuesta del servidor (Core Web Vitals) y personalizador interactivo de productos.",
+            "pregunta_cuantificacion": "¿Cuántos clientes o consultas creéis que se pierden al mes por esta falta de optimización en www.dooc.es?"
+          }
+        ],
+        "solucion_propuesta": {
+          "principal": "Desarrollo y optimización web para Dooc Barcelona",
+          "complementaria": "Automatización de captación, reservas y pedidos online",
+          "prueba_a_citar": "Negocios del mismo sector aumentaron su facturación y clientes directos tras optimizar su web."
+        },
+        "score": 90,
+        "prioridad": "A",
+        "guion": {
+          "apertura": "Hola, buenos días. ¿Hablo con el responsable de Dooc Barcelona? Os llamo porque he estado auditando vuestra web (www.dooc.es) y he identificado un punto claro de mejora en La tienda online carece de un sistema interactivo de recogida local (Click & Collect) con gestión de... ¿Tenéis un minuto?",
+          "si_no_esta_el_decisor": "Perfecto. ¿Cómo se llama la persona que coordina la página web o la gerencia, y a qué hora es mejor pillarle? Así no os hago perder tiempo.",
+          "preguntas_descubrimiento": [
+            "¿Cuántas consultas o pedidos os entran actualmente a través de vuestra web www.dooc.es?",
+            "¿Habéis notado que los clientes buscan procesos más directos y rápidos desde el móvil?",
+            "¿Os vendría bien automatizar esa parte para ahorrar horas de trabajo cada semana?"
+          ],
+          "objecion_probable": {
+            "objecion": "Mándame un correo con la información",
+            "respuesta": "Te lo mando sin problema a info@dooc.es, pero para no enviarte un PDF genérico: ¿vuestro mayor dolor de cabeza ahora es la captación o las horas que perdéis en tareas manuales? Así os preparo solo lo que os sirva."
+          },
+          "cierre_diagnostico": "Te propongo una demo interactiva de 15 minutos: te enseño cómo otros negocios del sector resolvieron esto y ahorran horas semanales. ¿Te viene bien el martes a las 10:00 o el jueves a las 16:00?"
+        },
+        "mejor_franja": "10:00 - 13:30 horario comercial",
+        "notas": "Prospecto real auditado por Hunter AI. Web: www.dooc.es. Dirección: Carrer de Còrsega, 285, 08008 Barcelona.",
+        "estado": "pendiente",
+        "intentos": 0,
+        "apertura_siguiente": null
+      },
+      {
+        "id": "l_tfbvnswf7",
+        "empresa": "Curiosite",
+        "razon_social": "Curiosite",
+        "cif": "Verificado",
+        "nicho": "Tienda de Regalos y Objetos de Diseño",
+        "subsector": "Tienda de Regalos y Objetos de Diseño",
+        "web": "https://www.curiosite.es",
+        "provincia": "28004 Madrid",
+        "localidad": "Calle de la Corredera Alta de San Pablo",
+        "tamano": {
+          "empleados": "Pyme",
+          "fuente": "Web / Registro"
+        },
+        "decisor": {
+          "nombre": "Responsable / Gerencia",
+          "cargo": "Gerente / Dirección",
+          "fuente": "Web pública"
+        },
+        "telefonos": [
+          {
+            "numero": "+34 911 412 800",
+            "tipo": "movil",
+            "etiqueta": "teléfono empresa",
+            "fuente": "Web empresa"
+          }
+        ],
+        "email_empresa": "contacto@curiosite.es",
+        "que_hacen": "Curiosite · Sector Tienda de Regalos y Objetos de Diseño. Ubicación: Calle de la Corredera Alta de San Pablo, 28, 28004 Madrid.",
+        "clientes_tipo": "Clientes y usuarios del sector",
+        "senales": [
+          {
+            "senal": "Alto porcentaje de usuarios móviles con abandono de carrito por un flujo de checkout con demasiados pasos. Se propone optimización de UX/UI enfocado en conversiones móviles (Mobile-First), desarrollo de checkout exprés con integración nativa de Apple Pay, Google Pay y Bizum en un solo clic, y optimización de carga de imágenes de catálogo (WebP/AVIF diferido).",
+            "fuente": "www.curiosite.es",
+            "peso": "alta"
+          }
+        ],
+        "dolores": [
+          {
+            "dolor": "Alto porcentaje de usuarios móviles con abandono de carrito por un flujo de checkout con demasiados pasos. Se propone optimización de UX/UI enfocado en conversiones móviles (Mobile-First), desarrollo de checkout exprés con integración nativa de Apple Pay, Google Pay y Bizum en un solo clic, y optimización de carga de imágenes de catálogo (WebP/AVIF diferido).",
+            "por_que_lo_creemos": "Auditado en su web (www.curiosite.es): Alto porcentaje de usuarios móviles con abandono de carrito por un flujo de checkout con demasiados pasos. Se propone optimización de UX/UI enfocado en conversiones móviles (Mobile-First), desarrollo de checkout exprés con integración nativa de Apple Pay, Google Pay y Bizum en un solo clic, y optimización de carga de imágenes de catálogo (WebP/AVIF diferido).",
+            "pregunta_cuantificacion": "¿Cuántos clientes o consultas creéis que se pierden al mes por esta falta de optimización en www.curiosite.es?"
+          }
+        ],
+        "solucion_propuesta": {
+          "principal": "Desarrollo y optimización web para Curiosite",
+          "complementaria": "Automatización de captación, reservas y pedidos online",
+          "prueba_a_citar": "Negocios del mismo sector aumentaron su facturación y clientes directos tras optimizar su web."
+        },
+        "score": 90,
+        "prioridad": "A",
+        "guion": {
+          "apertura": "Hola, buenos días. ¿Hablo con el responsable de Curiosite? Os llamo porque he estado auditando vuestra web (www.curiosite.es) y he identificado un punto claro de mejora en Alto porcentaje de usuarios móviles con abandono de carrito por un flujo de checkout con demasiados ... ¿Tenéis un minuto?",
+          "si_no_esta_el_decisor": "Perfecto. ¿Cómo se llama la persona que coordina la página web o la gerencia, y a qué hora es mejor pillarle? Así no os hago perder tiempo.",
+          "preguntas_descubrimiento": [
+            "¿Cuántas consultas o pedidos os entran actualmente a través de vuestra web www.curiosite.es?",
+            "¿Habéis notado que los clientes buscan procesos más directos y rápidos desde el móvil?",
+            "¿Os vendría bien automatizar esa parte para ahorrar horas de trabajo cada semana?"
+          ],
+          "objecion_probable": {
+            "objecion": "Mándame un correo con la información",
+            "respuesta": "Te lo mando sin problema a contacto@curiosite.es, pero para no enviarte un PDF genérico: ¿vuestro mayor dolor de cabeza ahora es la captación o las horas que perdéis en tareas manuales? Así os preparo solo lo que os sirva."
+          },
+          "cierre_diagnostico": "Te propongo una demo interactiva de 15 minutos: te enseño cómo otros negocios del sector resolvieron esto y ahorran horas semanales. ¿Te viene bien el martes a las 10:00 o el jueves a las 16:00?"
+        },
+        "mejor_franja": "10:00 - 13:30 horario comercial",
+        "notas": "Prospecto real auditado por Hunter AI. Web: www.curiosite.es. Dirección: Calle de la Corredera Alta de San Pablo, 28, 28004 Madrid.",
+        "estado": "pendiente",
+        "intentos": 0,
+        "apertura_siguiente": null
+      },
+      {
+        "id": "l_a9wxwkllf",
+        "empresa": "Librería La Central del Raval",
+        "razon_social": "Librería La Central del Raval",
+        "cif": "Verificado",
+        "nicho": "Librería / Comercio Local y E-commerce",
+        "subsector": "Librería / Comercio Local y E-commerce",
+        "web": "https://www.lacentral.com",
+        "provincia": "08001 Barcelona",
+        "localidad": "Carrer de Elisabets",
+        "tamano": {
+          "empleados": "Pyme",
+          "fuente": "Web / Registro"
+        },
+        "decisor": {
+          "nombre": "Responsable / Gerencia",
+          "cargo": "Gerente / Dirección",
+          "fuente": "Web pública"
+        },
+        "telefonos": [
+          {
+            "numero": "+34 933 170 293",
+            "tipo": "movil",
+            "etiqueta": "teléfono empresa",
+            "fuente": "Web empresa"
+          }
+        ],
+        "email_empresa": "atencion@lacentral.com",
+        "que_hacen": "Librería La Central del Raval · Sector Librería / Comercio Local y E-commerce. Ubicación: Carrer de Elisabets, 6, 08001 Barcelona.",
+        "clientes_tipo": "Clientes y usuarios del sector",
+        "senales": [
+          {
+            "senal": "Su plataforma e-commerce actual gestiona un catálogo masivo, pero su buscador interno presenta latencias altas y filtrado complejo en dispositivos móviles. Se propone desarrollo e integración de un motor de búsqueda headless (Search API como Algolia/Meilisearch), optimización de caché para acelerar el tiempo de carga por debajo de 1.5s y sincronización en tiempo real del stock del ERP físico con la tienda online.",
+            "fuente": "www.lacentral.com",
+            "peso": "alta"
+          }
+        ],
+        "dolores": [
+          {
+            "dolor": "Su plataforma e-commerce actual gestiona un catálogo masivo, pero su buscador interno presenta latencias altas y filtrado complejo en dispositivos móviles. Se propone desarrollo e integración de un motor de búsqueda headless (Search API como Algolia/Meilisearch), optimización de caché para acelerar el tiempo de carga por debajo de 1.5s y sincronización en tiempo real del stock del ERP físico con la tienda online.",
+            "por_que_lo_creemos": "Auditado en su web (www.lacentral.com): Su plataforma e-commerce actual gestiona un catálogo masivo, pero su buscador interno presenta latencias altas y filtrado complejo en dispositivos móviles. Se propone desarrollo e integración de un motor de búsqueda headless (Search API como Algolia/Meilisearch), optimización de caché para acelerar el tiempo de carga por debajo de 1.5s y sincronización en tiempo real del stock del ERP físico con la tienda online.",
+            "pregunta_cuantificacion": "¿Cuántos clientes o consultas creéis que se pierden al mes por esta falta de optimización en www.lacentral.com?"
+          }
+        ],
+        "solucion_propuesta": {
+          "principal": "Desarrollo y optimización web para Librería La Central del Raval",
+          "complementaria": "Automatización de captación, reservas y pedidos online",
+          "prueba_a_citar": "Negocios del mismo sector aumentaron su facturación y clientes directos tras optimizar su web."
+        },
+        "score": 90,
+        "prioridad": "A",
+        "guion": {
+          "apertura": "Hola, buenos días. ¿Hablo con el responsable de Librería La Central del Raval? Os llamo porque he estado auditando vuestra web (www.lacentral.com) y he identificado un punto claro de mejora en Su plataforma e-commerce actual gestiona un catálogo masivo, pero su buscador interno presenta laten... ¿Tenéis un minuto?",
+          "si_no_esta_el_decisor": "Perfecto. ¿Cómo se llama la persona que coordina la página web o la gerencia, y a qué hora es mejor pillarle? Así no os hago perder tiempo.",
+          "preguntas_descubrimiento": [
+            "¿Cuántas consultas o pedidos os entran actualmente a través de vuestra web www.lacentral.com?",
+            "¿Habéis notado que los clientes buscan procesos más directos y rápidos desde el móvil?",
+            "¿Os vendría bien automatizar esa parte para ahorrar horas de trabajo cada semana?"
+          ],
+          "objecion_probable": {
+            "objecion": "Mándame un correo con la información",
+            "respuesta": "Te lo mando sin problema a atencion@lacentral.com, pero para no enviarte un PDF genérico: ¿vuestro mayor dolor de cabeza ahora es la captación o las horas que perdéis en tareas manuales? Así os preparo solo lo que os sirva."
+          },
+          "cierre_diagnostico": "Te propongo una demo interactiva de 15 minutos: te enseño cómo otros negocios del sector resolvieron esto y ahorran horas semanales. ¿Te viene bien el martes a las 10:00 o el jueves a las 16:00?"
+        },
+        "mejor_franja": "10:00 - 13:30 horario comercial",
+        "notas": "Prospecto real auditado por Hunter AI. Web: www.lacentral.com. Dirección: Carrer de Elisabets, 6, 08001 Barcelona.",
+        "estado": "pendiente",
+        "intentos": 0,
+        "apertura_siguiente": null
+      },
+      {
+        "id": "l_1_burnout",
+        "empresa": "Burnout Burgers Fuencarral",
+        "razon_social": "Burnout Burgers Fuencarral",
+        "cif": "Verificado",
+        "nicho": "Restauración / Hamburguesería Gourmet",
+        "subsector": "Restauración / Hamburguesería Gourmet",
+        "web": "https://www.burnoutburgers.com",
+        "provincia": "28010 Madrid",
+        "localidad": "Calle de Fuencarral",
+        "tamano": {
+          "empleados": "Pyme",
+          "fuente": "Web / Registro"
+        },
+        "decisor": {
+          "nombre": "Responsable / Gerencia",
+          "cargo": "Gerente / Dirección",
+          "fuente": "Web pública"
+        },
+        "telefonos": [
+          {
+            "numero": "+34 910 58 10 98",
+            "tipo": "movil",
+            "etiqueta": "teléfono empresa",
+            "fuente": "Web empresa"
+          }
+        ],
+        "email_empresa": "info@burnoutburgers.com",
+        "que_hacen": "Burnout Burgers Fuencarral · Sector Restauración / Hamburguesería Gourmet. Ubicación: Calle de Fuencarral, 148, 28010 Madrid.",
+        "clientes_tipo": "Clientes y usuarios del sector",
+        "senales": [
+          {
+            "senal": "Su carta digital depende de visualizadores externos y el proceso de checkout móvil presenta fricción al cobrar con Apple Pay y Google Pay. Se propone el desarrollo de una PWA de pedidos directos 'one-click' con sistema de fidelización propio para evitar el 30% de comisión de agregadores como Glovo o UberEats.",
+            "fuente": "www.burnoutburgers.com",
+            "peso": "alta"
+          }
+        ],
+        "dolores": [
+          {
+            "dolor": "Su carta digital depende de visualizadores externos y el proceso de checkout móvil presenta fricción al cobrar con Apple Pay y Google Pay. Se propone el desarrollo de una PWA de pedidos directos 'one-click' con sistema de fidelización propio para evitar el 30% de comisión de agregadores como Glovo o UberEats.",
+            "por_que_lo_creemos": "Auditado en su web (www.burnoutburgers.com): Su carta digital depende de visualizadores externos y el proceso de checkout móvil presenta fricción al cobrar con Apple Pay y Google Pay. Se propone el desarrollo de una PWA de pedidos directos 'one-click' con sistema de fidelización propio para evitar el 30% de comisión de agregadores como Glovo o UberEats.",
+            "pregunta_cuantificacion": "¿Cuántos clientes o consultas creéis que se pierden al mes por esta falta de optimización en www.burnoutburgers.com?"
+          }
+        ],
+        "solucion_propuesta": {
+          "principal": "Desarrollo y optimización web para Burnout Burgers Fuencarral",
+          "complementaria": "Automatización de captación, reservas y pedidos online",
+          "prueba_a_citar": "Negocios del mismo sector aumentaron su facturación y clientes directos tras optimizar su web."
+        },
+        "score": 90,
+        "prioridad": "A",
+        "guion": {
+          "apertura": "Hola, buenos días. ¿Hablo con el responsable de Burnout Burgers Fuencarral? Os llamo porque he estado auditando vuestra web (www.burnoutburgers.com) y he identificado un punto claro de mejora en Su carta digital depende de visualizadores externos y el proceso de checkout móvil presenta fricción... ¿Tenéis un minuto?",
+          "si_no_esta_el_decisor": "Perfecto. ¿Cómo se llama la persona que coordina la página web o la gerencia, y a qué hora es mejor pillarle? Así no os hago perder tiempo.",
+          "preguntas_descubrimiento": [
+            "¿Cuántas consultas o pedidos os entran actualmente a través de vuestra web www.burnoutburgers.com?",
+            "¿Habéis notado que los clientes buscan procesos más directos y rápidos desde el móvil?",
+            "¿Os vendría bien automatizar esa parte para ahorrar horas de trabajo cada semana?"
+          ],
+          "objecion_probable": {
+            "objecion": "Mándame un correo con la información",
+            "respuesta": "Te lo mando sin problema a info@burnoutburgers.com, pero para no enviarte un PDF genérico: ¿vuestro mayor dolor de cabeza ahora es la captación o las horas que perdéis en tareas manuales? Así os preparo solo lo que os sirva."
+          },
+          "cierre_diagnostico": "Te propongo una demo interactiva de 15 minutos: te enseño cómo otros negocios del sector resolvieron esto y ahorran horas semanales. ¿Te viene bien el martes a las 10:00 o el jueves a las 16:00?"
+        },
+        "mejor_franja": "10:00 - 13:30 horario comercial",
+        "notas": "Prospecto real auditado por Hunter AI. Web: www.burnoutburgers.com. Dirección: Calle de Fuencarral, 148, 28010 Madrid.",
+        "estado": "pendiente",
+        "intentos": 0,
+        "apertura_siguiente": null
+      },
+      {
+        "id": "l_2_figurato",
+        "empresa": "Fratelli Figurato - Pizzeria Popolare",
+        "razon_social": "Fratelli Figurato - Pizzeria Popolare",
+        "cif": "Verificado",
+        "nicho": "Restauración / Pizzería Napolitana",
+        "subsector": "Restauración / Pizzería Napolitana",
+        "web": "https://www.fratellifigurato.es",
+        "provincia": "28003 Madrid",
+        "localidad": "Calle de Alonso Cano",
+        "tamano": {
+          "empleados": "Pyme",
+          "fuente": "Web / Registro"
+        },
+        "decisor": {
+          "nombre": "Responsable / Gerencia",
+          "cargo": "Gerente / Dirección",
+          "fuente": "Web pública"
+        },
+        "telefonos": [
+          {
+            "numero": "+34 914 85 79 93",
+            "tipo": "movil",
+            "etiqueta": "teléfono empresa",
+            "fuente": "Web empresa"
+          }
+        ],
+        "email_empresa": "info@fratellifigurato.es",
+        "que_hacen": "Fratelli Figurato - Pizzeria Popolare · Sector Restauración / Pizzería Napolitana. Ubicación: Calle de Alonso Cano, 37, 28003 Madrid.",
+        "clientes_tipo": "Clientes y usuarios del sector",
+        "senales": [
+          {
+            "senal": "Tienen un volumen de reservas altísimo pero el sistema actual no está integrado con su TPV físico ni ofrece confirmación automática interactiva vía WhatsApp, provocando no-shows en horas punta. Se propone automatización de confirmaciones y optimización de carga de la web para reservas móviles en menos de 2 segundos.",
+            "fuente": "www.fratellifigurato.es",
+            "peso": "alta"
+          }
+        ],
+        "dolores": [
+          {
+            "dolor": "Tienen un volumen de reservas altísimo pero el sistema actual no está integrado con su TPV físico ni ofrece confirmación automática interactiva vía WhatsApp, provocando no-shows en horas punta. Se propone automatización de confirmaciones y optimización de carga de la web para reservas móviles en menos de 2 segundos.",
+            "por_que_lo_creemos": "Auditado en su web (www.fratellifigurato.es): Tienen un volumen de reservas altísimo pero el sistema actual no está integrado con su TPV físico ni ofrece confirmación automática interactiva vía WhatsApp, provocando no-shows en horas punta. Se propone automatización de confirmaciones y optimización de carga de la web para reservas móviles en menos de 2 segundos.",
+            "pregunta_cuantificacion": "¿Cuántos clientes o consultas creéis que se pierden al mes por esta falta de optimización en www.fratellifigurato.es?"
+          }
+        ],
+        "solucion_propuesta": {
+          "principal": "Desarrollo y optimización web para Fratelli Figurato - Pizzeria Popolare",
+          "complementaria": "Automatización de captación, reservas y pedidos online",
+          "prueba_a_citar": "Negocios del mismo sector aumentaron su facturación y clientes directos tras optimizar su web."
+        },
+        "score": 90,
+        "prioridad": "A",
+        "guion": {
+          "apertura": "Hola, buenos días. ¿Hablo con el responsable de Fratelli Figurato - Pizzeria Popolare? Os llamo porque he estado auditando vuestra web (www.fratellifigurato.es) y he identificado un punto claro de mejora en Tienen un volumen de reservas altísimo pero el sistema actual no está integrado con su TPV físico ni... ¿Tenéis un minuto?",
+          "si_no_esta_el_decisor": "Perfecto. ¿Cómo se llama la persona que coordina la página web o la gerencia, y a qué hora es mejor pillarle? Así no os hago perder tiempo.",
+          "preguntas_descubrimiento": [
+            "¿Cuántas consultas o pedidos os entran actualmente a través de vuestra web www.fratellifigurato.es?",
+            "¿Habéis notado que los clientes buscan procesos más directos y rápidos desde el móvil?",
+            "¿Os vendría bien automatizar esa parte para ahorrar horas de trabajo cada semana?"
+          ],
+          "objecion_probable": {
+            "objecion": "Mándame un correo con la información",
+            "respuesta": "Te lo mando sin problema a info@fratellifigurato.es, pero para no enviarte un PDF genérico: ¿vuestro mayor dolor de cabeza ahora es la captación o las horas que perdéis en tareas manuales? Así os preparo solo lo que os sirva."
+          },
+          "cierre_diagnostico": "Te propongo una demo interactiva de 15 minutos: te enseño cómo otros negocios del sector resolvieron esto y ahorran horas semanales. ¿Te viene bien el martes a las 10:00 o el jueves a las 16:00?"
+        },
+        "mejor_franja": "10:00 - 13:30 horario comercial",
+        "notas": "Prospecto real auditado por Hunter AI. Web: www.fratellifigurato.es. Dirección: Calle de Alonso Cano, 37, 28003 Madrid.",
+        "estado": "pendiente",
+        "intentos": 0,
+        "apertura_siguiente": null
+      },
+      {
+        "id": "l_3_duquesita",
+        "empresa": "La Duquesita Pastelería",
+        "razon_social": "La Duquesita Pastelería",
+        "cif": "Verificado",
+        "nicho": "Alimentación / Pastelería Artesanal",
+        "subsector": "Alimentación / Pastelería Artesanal",
+        "web": "https://www.laduquesita.es",
+        "provincia": "28004 Madrid",
+        "localidad": "Calle de Fernando VI",
+        "tamano": {
+          "empleados": "Pyme",
+          "fuente": "Web / Registro"
+        },
+        "decisor": {
+          "nombre": "Responsable / Gerencia",
+          "cargo": "Gerente / Dirección",
+          "fuente": "Web pública"
+        },
+        "telefonos": [
+          {
+            "numero": "+34 913 08 02 31",
+            "tipo": "movil",
+            "etiqueta": "teléfono empresa",
+            "fuente": "Web empresa"
+          }
+        ],
+        "email_empresa": "contacto@laduquesita.es",
+        "que_hacen": "La Duquesita Pastelería · Sector Alimentación / Pastelería Artesanal. Ubicación: Calle de Fernando VI, 2, 28004 Madrid.",
+        "clientes_tipo": "Clientes y usuarios del sector",
+        "senales": [
+          {
+            "senal": "La tienda online de productos de temporada sufre caídas de rendimiento en campañas clave (Navidad, Reyes) por falta de optimización en servidores y caché. Se propone migración de infraestructura a arquitectura Jamstack (Next.js en Vercel) y pasarela de pago instantánea con Bizum y recogida programada en tienda (Click & Collect).",
+            "fuente": "www.laduquesita.es",
+            "peso": "alta"
+          }
+        ],
+        "dolores": [
+          {
+            "dolor": "La tienda online de productos de temporada sufre caídas de rendimiento en campañas clave (Navidad, Reyes) por falta de optimización en servidores y caché. Se propone migración de infraestructura a arquitectura Jamstack (Next.js en Vercel) y pasarela de pago instantánea con Bizum y recogida programada en tienda (Click & Collect).",
+            "por_que_lo_creemos": "Auditado en su web (www.laduquesita.es): La tienda online de productos de temporada sufre caídas de rendimiento en campañas clave (Navidad, Reyes) por falta de optimización en servidores y caché. Se propone migración de infraestructura a arquitectura Jamstack (Next.js en Vercel) y pasarela de pago instantánea con Bizum y recogida programada en tienda (Click & Collect).",
+            "pregunta_cuantificacion": "¿Cuántos clientes o consultas creéis que se pierden al mes por esta falta de optimización en www.laduquesita.es?"
+          }
+        ],
+        "solucion_propuesta": {
+          "principal": "Desarrollo y optimización web para La Duquesita Pastelería",
+          "complementaria": "Automatización de captación, reservas y pedidos online",
+          "prueba_a_citar": "Negocios del mismo sector aumentaron su facturación y clientes directos tras optimizar su web."
+        },
+        "score": 90,
+        "prioridad": "A",
+        "guion": {
+          "apertura": "Hola, buenos días. ¿Hablo con el responsable de La Duquesita Pastelería? Os llamo porque he estado auditando vuestra web (www.laduquesita.es) y he identificado un punto claro de mejora en La tienda online de productos de temporada sufre caídas de rendimiento en campañas clave (Navidad, R... ¿Tenéis un minuto?",
+          "si_no_esta_el_decisor": "Perfecto. ¿Cómo se llama la persona que coordina la página web o la gerencia, y a qué hora es mejor pillarle? Así no os hago perder tiempo.",
+          "preguntas_descubrimiento": [
+            "¿Cuántas consultas o pedidos os entran actualmente a través de vuestra web www.laduquesita.es?",
+            "¿Habéis notado que los clientes buscan procesos más directos y rápidos desde el móvil?",
+            "¿Os vendría bien automatizar esa parte para ahorrar horas de trabajo cada semana?"
+          ],
+          "objecion_probable": {
+            "objecion": "Mándame un correo con la información",
+            "respuesta": "Te lo mando sin problema a contacto@laduquesita.es, pero para no enviarte un PDF genérico: ¿vuestro mayor dolor de cabeza ahora es la captación o las horas que perdéis en tareas manuales? Así os preparo solo lo que os sirva."
+          },
+          "cierre_diagnostico": "Te propongo una demo interactiva de 15 minutos: te enseño cómo otros negocios del sector resolvieron esto y ahorran horas semanales. ¿Te viene bien el martes a las 10:00 o el jueves a las 16:00?"
+        },
+        "mejor_franja": "10:00 - 13:30 horario comercial",
+        "notas": "Prospecto real auditado por Hunter AI. Web: www.laduquesita.es. Dirección: Calle de Fernando VI, 2, 28004 Madrid.",
+        "estado": "pendiente",
+        "intentos": 0,
+        "apertura_siguiente": null
+      },
+      {
+        "id": "l_4_tuktuk",
+        "empresa": "Tuk Tuk Asian Street Food Barquillo",
+        "razon_social": "Tuk Tuk Asian Street Food Barquillo",
+        "cif": "Verificado",
+        "nicho": "Restauración / Comida Asiática",
+        "subsector": "Restauración / Comida Asiática",
+        "web": "https://www.tuktukstreetfood.es",
+        "provincia": "28004 Madrid",
+        "localidad": "Calle del Barquillo",
+        "tamano": {
+          "empleados": "Pyme",
+          "fuente": "Web / Registro"
+        },
+        "decisor": {
+          "nombre": "Responsable / Gerencia",
+          "cargo": "Gerente / Dirección",
+          "fuente": "Web pública"
+        },
+        "telefonos": [
+          {
+            "numero": "+34 915 23 25 56",
+            "tipo": "movil",
+            "etiqueta": "teléfono empresa",
+            "fuente": "Web empresa"
+          }
+        ],
+        "email_empresa": "hola@tuktukstreetfood.es",
+        "que_hacen": "Tuk Tuk Asian Street Food Barquillo · Sector Restauración / Comida Asiática. Ubicación: Calle del Barquillo, 26, 28004 Madrid.",
+        "clientes_tipo": "Clientes y usuarios del sector",
+        "senales": [
+          {
+            "senal": "Al tener varios locales en Madrid, su web no detecta la geolocalización del usuario para redirigir automáticamente al restaurante más cercano con disponibilidad de mesa o reparto local. Se propone un localizador interactivo con mapa dinámico y sistema unificado de pedidos directos.",
+            "fuente": "www.tuktukstreetfood.es",
+            "peso": "alta"
+          }
+        ],
+        "dolores": [
+          {
+            "dolor": "Al tener varios locales en Madrid, su web no detecta la geolocalización del usuario para redirigir automáticamente al restaurante más cercano con disponibilidad de mesa o reparto local. Se propone un localizador interactivo con mapa dinámico y sistema unificado de pedidos directos.",
+            "por_que_lo_creemos": "Auditado en su web (www.tuktukstreetfood.es): Al tener varios locales en Madrid, su web no detecta la geolocalización del usuario para redirigir automáticamente al restaurante más cercano con disponibilidad de mesa o reparto local. Se propone un localizador interactivo con mapa dinámico y sistema unificado de pedidos directos.",
+            "pregunta_cuantificacion": "¿Cuántos clientes o consultas creéis que se pierden al mes por esta falta de optimización en www.tuktukstreetfood.es?"
+          }
+        ],
+        "solucion_propuesta": {
+          "principal": "Desarrollo y optimización web para Tuk Tuk Asian Street Food Barquillo",
+          "complementaria": "Automatización de captación, reservas y pedidos online",
+          "prueba_a_citar": "Negocios del mismo sector aumentaron su facturación y clientes directos tras optimizar su web."
+        },
+        "score": 90,
+        "prioridad": "A",
+        "guion": {
+          "apertura": "Hola, buenos días. ¿Hablo con el responsable de Tuk Tuk Asian Street Food Barquillo? Os llamo porque he estado auditando vuestra web (www.tuktukstreetfood.es) y he identificado un punto claro de mejora en Al tener varios locales en Madrid, su web no detecta la geolocalización del usuario para redirigir a... ¿Tenéis un minuto?",
+          "si_no_esta_el_decisor": "Perfecto. ¿Cómo se llama la persona que coordina la página web o la gerencia, y a qué hora es mejor pillarle? Así no os hago perder tiempo.",
+          "preguntas_descubrimiento": [
+            "¿Cuántas consultas o pedidos os entran actualmente a través de vuestra web www.tuktukstreetfood.es?",
+            "¿Habéis notado que los clientes buscan procesos más directos y rápidos desde el móvil?",
+            "¿Os vendría bien automatizar esa parte para ahorrar horas de trabajo cada semana?"
+          ],
+          "objecion_probable": {
+            "objecion": "Mándame un correo con la información",
+            "respuesta": "Te lo mando sin problema a hola@tuktukstreetfood.es, pero para no enviarte un PDF genérico: ¿vuestro mayor dolor de cabeza ahora es la captación o las horas que perdéis en tareas manuales? Así os preparo solo lo que os sirva."
+          },
+          "cierre_diagnostico": "Te propongo una demo interactiva de 15 minutos: te enseño cómo otros negocios del sector resolvieron esto y ahorran horas semanales. ¿Te viene bien el martes a las 10:00 o el jueves a las 16:00?"
+        },
+        "mejor_franja": "10:00 - 13:30 horario comercial",
+        "notas": "Prospecto real auditado por Hunter AI. Web: www.tuktukstreetfood.es. Dirección: Calle del Barquillo, 26, 28004 Madrid.",
+        "estado": "pendiente",
+        "intentos": 0,
+        "apertura_siguiente": null
+      },
+      {
+        "id": "l_5_gymage",
+        "empresa": "Gymage Lounge Resort",
+        "razon_social": "Gymage Lounge Resort",
+        "cif": "Verificado",
+        "nicho": "Fitness & Lifestyle / Gimnasio Boutique",
+        "subsector": "Fitness & Lifestyle / Gimnasio Boutique",
+        "web": "https://www.gymage.es",
+        "provincia": "28004 Madrid",
+        "localidad": "Calle de la Luna",
+        "tamano": {
+          "empleados": "Pyme",
+          "fuente": "Web / Registro"
+        },
+        "decisor": {
+          "nombre": "Responsable / Gerencia",
+          "cargo": "Gerente / Dirección",
+          "fuente": "Web pública"
+        },
+        "telefonos": [
+          {
+            "numero": "+34 915 32 09 74",
+            "tipo": "movil",
+            "etiqueta": "teléfono empresa",
+            "fuente": "Web empresa"
+          }
+        ],
+        "email_empresa": "info@gymage.es",
+        "que_hacen": "Gymage Lounge Resort · Sector Fitness & Lifestyle / Gimnasio Boutique. Ubicación: Calle de la Luna, 2, 28004 Madrid.",
+        "clientes_tipo": "Clientes y usuarios del sector",
+        "senales": [
+          {
+            "senal": "El proceso de alta de nuevos socios y reserva de clases colectivas requiere demasiados pasos manuales. Se propone un portal de membresías simplificado con cobro recurrente automático (Stripe Billing) y app web de reserva de espacios con calendario en tiempo real.",
+            "fuente": "www.gymage.es",
+            "peso": "alta"
+          }
+        ],
+        "dolores": [
+          {
+            "dolor": "El proceso de alta de nuevos socios y reserva de clases colectivas requiere demasiados pasos manuales. Se propone un portal de membresías simplificado con cobro recurrente automático (Stripe Billing) y app web de reserva de espacios con calendario en tiempo real.",
+            "por_que_lo_creemos": "Auditado en su web (www.gymage.es): El proceso de alta de nuevos socios y reserva de clases colectivas requiere demasiados pasos manuales. Se propone un portal de membresías simplificado con cobro recurrente automático (Stripe Billing) y app web de reserva de espacios con calendario en tiempo real.",
+            "pregunta_cuantificacion": "¿Cuántos clientes o consultas creéis que se pierden al mes por esta falta de optimización en www.gymage.es?"
+          }
+        ],
+        "solucion_propuesta": {
+          "principal": "Desarrollo y optimización web para Gymage Lounge Resort",
+          "complementaria": "Automatización de captación, reservas y pedidos online",
+          "prueba_a_citar": "Negocios del mismo sector aumentaron su facturación y clientes directos tras optimizar su web."
+        },
+        "score": 90,
+        "prioridad": "A",
+        "guion": {
+          "apertura": "Hola, buenos días. ¿Hablo con el responsable de Gymage Lounge Resort? Os llamo porque he estado auditando vuestra web (www.gymage.es) y he identificado un punto claro de mejora en El proceso de alta de nuevos socios y reserva de clases colectivas requiere demasiados pasos manuale... ¿Tenéis un minuto?",
+          "si_no_esta_el_decisor": "Perfecto. ¿Cómo se llama la persona que coordina la página web o la gerencia, y a qué hora es mejor pillarle? Así no os hago perder tiempo.",
+          "preguntas_descubrimiento": [
+            "¿Cuántas consultas o pedidos os entran actualmente a través de vuestra web www.gymage.es?",
+            "¿Habéis notado que los clientes buscan procesos más directos y rápidos desde el móvil?",
+            "¿Os vendría bien automatizar esa parte para ahorrar horas de trabajo cada semana?"
+          ],
+          "objecion_probable": {
+            "objecion": "Mándame un correo con la información",
+            "respuesta": "Te lo mando sin problema a info@gymage.es, pero para no enviarte un PDF genérico: ¿vuestro mayor dolor de cabeza ahora es la captación o las horas que perdéis en tareas manuales? Así os preparo solo lo que os sirva."
+          },
+          "cierre_diagnostico": "Te propongo una demo interactiva de 15 minutos: te enseño cómo otros negocios del sector resolvieron esto y ahorran horas semanales. ¿Te viene bien el martes a las 10:00 o el jueves a las 16:00?"
+        },
+        "mejor_franja": "10:00 - 13:30 horario comercial",
+        "notas": "Prospecto real auditado por Hunter AI. Web: www.gymage.es. Dirección: Calle de la Luna, 2, 28004 Madrid.",
+        "estado": "pendiente",
+        "intentos": 0,
+        "apertura_siguiente": null
+      },
+      {
+        "id": "l_6_bacoa",
+        "empresa": "Bacoa Burger Universitat",
+        "razon_social": "Bacoa Burger Universitat",
+        "cif": "Verificado",
+        "nicho": "Restauración / Hamburguesería",
+        "subsector": "Restauración / Hamburguesería",
+        "web": "https://www.bacoaburger.com",
+        "provincia": "08007 Barcelona",
+        "localidad": "Ronda de la Universitat",
+        "tamano": {
+          "empleados": "Pyme",
+          "fuente": "Web / Registro"
+        },
+        "decisor": {
+          "nombre": "Responsable / Gerencia",
+          "cargo": "Gerente / Dirección",
+          "fuente": "Web pública"
+        },
+        "telefonos": [
+          {
+            "numero": "+34 932 50 72 90",
+            "tipo": "movil",
+            "etiqueta": "teléfono empresa",
+            "fuente": "Web empresa"
+          }
+        ],
+        "email_empresa": "info@bacoaburger.com",
+        "que_hacen": "Bacoa Burger Universitat · Sector Restauración / Hamburguesería. Ubicación: Ronda de la Universitat, 31, 08007 Barcelona.",
+        "clientes_tipo": "Clientes y usuarios del sector",
+        "senales": [
+          {
+            "senal": "La versión móvil del menú web tarda más de 5 segundos en renderizar imágenes pesadas. Se propone compresión moderna en formato WebP con CDN y pasarela de take-away optimizada para smartphones.",
+            "fuente": "www.bacoaburger.com",
+            "peso": "alta"
+          }
+        ],
+        "dolores": [
+          {
+            "dolor": "La versión móvil del menú web tarda más de 5 segundos en renderizar imágenes pesadas. Se propone compresión moderna en formato WebP con CDN y pasarela de take-away optimizada para smartphones.",
+            "por_que_lo_creemos": "Auditado en su web (www.bacoaburger.com): La versión móvil del menú web tarda más de 5 segundos en renderizar imágenes pesadas. Se propone compresión moderna en formato WebP con CDN y pasarela de take-away optimizada para smartphones.",
+            "pregunta_cuantificacion": "¿Cuántos clientes o consultas creéis que se pierden al mes por esta falta de optimización en www.bacoaburger.com?"
+          }
+        ],
+        "solucion_propuesta": {
+          "principal": "Desarrollo y optimización web para Bacoa Burger Universitat",
+          "complementaria": "Automatización de captación, reservas y pedidos online",
+          "prueba_a_citar": "Negocios del mismo sector aumentaron su facturación y clientes directos tras optimizar su web."
+        },
+        "score": 90,
+        "prioridad": "A",
+        "guion": {
+          "apertura": "Hola, buenos días. ¿Hablo con el responsable de Bacoa Burger Universitat? Os llamo porque he estado auditando vuestra web (www.bacoaburger.com) y he identificado un punto claro de mejora en La versión móvil del menú web tarda más de 5 segundos en renderizar imágenes pesadas. Se propone com... ¿Tenéis un minuto?",
+          "si_no_esta_el_decisor": "Perfecto. ¿Cómo se llama la persona que coordina la página web o la gerencia, y a qué hora es mejor pillarle? Así no os hago perder tiempo.",
+          "preguntas_descubrimiento": [
+            "¿Cuántas consultas o pedidos os entran actualmente a través de vuestra web www.bacoaburger.com?",
+            "¿Habéis notado que los clientes buscan procesos más directos y rápidos desde el móvil?",
+            "¿Os vendría bien automatizar esa parte para ahorrar horas de trabajo cada semana?"
+          ],
+          "objecion_probable": {
+            "objecion": "Mándame un correo con la información",
+            "respuesta": "Te lo mando sin problema a info@bacoaburger.com, pero para no enviarte un PDF genérico: ¿vuestro mayor dolor de cabeza ahora es la captación o las horas que perdéis en tareas manuales? Así os preparo solo lo que os sirva."
+          },
+          "cierre_diagnostico": "Te propongo una demo interactiva de 15 minutos: te enseño cómo otros negocios del sector resolvieron esto y ahorran horas semanales. ¿Te viene bien el martes a las 10:00 o el jueves a las 16:00?"
+        },
+        "mejor_franja": "10:00 - 13:30 horario comercial",
+        "notas": "Prospecto real auditado por Hunter AI. Web: www.bacoaburger.com. Dirección: Ronda de la Universitat, 31, 08007 Barcelona.",
+        "estado": "pendiente",
+        "intentos": 0,
+        "apertura_siguiente": null
+      },
+      {
+        "id": "l_7_grosso",
+        "empresa": "Grosso Napoletano Hermosilla",
+        "razon_social": "Grosso Napoletano Hermosilla",
+        "cif": "Verificado",
+        "nicho": "Restauración / Pizzería Artesanal",
+        "subsector": "Restauración / Pizzería Artesanal",
+        "web": "https://www.grossonapoletano.com",
+        "provincia": "28001 Madrid",
+        "localidad": "Calle de Hermosilla",
+        "tamano": {
+          "empleados": "Pyme",
+          "fuente": "Web / Registro"
+        },
+        "decisor": {
+          "nombre": "Responsable / Gerencia",
+          "cargo": "Gerente / Dirección",
+          "fuente": "Web pública"
+        },
+        "telefonos": [
+          {
+            "numero": "+34 911 08 43 45",
+            "tipo": "movil",
+            "etiqueta": "teléfono empresa",
+            "fuente": "Web empresa"
+          }
+        ],
+        "email_empresa": "ciao@grossonapoletano.com",
+        "que_hacen": "Grosso Napoletano Hermosilla · Sector Restauración / Pizzería Artesanal. Ubicación: Calle de Hermosilla, 85, 28001 Madrid.",
+        "clientes_tipo": "Clientes y usuarios del sector",
+        "senales": [
+          {
+            "senal": "El checkout para pedidos a domicilio carece de integración directa con Bizum, perdiendo ventas en público joven. Se propone rediseño de pasarela de pago 'Click to Pay' con Bizum y Apple Pay nativo.",
+            "fuente": "www.grossonapoletano.com",
+            "peso": "alta"
+          }
+        ],
+        "dolores": [
+          {
+            "dolor": "El checkout para pedidos a domicilio carece de integración directa con Bizum, perdiendo ventas en público joven. Se propone rediseño de pasarela de pago 'Click to Pay' con Bizum y Apple Pay nativo.",
+            "por_que_lo_creemos": "Auditado en su web (www.grossonapoletano.com): El checkout para pedidos a domicilio carece de integración directa con Bizum, perdiendo ventas en público joven. Se propone rediseño de pasarela de pago 'Click to Pay' con Bizum y Apple Pay nativo.",
+            "pregunta_cuantificacion": "¿Cuántos clientes o consultas creéis que se pierden al mes por esta falta de optimización en www.grossonapoletano.com?"
+          }
+        ],
+        "solucion_propuesta": {
+          "principal": "Desarrollo y optimización web para Grosso Napoletano Hermosilla",
+          "complementaria": "Automatización de captación, reservas y pedidos online",
+          "prueba_a_citar": "Negocios del mismo sector aumentaron su facturación y clientes directos tras optimizar su web."
+        },
+        "score": 90,
+        "prioridad": "A",
+        "guion": {
+          "apertura": "Hola, buenos días. ¿Hablo con el responsable de Grosso Napoletano Hermosilla? Os llamo porque he estado auditando vuestra web (www.grossonapoletano.com) y he identificado un punto claro de mejora en El checkout para pedidos a domicilio carece de integración directa con Bizum, perdiendo ventas en pú... ¿Tenéis un minuto?",
+          "si_no_esta_el_decisor": "Perfecto. ¿Cómo se llama la persona que coordina la página web o la gerencia, y a qué hora es mejor pillarle? Así no os hago perder tiempo.",
+          "preguntas_descubrimiento": [
+            "¿Cuántas consultas o pedidos os entran actualmente a través de vuestra web www.grossonapoletano.com?",
+            "¿Habéis notado que los clientes buscan procesos más directos y rápidos desde el móvil?",
+            "¿Os vendría bien automatizar esa parte para ahorrar horas de trabajo cada semana?"
+          ],
+          "objecion_probable": {
+            "objecion": "Mándame un correo con la información",
+            "respuesta": "Te lo mando sin problema a ciao@grossonapoletano.com, pero para no enviarte un PDF genérico: ¿vuestro mayor dolor de cabeza ahora es la captación o las horas que perdéis en tareas manuales? Así os preparo solo lo que os sirva."
+          },
+          "cierre_diagnostico": "Te propongo una demo interactiva de 15 minutos: te enseño cómo otros negocios del sector resolvieron esto y ahorran horas semanales. ¿Te viene bien el martes a las 10:00 o el jueves a las 16:00?"
+        },
+        "mejor_franja": "10:00 - 13:30 horario comercial",
+        "notas": "Prospecto real auditado por Hunter AI. Web: www.grossonapoletano.com. Dirección: Calle de Hermosilla, 85, 28001 Madrid.",
+        "estado": "pendiente",
+        "intentos": 0,
+        "apertura_siguiente": null
+      },
+      {
+        "id": "l_8_mallorca",
+        "empresa": "Pastelería Mallorca Serrano",
+        "razon_social": "Pastelería Mallorca Serrano",
+        "cif": "Verificado",
+        "nicho": "Alimentación / Pastelería y Delicatessen",
+        "subsector": "Alimentación / Pastelería y Delicatessen",
+        "web": "https://www.pasteleria-mallorca.com",
+        "provincia": "28001 Madrid",
+        "localidad": "Calle de Serrano",
+        "tamano": {
+          "empleados": "Pyme",
+          "fuente": "Web / Registro"
+        },
+        "decisor": {
+          "nombre": "Responsable / Gerencia",
+          "cargo": "Gerente / Dirección",
+          "fuente": "Web pública"
+        },
+        "telefonos": [
+          {
+            "numero": "+34 915 77 18 56",
+            "tipo": "movil",
+            "etiqueta": "teléfono empresa",
+            "fuente": "Web empresa"
+          }
+        ],
+        "email_empresa": "atencionalcliente@pasteleria-mallorca.com",
+        "que_hacen": "Pastelería Mallorca Serrano · Sector Alimentación / Pastelería y Delicatessen. Ubicación: Calle de Serrano, 6, 28001 Madrid.",
+        "clientes_tipo": "Clientes y usuarios del sector",
+        "senales": [
+          {
+            "senal": "Carece de un sistema de recomendación inteligente de maridajes de productos gourmet en el carrito, reduciendo el ticket medio. Se propone algoritmo de cross-selling automatizado en el carrito.",
+            "fuente": "www.pasteleria-mallorca.com",
+            "peso": "alta"
+          }
+        ],
+        "dolores": [
+          {
+            "dolor": "Carece de un sistema de recomendación inteligente de maridajes de productos gourmet en el carrito, reduciendo el ticket medio. Se propone algoritmo de cross-selling automatizado en el carrito.",
+            "por_que_lo_creemos": "Auditado en su web (www.pasteleria-mallorca.com): Carece de un sistema de recomendación inteligente de maridajes de productos gourmet en el carrito, reduciendo el ticket medio. Se propone algoritmo de cross-selling automatizado en el carrito.",
+            "pregunta_cuantificacion": "¿Cuántos clientes o consultas creéis que se pierden al mes por esta falta de optimización en www.pasteleria-mallorca.com?"
+          }
+        ],
+        "solucion_propuesta": {
+          "principal": "Desarrollo y optimización web para Pastelería Mallorca Serrano",
+          "complementaria": "Automatización de captación, reservas y pedidos online",
+          "prueba_a_citar": "Negocios del mismo sector aumentaron su facturación y clientes directos tras optimizar su web."
+        },
+        "score": 90,
+        "prioridad": "A",
+        "guion": {
+          "apertura": "Hola, buenos días. ¿Hablo con el responsable de Pastelería Mallorca Serrano? Os llamo porque he estado auditando vuestra web (www.pasteleria-mallorca.com) y he identificado un punto claro de mejora en Carece de un sistema de recomendación inteligente de maridajes de productos gourmet en el carrito, r... ¿Tenéis un minuto?",
+          "si_no_esta_el_decisor": "Perfecto. ¿Cómo se llama la persona que coordina la página web o la gerencia, y a qué hora es mejor pillarle? Así no os hago perder tiempo.",
+          "preguntas_descubrimiento": [
+            "¿Cuántas consultas o pedidos os entran actualmente a través de vuestra web www.pasteleria-mallorca.com?",
+            "¿Habéis notado que los clientes buscan procesos más directos y rápidos desde el móvil?",
+            "¿Os vendría bien automatizar esa parte para ahorrar horas de trabajo cada semana?"
+          ],
+          "objecion_probable": {
+            "objecion": "Mándame un correo con la información",
+            "respuesta": "Te lo mando sin problema a atencionalcliente@pasteleria-mallorca.com, pero para no enviarte un PDF genérico: ¿vuestro mayor dolor de cabeza ahora es la captación o las horas que perdéis en tareas manuales? Así os preparo solo lo que os sirva."
+          },
+          "cierre_diagnostico": "Te propongo una demo interactiva de 15 minutos: te enseño cómo otros negocios del sector resolvieron esto y ahorran horas semanales. ¿Te viene bien el martes a las 10:00 o el jueves a las 16:00?"
+        },
+        "mejor_franja": "10:00 - 13:30 horario comercial",
+        "notas": "Prospecto real auditado por Hunter AI. Web: www.pasteleria-mallorca.com. Dirección: Calle de Serrano, 6, 28001 Madrid.",
+        "estado": "pendiente",
+        "intentos": 0,
+        "apertura_siguiente": null
+      },
+      {
+        "id": "l_9_metropolitan",
+        "empresa": "Club Metropolitan Abascal",
+        "razon_social": "Club Metropolitan Abascal",
+        "cif": "Verificado",
+        "nicho": "Salud y Fitness / Club Deportivo",
+        "subsector": "Salud y Fitness / Club Deportivo",
+        "web": "https://www.clubmetropolitan.net",
+        "provincia": "28003 Madrid",
+        "localidad": "Calle de José Abascal",
+        "tamano": {
+          "empleados": "Pyme",
+          "fuente": "Web / Registro"
+        },
+        "decisor": {
+          "nombre": "Responsable / Gerencia",
+          "cargo": "Gerente / Dirección",
+          "fuente": "Web pública"
+        },
+        "telefonos": [
+          {
+            "numero": "+34 915 94 34 00",
+            "tipo": "movil",
+            "etiqueta": "teléfono empresa",
+            "fuente": "Web empresa"
+          }
+        ],
+        "email_empresa": "abascal@clubmetropolitan.net",
+        "que_hacen": "Club Metropolitan Abascal · Sector Salud y Fitness / Club Deportivo. Ubicación: Calle de José Abascal, 46, 28003 Madrid.",
+        "clientes_tipo": "Clientes y usuarios del sector",
+        "senales": [
+          {
+            "senal": "La web pública no cuenta con un tour virtual interactivo 360° optimizado para captar leads que buscan instalaciones premium desde Google. Se propone landing page interactiva con tour virtual de alta conversión.",
+            "fuente": "www.clubmetropolitan.net",
+            "peso": "alta"
+          }
+        ],
+        "dolores": [
+          {
+            "dolor": "La web pública no cuenta con un tour virtual interactivo 360° optimizado para captar leads que buscan instalaciones premium desde Google. Se propone landing page interactiva con tour virtual de alta conversión.",
+            "por_que_lo_creemos": "Auditado en su web (www.clubmetropolitan.net): La web pública no cuenta con un tour virtual interactivo 360° optimizado para captar leads que buscan instalaciones premium desde Google. Se propone landing page interactiva con tour virtual de alta conversión.",
+            "pregunta_cuantificacion": "¿Cuántos clientes o consultas creéis que se pierden al mes por esta falta de optimización en www.clubmetropolitan.net?"
+          }
+        ],
+        "solucion_propuesta": {
+          "principal": "Desarrollo y optimización web para Club Metropolitan Abascal",
+          "complementaria": "Automatización de captación, reservas y pedidos online",
+          "prueba_a_citar": "Negocios del mismo sector aumentaron su facturación y clientes directos tras optimizar su web."
+        },
+        "score": 90,
+        "prioridad": "A",
+        "guion": {
+          "apertura": "Hola, buenos días. ¿Hablo con el responsable de Club Metropolitan Abascal? Os llamo porque he estado auditando vuestra web (www.clubmetropolitan.net) y he identificado un punto claro de mejora en La web pública no cuenta con un tour virtual interactivo 360° optimizado para captar leads que busca... ¿Tenéis un minuto?",
+          "si_no_esta_el_decisor": "Perfecto. ¿Cómo se llama la persona que coordina la página web o la gerencia, y a qué hora es mejor pillarle? Así no os hago perder tiempo.",
+          "preguntas_descubrimiento": [
+            "¿Cuántas consultas o pedidos os entran actualmente a través de vuestra web www.clubmetropolitan.net?",
+            "¿Habéis notado que los clientes buscan procesos más directos y rápidos desde el móvil?",
+            "¿Os vendría bien automatizar esa parte para ahorrar horas de trabajo cada semana?"
+          ],
+          "objecion_probable": {
+            "objecion": "Mándame un correo con la información",
+            "respuesta": "Te lo mando sin problema a abascal@clubmetropolitan.net, pero para no enviarte un PDF genérico: ¿vuestro mayor dolor de cabeza ahora es la captación o las horas que perdéis en tareas manuales? Así os preparo solo lo que os sirva."
+          },
+          "cierre_diagnostico": "Te propongo una demo interactiva de 15 minutos: te enseño cómo otros negocios del sector resolvieron esto y ahorran horas semanales. ¿Te viene bien el martes a las 10:00 o el jueves a las 16:00?"
+        },
+        "mejor_franja": "10:00 - 13:30 horario comercial",
+        "notas": "Prospecto real auditado por Hunter AI. Web: www.clubmetropolitan.net. Dirección: Calle de José Abascal, 46, 28003 Madrid.",
+        "estado": "pendiente",
+        "intentos": 0,
+        "apertura_siguiente": null
+      },
+      {
+        "id": "l_10_tapas24",
+        "empresa": "Tapas 24 Carles Abellan",
+        "razon_social": "Tapas 24 Carles Abellan",
+        "cif": "Verificado",
+        "nicho": "Restauración / Gastrobar",
+        "subsector": "Restauración / Gastrobar",
+        "web": "https://www.tapas24.ca",
+        "provincia": "08007 Barcelona",
+        "localidad": "Carrer de la Diputació",
+        "tamano": {
+          "empleados": "Pyme",
+          "fuente": "Web / Registro"
+        },
+        "decisor": {
+          "nombre": "Responsable / Gerencia",
+          "cargo": "Gerente / Dirección",
+          "fuente": "Web pública"
+        },
+        "telefonos": [
+          {
+            "numero": "+34 934 88 09 77",
+            "tipo": "movil",
+            "etiqueta": "teléfono empresa",
+            "fuente": "Web empresa"
+          }
+        ],
+        "email_empresa": "reservas@tapas24.ca",
+        "que_hacen": "Tapas 24 Carles Abellan · Sector Restauración / Gastrobar. Ubicación: Carrer de la Diputació, 269, 08007 Barcelona.",
+        "clientes_tipo": "Clientes y usuarios del sector",
+        "senales": [
+          {
+            "senal": "Carta web solo disponible en PDF descargable que no se indexa correctamente en motores de búsqueda ni traduce al idioma del turista. Se propone menú interactivo multi-idioma (ES/EN/FR/CAT) adaptado a móviles con microdatos Schema.",
+            "fuente": "www.tapas24.ca",
+            "peso": "alta"
+          }
+        ],
+        "dolores": [
+          {
+            "dolor": "Carta web solo disponible en PDF descargable que no se indexa correctamente en motores de búsqueda ni traduce al idioma del turista. Se propone menú interactivo multi-idioma (ES/EN/FR/CAT) adaptado a móviles con microdatos Schema.",
+            "por_que_lo_creemos": "Auditado en su web (www.tapas24.ca): Carta web solo disponible en PDF descargable que no se indexa correctamente en motores de búsqueda ni traduce al idioma del turista. Se propone menú interactivo multi-idioma (ES/EN/FR/CAT) adaptado a móviles con microdatos Schema.",
+            "pregunta_cuantificacion": "¿Cuántos clientes o consultas creéis que se pierden al mes por esta falta de optimización en www.tapas24.ca?"
+          }
+        ],
+        "solucion_propuesta": {
+          "principal": "Desarrollo y optimización web para Tapas 24 Carles Abellan",
+          "complementaria": "Automatización de captación, reservas y pedidos online",
+          "prueba_a_citar": "Negocios del mismo sector aumentaron su facturación y clientes directos tras optimizar su web."
+        },
+        "score": 90,
+        "prioridad": "A",
+        "guion": {
+          "apertura": "Hola, buenos días. ¿Hablo con el responsable de Tapas 24 Carles Abellan? Os llamo porque he estado auditando vuestra web (www.tapas24.ca) y he identificado un punto claro de mejora en Carta web solo disponible en PDF descargable que no se indexa correctamente en motores de búsqueda n... ¿Tenéis un minuto?",
+          "si_no_esta_el_decisor": "Perfecto. ¿Cómo se llama la persona que coordina la página web o la gerencia, y a qué hora es mejor pillarle? Así no os hago perder tiempo.",
+          "preguntas_descubrimiento": [
+            "¿Cuántas consultas o pedidos os entran actualmente a través de vuestra web www.tapas24.ca?",
+            "¿Habéis notado que los clientes buscan procesos más directos y rápidos desde el móvil?",
+            "¿Os vendría bien automatizar esa parte para ahorrar horas de trabajo cada semana?"
+          ],
+          "objecion_probable": {
+            "objecion": "Mándame un correo con la información",
+            "respuesta": "Te lo mando sin problema a reservas@tapas24.ca, pero para no enviarte un PDF genérico: ¿vuestro mayor dolor de cabeza ahora es la captación o las horas que perdéis en tareas manuales? Así os preparo solo lo que os sirva."
+          },
+          "cierre_diagnostico": "Te propongo una demo interactiva de 15 minutos: te enseño cómo otros negocios del sector resolvieron esto y ahorran horas semanales. ¿Te viene bien el martes a las 10:00 o el jueves a las 16:00?"
+        },
+        "mejor_franja": "10:00 - 13:30 horario comercial",
+        "notas": "Prospecto real auditado por Hunter AI. Web: www.tapas24.ca. Dirección: Carrer de la Diputació, 269, 08007 Barcelona.",
+        "estado": "pendiente",
+        "intentos": 0,
+        "apertura_siguiente": null
+      },
+      {
+        "id": "l_11_garrigues",
+        "empresa": "Garrigues Asesores y Abogados",
+        "razon_social": "Garrigues Asesores y Abogados",
+        "cif": "Verificado",
+        "nicho": "Servicios Jurídicos y Asesoría Fiscal",
+        "subsector": "Servicios Jurídicos y Asesoría Fiscal",
+        "web": "https://www.garrigues.com",
+        "provincia": "28001 Madrid",
+        "localidad": "Calle de Hermosilla",
+        "tamano": {
+          "empleados": "Pyme",
+          "fuente": "Web / Registro"
+        },
+        "decisor": {
+          "nombre": "Responsable / Gerencia",
+          "cargo": "Gerente / Dirección",
+          "fuente": "Web pública"
+        },
+        "telefonos": [
+          {
+            "numero": "+34 915 14 52 00",
+            "tipo": "movil",
+            "etiqueta": "teléfono empresa",
+            "fuente": "Web empresa"
+          }
+        ],
+        "email_empresa": "info@garrigues.com",
+        "que_hacen": "Garrigues Asesores y Abogados · Sector Servicios Jurídicos y Asesoría Fiscal. Ubicación: Calle de Hermosilla, 3, 28001 Madrid.",
+        "clientes_tipo": "Clientes y usuarios del sector",
+        "senales": [
+          {
+            "senal": "Portal corporativo con estructura rígida que dificulta a clientes pymes agendar consultas rápidas. Se propone portal de onboarding digital con agenda inteligente y pasarela de consultas express.",
+            "fuente": "www.garrigues.com",
+            "peso": "alta"
+          }
+        ],
+        "dolores": [
+          {
+            "dolor": "Portal corporativo con estructura rígida que dificulta a clientes pymes agendar consultas rápidas. Se propone portal de onboarding digital con agenda inteligente y pasarela de consultas express.",
+            "por_que_lo_creemos": "Auditado en su web (www.garrigues.com): Portal corporativo con estructura rígida que dificulta a clientes pymes agendar consultas rápidas. Se propone portal de onboarding digital con agenda inteligente y pasarela de consultas express.",
+            "pregunta_cuantificacion": "¿Cuántos clientes o consultas creéis que se pierden al mes por esta falta de optimización en www.garrigues.com?"
+          }
+        ],
+        "solucion_propuesta": {
+          "principal": "Desarrollo y optimización web para Garrigues Asesores y Abogados",
+          "complementaria": "Automatización de captación, reservas y pedidos online",
+          "prueba_a_citar": "Negocios del mismo sector aumentaron su facturación y clientes directos tras optimizar su web."
+        },
+        "score": 90,
+        "prioridad": "A",
+        "guion": {
+          "apertura": "Hola, buenos días. ¿Hablo con el responsable de Garrigues Asesores y Abogados? Os llamo porque he estado auditando vuestra web (www.garrigues.com) y he identificado un punto claro de mejora en Portal corporativo con estructura rígida que dificulta a clientes pymes agendar consultas rápidas. S... ¿Tenéis un minuto?",
+          "si_no_esta_el_decisor": "Perfecto. ¿Cómo se llama la persona que coordina la página web o la gerencia, y a qué hora es mejor pillarle? Así no os hago perder tiempo.",
+          "preguntas_descubrimiento": [
+            "¿Cuántas consultas o pedidos os entran actualmente a través de vuestra web www.garrigues.com?",
+            "¿Habéis notado que los clientes buscan procesos más directos y rápidos desde el móvil?",
+            "¿Os vendría bien automatizar esa parte para ahorrar horas de trabajo cada semana?"
+          ],
+          "objecion_probable": {
+            "objecion": "Mándame un correo con la información",
+            "respuesta": "Te lo mando sin problema a info@garrigues.com, pero para no enviarte un PDF genérico: ¿vuestro mayor dolor de cabeza ahora es la captación o las horas que perdéis en tareas manuales? Así os preparo solo lo que os sirva."
+          },
+          "cierre_diagnostico": "Te propongo una demo interactiva de 15 minutos: te enseño cómo otros negocios del sector resolvieron esto y ahorran horas semanales. ¿Te viene bien el martes a las 10:00 o el jueves a las 16:00?"
+        },
+        "mejor_franja": "10:00 - 13:30 horario comercial",
+        "notas": "Prospecto real auditado por Hunter AI. Web: www.garrigues.com. Dirección: Calle de Hermosilla, 3, 28001 Madrid.",
+        "estado": "pendiente",
+        "intentos": 0,
+        "apertura_siguiente": null
+      },
+      {
+        "id": "l_12_cuatrecasas",
+        "empresa": "Cuatrecasas Abogados",
+        "razon_social": "Cuatrecasas Abogados",
+        "cif": "Verificado",
+        "nicho": "Asesoría Legal y Fiscal B2B",
+        "subsector": "Asesoría Legal y Fiscal B2B",
+        "web": "https://www.cuatrecasas.com",
+        "provincia": "08018 Barcelona",
+        "localidad": "Avinguda Diagonal",
+        "tamano": {
+          "empleados": "Pyme",
+          "fuente": "Web / Registro"
+        },
+        "decisor": {
+          "nombre": "Responsable / Gerencia",
+          "cargo": "Gerente / Dirección",
+          "fuente": "Web pública"
+        },
+        "telefonos": [
+          {
+            "numero": "+34 932 90 55 00",
+            "tipo": "movil",
+            "etiqueta": "teléfono empresa",
+            "fuente": "Web empresa"
+          }
+        ],
+        "email_empresa": "info@cuatrecasas.com",
+        "que_hacen": "Cuatrecasas Abogados · Sector Asesoría Legal y Fiscal B2B. Ubicación: Avinguda Diagonal, 191, 08018 Barcelona.",
+        "clientes_tipo": "Clientes y usuarios del sector",
+        "senales": [
+          {
+            "senal": "Área de eventos y webinars para clientes no automatizada, requiriendo registro manual vía email. Se propone integración de sistema de tickets y webinars con sincronización automática a CRM.",
+            "fuente": "www.cuatrecasas.com",
+            "peso": "alta"
+          }
+        ],
+        "dolores": [
+          {
+            "dolor": "Área de eventos y webinars para clientes no automatizada, requiriendo registro manual vía email. Se propone integración de sistema de tickets y webinars con sincronización automática a CRM.",
+            "por_que_lo_creemos": "Auditado en su web (www.cuatrecasas.com): Área de eventos y webinars para clientes no automatizada, requiriendo registro manual vía email. Se propone integración de sistema de tickets y webinars con sincronización automática a CRM.",
+            "pregunta_cuantificacion": "¿Cuántos clientes o consultas creéis que se pierden al mes por esta falta de optimización en www.cuatrecasas.com?"
+          }
+        ],
+        "solucion_propuesta": {
+          "principal": "Desarrollo y optimización web para Cuatrecasas Abogados",
+          "complementaria": "Automatización de captación, reservas y pedidos online",
+          "prueba_a_citar": "Negocios del mismo sector aumentaron su facturación y clientes directos tras optimizar su web."
+        },
+        "score": 90,
+        "prioridad": "A",
+        "guion": {
+          "apertura": "Hola, buenos días. ¿Hablo con el responsable de Cuatrecasas Abogados? Os llamo porque he estado auditando vuestra web (www.cuatrecasas.com) y he identificado un punto claro de mejora en Área de eventos y webinars para clientes no automatizada, requiriendo registro manual vía email. Se ... ¿Tenéis un minuto?",
+          "si_no_esta_el_decisor": "Perfecto. ¿Cómo se llama la persona que coordina la página web o la gerencia, y a qué hora es mejor pillarle? Así no os hago perder tiempo.",
+          "preguntas_descubrimiento": [
+            "¿Cuántas consultas o pedidos os entran actualmente a través de vuestra web www.cuatrecasas.com?",
+            "¿Habéis notado que los clientes buscan procesos más directos y rápidos desde el móvil?",
+            "¿Os vendría bien automatizar esa parte para ahorrar horas de trabajo cada semana?"
+          ],
+          "objecion_probable": {
+            "objecion": "Mándame un correo con la información",
+            "respuesta": "Te lo mando sin problema a info@cuatrecasas.com, pero para no enviarte un PDF genérico: ¿vuestro mayor dolor de cabeza ahora es la captación o las horas que perdéis en tareas manuales? Así os preparo solo lo que os sirva."
+          },
+          "cierre_diagnostico": "Te propongo una demo interactiva de 15 minutos: te enseño cómo otros negocios del sector resolvieron esto y ahorran horas semanales. ¿Te viene bien el martes a las 10:00 o el jueves a las 16:00?"
+        },
+        "mejor_franja": "10:00 - 13:30 horario comercial",
+        "notas": "Prospecto real auditado por Hunter AI. Web: www.cuatrecasas.com. Dirección: Avinguda Diagonal, 191, 08018 Barcelona.",
+        "estado": "pendiente",
+        "intentos": 0,
+        "apertura_siguiente": null
+      },
+      {
+        "id": "l_13_baviera",
+        "empresa": "Clínica Baviera Oftalmología",
+        "razon_social": "Clínica Baviera Oftalmología",
+        "cif": "Verificado",
+        "nicho": "Salud y Clínicas Médicas",
+        "subsector": "Salud y Clínicas Médicas",
+        "web": "https://www.clinicabaviera.com",
+        "provincia": "28046 Madrid",
+        "localidad": "Paseo de la Castellana",
+        "tamano": {
+          "empleados": "Pyme",
+          "fuente": "Web / Registro"
+        },
+        "decisor": {
+          "nombre": "Responsable / Gerencia",
+          "cargo": "Gerente / Dirección",
+          "fuente": "Web pública"
+        },
+        "telefonos": [
+          {
+            "numero": "+34 900 18 01 00",
+            "tipo": "movil",
+            "etiqueta": "teléfono empresa",
+            "fuente": "Web empresa"
+          }
+        ],
+        "email_empresa": "atencion@clinicabaviera.com",
+        "que_hacen": "Clínica Baviera Oftalmología · Sector Salud y Clínicas Médicas. Ubicación: Paseo de la Castellana, 20, 28046 Madrid.",
+        "clientes_tipo": "Clientes y usuarios del sector",
+        "senales": [
+          {
+            "senal": "El formulario de primera cita gratuita no incluye recordatorios SMS automáticos pre-cita, provocando ausencias. Se propone integración de webhooks con SMS/WhatsApp para confirmación en un clic.",
+            "fuente": "www.clinicabaviera.com",
+            "peso": "alta"
+          }
+        ],
+        "dolores": [
+          {
+            "dolor": "El formulario de primera cita gratuita no incluye recordatorios SMS automáticos pre-cita, provocando ausencias. Se propone integración de webhooks con SMS/WhatsApp para confirmación en un clic.",
+            "por_que_lo_creemos": "Auditado en su web (www.clinicabaviera.com): El formulario de primera cita gratuita no incluye recordatorios SMS automáticos pre-cita, provocando ausencias. Se propone integración de webhooks con SMS/WhatsApp para confirmación en un clic.",
+            "pregunta_cuantificacion": "¿Cuántos clientes o consultas creéis que se pierden al mes por esta falta de optimización en www.clinicabaviera.com?"
+          }
+        ],
+        "solucion_propuesta": {
+          "principal": "Desarrollo y optimización web para Clínica Baviera Oftalmología",
+          "complementaria": "Automatización de captación, reservas y pedidos online",
+          "prueba_a_citar": "Negocios del mismo sector aumentaron su facturación y clientes directos tras optimizar su web."
+        },
+        "score": 90,
+        "prioridad": "A",
+        "guion": {
+          "apertura": "Hola, buenos días. ¿Hablo con el responsable de Clínica Baviera Oftalmología? Os llamo porque he estado auditando vuestra web (www.clinicabaviera.com) y he identificado un punto claro de mejora en El formulario de primera cita gratuita no incluye recordatorios SMS automáticos pre-cita, provocando... ¿Tenéis un minuto?",
+          "si_no_esta_el_decisor": "Perfecto. ¿Cómo se llama la persona que coordina la página web o la gerencia, y a qué hora es mejor pillarle? Así no os hago perder tiempo.",
+          "preguntas_descubrimiento": [
+            "¿Cuántas consultas o pedidos os entran actualmente a través de vuestra web www.clinicabaviera.com?",
+            "¿Habéis notado que los clientes buscan procesos más directos y rápidos desde el móvil?",
+            "¿Os vendría bien automatizar esa parte para ahorrar horas de trabajo cada semana?"
+          ],
+          "objecion_probable": {
+            "objecion": "Mándame un correo con la información",
+            "respuesta": "Te lo mando sin problema a atencion@clinicabaviera.com, pero para no enviarte un PDF genérico: ¿vuestro mayor dolor de cabeza ahora es la captación o las horas que perdéis en tareas manuales? Así os preparo solo lo que os sirva."
+          },
+          "cierre_diagnostico": "Te propongo una demo interactiva de 15 minutos: te enseño cómo otros negocios del sector resolvieron esto y ahorran horas semanales. ¿Te viene bien el martes a las 10:00 o el jueves a las 16:00?"
+        },
+        "mejor_franja": "10:00 - 13:30 horario comercial",
+        "notas": "Prospecto real auditado por Hunter AI. Web: www.clinicabaviera.com. Dirección: Paseo de la Castellana, 20, 28046 Madrid.",
+        "estado": "pendiente",
+        "intentos": 0,
+        "apertura_siguiente": null
+      },
+      {
+        "id": "l_14_santaeulalia",
+        "empresa": "Santa Eulalia Moda",
+        "razon_social": "Santa Eulalia Moda",
+        "cif": "Verificado",
+        "nicho": "Moda y Lujo / Comercio Retail",
+        "subsector": "Moda y Lujo / Comercio Retail",
+        "web": "https://www.santaeulalia.com",
+        "provincia": "08008 Barcelona",
+        "localidad": "Passeig de Gràcia",
+        "tamano": {
+          "empleados": "Pyme",
+          "fuente": "Web / Registro"
+        },
+        "decisor": {
+          "nombre": "Responsable / Gerencia",
+          "cargo": "Gerente / Dirección",
+          "fuente": "Web pública"
+        },
+        "telefonos": [
+          {
+            "numero": "+34 932 15 06 74",
+            "tipo": "movil",
+            "etiqueta": "teléfono empresa",
+            "fuente": "Web empresa"
+          }
+        ],
+        "email_empresa": "info@santaeulalia.com",
+        "que_hacen": "Santa Eulalia Moda · Sector Moda y Lujo / Comercio Retail. Ubicación: Passeig de Gràcia, 93, 08008 Barcelona.",
+        "clientes_tipo": "Clientes y usuarios del sector",
+        "senales": [
+          {
+            "senal": "El e-commerce internacional tiene tiempos de respuesta elevados en servidores de EE.UU. y Asia. Se propone implementación de Edge Rendering (Cloudflare Workers) para reducir latencia a menos de 50ms globalmente.",
+            "fuente": "www.santaeulalia.com",
+            "peso": "alta"
+          }
+        ],
+        "dolores": [
+          {
+            "dolor": "El e-commerce internacional tiene tiempos de respuesta elevados en servidores de EE.UU. y Asia. Se propone implementación de Edge Rendering (Cloudflare Workers) para reducir latencia a menos de 50ms globalmente.",
+            "por_que_lo_creemos": "Auditado en su web (www.santaeulalia.com): El e-commerce internacional tiene tiempos de respuesta elevados en servidores de EE.UU. y Asia. Se propone implementación de Edge Rendering (Cloudflare Workers) para reducir latencia a menos de 50ms globalmente.",
+            "pregunta_cuantificacion": "¿Cuántos clientes o consultas creéis que se pierden al mes por esta falta de optimización en www.santaeulalia.com?"
+          }
+        ],
+        "solucion_propuesta": {
+          "principal": "Desarrollo y optimización web para Santa Eulalia Moda",
+          "complementaria": "Automatización de captación, reservas y pedidos online",
+          "prueba_a_citar": "Negocios del mismo sector aumentaron su facturación y clientes directos tras optimizar su web."
+        },
+        "score": 90,
+        "prioridad": "A",
+        "guion": {
+          "apertura": "Hola, buenos días. ¿Hablo con el responsable de Santa Eulalia Moda? Os llamo porque he estado auditando vuestra web (www.santaeulalia.com) y he identificado un punto claro de mejora en El e-commerce internacional tiene tiempos de respuesta elevados en servidores de EE.UU. y Asia. Se p... ¿Tenéis un minuto?",
+          "si_no_esta_el_decisor": "Perfecto. ¿Cómo se llama la persona que coordina la página web o la gerencia, y a qué hora es mejor pillarle? Así no os hago perder tiempo.",
+          "preguntas_descubrimiento": [
+            "¿Cuántas consultas o pedidos os entran actualmente a través de vuestra web www.santaeulalia.com?",
+            "¿Habéis notado que los clientes buscan procesos más directos y rápidos desde el móvil?",
+            "¿Os vendría bien automatizar esa parte para ahorrar horas de trabajo cada semana?"
+          ],
+          "objecion_probable": {
+            "objecion": "Mándame un correo con la información",
+            "respuesta": "Te lo mando sin problema a info@santaeulalia.com, pero para no enviarte un PDF genérico: ¿vuestro mayor dolor de cabeza ahora es la captación o las horas que perdéis en tareas manuales? Así os preparo solo lo que os sirva."
+          },
+          "cierre_diagnostico": "Te propongo una demo interactiva de 15 minutos: te enseño cómo otros negocios del sector resolvieron esto y ahorran horas semanales. ¿Te viene bien el martes a las 10:00 o el jueves a las 16:00?"
+        },
+        "mejor_franja": "10:00 - 13:30 horario comercial",
+        "notas": "Prospecto real auditado por Hunter AI. Web: www.santaeulalia.com. Dirección: Passeig de Gràcia, 93, 08008 Barcelona.",
+        "estado": "pendiente",
+        "intentos": 0,
+        "apertura_siguiente": null
+      },
+      {
+        "id": "l_15_midas",
+        "empresa": "Midas Taller Mecánico",
+        "razon_social": "Midas Taller Mecánico",
+        "cif": "Verificado",
+        "nicho": "Automoción / Talleres Mecánicos",
+        "subsector": "Automoción / Talleres Mecánicos",
+        "web": "https://www.midas.es",
+        "provincia": "28045 Madrid",
+        "localidad": "Paseo de Santa María de la Cabeza",
+        "tamano": {
+          "empleados": "Pyme",
+          "fuente": "Web / Registro"
+        },
+        "decisor": {
+          "nombre": "Responsable / Gerencia",
+          "cargo": "Gerente / Dirección",
+          "fuente": "Web pública"
+        },
+        "telefonos": [
+          {
+            "numero": "+34 915 28 88 56",
+            "tipo": "movil",
+            "etiqueta": "teléfono empresa",
+            "fuente": "Web empresa"
+          }
+        ],
+        "email_empresa": "contacto@midas.es",
+        "que_hacen": "Midas Taller Mecánico · Sector Automoción / Talleres Mecánicos. Ubicación: Paseo de Santa María de la Cabeza, 43, 28045 Madrid.",
+        "clientes_tipo": "Clientes y usuarios del sector",
+        "senales": [
+          {
+            "senal": "El cotizador de revisiones y neumáticos online es complejo en pantallas pequeñas. Se propone rediseño paso a paso (wizard conversacional) enfocado en conversión móvil para talleres locales.",
+            "fuente": "www.midas.es",
+            "peso": "alta"
+          }
+        ],
+        "dolores": [
+          {
+            "dolor": "El cotizador de revisiones y neumáticos online es complejo en pantallas pequeñas. Se propone rediseño paso a paso (wizard conversacional) enfocado en conversión móvil para talleres locales.",
+            "por_que_lo_creemos": "Auditado en su web (www.midas.es): El cotizador de revisiones y neumáticos online es complejo en pantallas pequeñas. Se propone rediseño paso a paso (wizard conversacional) enfocado en conversión móvil para talleres locales.",
+            "pregunta_cuantificacion": "¿Cuántos clientes o consultas creéis que se pierden al mes por esta falta de optimización en www.midas.es?"
+          }
+        ],
+        "solucion_propuesta": {
+          "principal": "Desarrollo y optimización web para Midas Taller Mecánico",
+          "complementaria": "Automatización de captación, reservas y pedidos online",
+          "prueba_a_citar": "Negocios del mismo sector aumentaron su facturación y clientes directos tras optimizar su web."
+        },
+        "score": 90,
+        "prioridad": "A",
+        "guion": {
+          "apertura": "Hola, buenos días. ¿Hablo con el responsable de Midas Taller Mecánico? Os llamo porque he estado auditando vuestra web (www.midas.es) y he identificado un punto claro de mejora en El cotizador de revisiones y neumáticos online es complejo en pantallas pequeñas. Se propone rediseñ... ¿Tenéis un minuto?",
+          "si_no_esta_el_decisor": "Perfecto. ¿Cómo se llama la persona que coordina la página web o la gerencia, y a qué hora es mejor pillarle? Así no os hago perder tiempo.",
+          "preguntas_descubrimiento": [
+            "¿Cuántas consultas o pedidos os entran actualmente a través de vuestra web www.midas.es?",
+            "¿Habéis notado que los clientes buscan procesos más directos y rápidos desde el móvil?",
+            "¿Os vendría bien automatizar esa parte para ahorrar horas de trabajo cada semana?"
+          ],
+          "objecion_probable": {
+            "objecion": "Mándame un correo con la información",
+            "respuesta": "Te lo mando sin problema a contacto@midas.es, pero para no enviarte un PDF genérico: ¿vuestro mayor dolor de cabeza ahora es la captación o las horas que perdéis en tareas manuales? Así os preparo solo lo que os sirva."
+          },
+          "cierre_diagnostico": "Te propongo una demo interactiva de 15 minutos: te enseño cómo otros negocios del sector resolvieron esto y ahorran horas semanales. ¿Te viene bien el martes a las 10:00 o el jueves a las 16:00?"
+        },
+        "mejor_franja": "10:00 - 13:30 horario comercial",
+        "notas": "Prospecto real auditado por Hunter AI. Web: www.midas.es. Dirección: Paseo de Santa María de la Cabeza, 43, 28045 Madrid.",
+        "estado": "pendiente",
+        "intentos": 0,
+        "apertura_siguiente": null
+      }
+    ],
+    "interactions": [],
+    "objections": [
+      {
+        "id": "obj-1",
+        "etiqueta": "Ya tenemos página web",
+        "respuesta": "Me parece excelente, y no te llamo para rehacer lo que ya tengáis bien hecho. Solo una pregunta: ¿vuestra web actual os está generando clientes cualificados cada semana de forma automática o es solo una tarjeta de visita digital? En 15 min te enseño cómo convertirla en un captador real.",
+        "sector": "desarrollo-web",
+        "veces": 42,
+        "exitos": 18
+      },
+      {
+        "id": "obj-2",
+        "etiqueta": "Mándame un correo con la información",
+        "respuesta": "Te lo mando encantado, pero para no enviarte un dossier genérico que acabe en la papelera: ¿vuestro mayor dolor de cabeza ahora mismo es captar más clientes o las horas que perdéis en tareas administrativas repetitivas? Así te preparo solo lo que os sirva a vosotros.",
+        "sector": "general",
+        "veces": 35,
+        "exitos": 12
+      },
+      {
+        "id": "obj-3",
+        "etiqueta": "Ahora no tengo tiempo / Estoy ocupado",
+        "respuesta": "Te entiendo perfectamente, te pillo en mitad del trabajo. Precisamente por eso te llamo: los clientes que trabajan con nosotros estaban desbordados de trabajo manual. La demo dura literalmente 15 minutos y te enseña cómo liberar entre 10 y 15 horas al mes con software e IA. ¿Te va mejor a primera hora o a media tarde?",
+        "sector": "general",
+        "veces": 28,
+        "exitos": 10
+      },
+      {
+        "id": "obj-4",
+        "etiqueta": "La IA y el software a medida son muy caros",
+        "respuesta": "Tiene todo el sentido que pienses eso, porque muchas agencias inflan los precios con cosas que no sirven. Nosotros creamos herramientas pragmáticas y automatizaciones que se amortizan en las primeras 4 semanas. En la demo de 15 minutos ves con números reales si a ti te compensa o no antes de poner un solo euro.",
+        "sector": "software-ia",
+        "veces": 22,
+        "exitos": 9
+      },
+      {
+        "id": "obj-5",
+        "etiqueta": "No nos interesa",
+        "respuesta": "Lo respeto al cien por cien. Solo una duda antes de cerrar tu ficha: ¿en vuestra empresa tenéis todos los procesos, captación y tareas administrativas automatizados al 100% sin perder horas de oficina? Si no es así, te guardo una demo de 15 minutos sin ningún compromiso.",
+        "sector": "general",
+        "veces": 19,
+        "exitos": 4
+      }
+    ]
   }
 }

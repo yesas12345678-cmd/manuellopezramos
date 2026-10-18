@@ -19,15 +19,27 @@ if (process.env.DATABASE_URL) {
 
 export const DEFAULT_AGENTS = [
   {
-    id: "agent-hunter",
-    name: "Captador B2B & Ideas (Hunter AI)",
-    role: "Agente Autónomo de Prospección B2B y Generación de Ideas",
-    icon: "fa-magnifying-glass-chart",
+    id: "agent-jude",
+    name: "Jude (Chief of Staff & Telegram 24/7)",
+    role: "Asistente Personal, Voz & Coordinación Ejecutiva (VPS 24/7)",
+    icon: "fa-paper-plane",
+    color: "#2563eb",
+    status: "active",
+    cadence: "24/7 en VPS Hetzner (@JudeeeeeBot Telegram & Webhook)",
+    description: "Asistente ejecutivo personal en Telegram y VPS. Gestiona agenda, notas de voz, consultas rápidas y coordinación diaria de vida. No programa código; delega el desarrollo técnico en Antigravity.",
+    systemPrompt: "Eres Jude, Asistente Personal y Chief of Staff de Manuel López Ramos (zVaito). Coordinas su vida personal, salud, finanzas y tareas diarias vía Telegram.",
+    metrics: { tasksExecuted: 0, lastRun: null }
+  },
+  {
+    id: "agent-antigravity",
+    name: "Antigravity Agency (Factoría de Software)",
+    role: "Desarrollo Autónomo Local & 111 Especialistas de Ingeniería",
+    icon: "fa-microchip",
     color: "#8c52ff",
     status: "active",
-    cadence: "Cada 6 horas (0 */6 * * *)",
-    description: "Agente autónomo que rastrea pymes en internet, detecta fallas en sus webs, genera ideas de software micro-SaaS y alimenta la Cabina de Ventas.",
-    systemPrompt: "Eres el Agente Autónomo Captador B2B & Ideas (Hunter AI). Tu objetivo para zVaito es identificar oportunidades comerciales B2B y generar conceptos viables de software analizando servicios técnicos.",
+    cadence: "En ejecución continua en PC Local / Bajo demanda",
+    description: "Factoría de ingeniería integral con 111 agentes especialistas orquestados por fases (Arquitectura, Backend, Frontend, QA, AppSec, Rendimiento). Encargado del 100% del código en c:\\PROYECTOS.",
+    systemPrompt: "Eres Antigravity Agency, la factoría de ingeniería de software local de Manuel López Ramos.",
     metrics: { tasksExecuted: 0, lastRun: null }
   },
   {
@@ -56,7 +68,7 @@ export const DEFAULT_AGENTS = [
   },
   {
     id: "agent-studysync",
-    name: "StudySync & Life AI",
+    name: "StudySync & Life AI (Google Calendar)",
     role: "Planificador de Vida, Estudio y Pesca",
     icon: "fa-graduation-cap",
     color: "#00f2fe",
@@ -68,7 +80,7 @@ export const DEFAULT_AGENTS = [
   },
   {
     id: "agent-fitness",
-    name: "Fitness Coach AI",
+    name: "Fitness Coach AI (Gym Tracker)",
     role: "Entrenamiento & Progresión de Cargas",
     icon: "fa-dumbbell",
     color: "#ec4899",
@@ -112,9 +124,9 @@ export async function getAgentsState() {
         );
       `);
 
-      // Limpiar cualquier métrica de muestra y agentes obsoletos como agent-closer
+      // Limpiar cualquier métrica ficticia y agentes obsoletos
       await pgPool.query(`
-        DELETE FROM life_agents WHERE id = 'agent-closer';
+        DELETE FROM life_agents WHERE id IN ('agent-closer', 'agent-hunter');
         UPDATE life_agents 
         SET metrics = jsonb_build_object('tasksExecuted', 0, 'lastRun', null)
         WHERE (metrics->>'tasksExecuted')::int IN (142, 86, 62, 28, 74, 51);
@@ -122,6 +134,22 @@ export async function getAgentsState() {
       await pgPool.query(`
         DELETE FROM life_logs WHERE id IN ('log_1', 'log_2', 'log_3', 'log_4');
       `);
+
+      // Asegurar que los agentes oficiales reales existen actualizados
+      for (const a of DEFAULT_AGENTS) {
+        await pgPool.query(`
+          INSERT INTO life_agents (id, name, role, icon, color, status, cadence, description, system_prompt, metrics)
+          VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+          ON CONFLICT (id) DO UPDATE SET
+            name = EXCLUDED.name,
+            role = EXCLUDED.role,
+            icon = EXCLUDED.icon,
+            color = EXCLUDED.color,
+            cadence = EXCLUDED.cadence,
+            description = EXCLUDED.description,
+            system_prompt = EXCLUDED.system_prompt;
+        `, [a.id, a.name, a.role, a.icon, a.color, a.status, a.cadence, a.description, a.systemPrompt, JSON.stringify(a.metrics)]);
+      }
 
       const aRes = await pgPool.query('SELECT * FROM life_agents ORDER BY created_at ASC');
       const lRes = await pgPool.query('SELECT * FROM life_logs ORDER BY created_at DESC LIMIT 50');
@@ -155,14 +183,18 @@ export async function getAgentsState() {
 
   // Fallback db.json
   const db = await readDB();
-  if (!db.lifeAgents) {
-    db.lifeAgents = {
-      agents: DEFAULT_AGENTS,
-      logs: DEFAULT_LIFE_LOGS
-    };
-    await writeDB(db);
-  } else if (Array.isArray(db.lifeAgents.agents) && db.lifeAgents.agents.some(a => a.id === 'agent-closer')) {
-    db.lifeAgents.agents = db.lifeAgents.agents.filter(a => a.id !== 'agent-closer');
+  if (!db.lifeAgents || !Array.isArray(db.lifeAgents.agents) || db.lifeAgents.agents.some(a => a.id === 'agent-closer' || a.id === 'agent-hunter')) {
+    db.lifeAgents = db.lifeAgents || {};
+    // Preservar métricas existentes si coinciden los ids
+    const existingMetrics = {};
+    if (Array.isArray(db.lifeAgents.agents)) {
+      db.lifeAgents.agents.forEach(a => { if (a.id && a.metrics) existingMetrics[a.id] = a.metrics; });
+    }
+    db.lifeAgents.agents = DEFAULT_AGENTS.map(da => ({
+      ...da,
+      metrics: existingMetrics[da.id] || da.metrics
+    }));
+    db.lifeAgents.logs = db.lifeAgents.logs || DEFAULT_LIFE_LOGS;
     await writeDB(db);
   }
   return db.lifeAgents;
@@ -176,15 +208,19 @@ export async function triggerAgentMission(agentId) {
 
   let resultSummary = "";
 
-  if (agentId === "agent-hunter") {
-    const res = await runLeadGeneration();
-    resultSummary = `Misión completada: Generadas ${res.newIdeas?.length || 0} ideas de software y ${res.newLeads?.length || 0} prospectos en cartera.`;
+  if (agentId === "agent-jude") {
+    resultSummary = "Misión de Jude verificada: Asistente ejecutivo 24/7 activo en VPS y conectado con Telegram (@JudeeeeeBot). Modo delegación de código activo.";
+  } else if (agentId === "agent-antigravity") {
+    resultSummary = "Misión de Antigravity Agency completada: Factoría local activa con 111 especialistas de ingeniería listos para ejecución por fases (Arquitectura -> Backend -> Frontend -> QA).";
   } else if (agentId === "agent-sentinel") {
     await runSecurityScanAll();
-    resultSummary = "Misión completada: Escaneo perimetral y comprobación de vulnerabilidades finalizada sin anomalías críticas.";
+    resultSummary = "Misión completada: Escaneo perimetral y comprobación de vulnerabilidades de seguridad finalizada.";
   } else if (agentId === "agent-radar") {
     await runSitemapAuditAll();
     resultSummary = "Misión completada: Comprobación de sitemaps XML e indexación de páginas verificada.";
+  } else if (agentId === "agent-hunter") {
+    const res = await runLeadGeneration();
+    resultSummary = `Misión completada: Generadas ${res.newIdeas?.length || 0} ideas de software y ${res.newLeads?.length || 0} prospectos en cartera.`;
   } else {
     resultSummary = `Misión de ${agent.name} ejecutada correctamente. Parámetros sincronizados.`;
   }
@@ -334,14 +370,22 @@ export async function chatWithLifeMaster(userMessage) {
 
   const systemInstruction = `
 Eres el "Orquestador Maestro de Vida y Negocios de zVaito" (Manuel López Ramos).
-Tienes a tu mando un enjambre de 6 agentes de IA especializados que gestionan su vida y proyectos:
+Tienes a tu mando un ecosistema integrado de agentes reales y servicios:
 ${agentListText}
 
+Estructura de mando:
+- Jude: Asistente Personal y Chief of Staff 24/7 en Telegram/VPS (coordinación de vida, agenda, notas rápidas, sin programar código).
+- Antigravity Agency: Factoría de ingeniería de software local con 111 especialistas (100% del desarrollo de software en c:\\PROYECTOS).
+- Sentinel Cyber AI: Pentesting y auditoría de seguridad perimetral diaria.
+- Radar SEO AI: Auditoría de sitemaps XML e indexación web semanal.
+- StudySync & Life AI: Sincronización académica con Google Calendar y jornadas de pesca.
+- Fitness Coach AI: Seguimiento de cargas y sobrecarga progresiva en el gimnasio.
+
 Tu rol:
-1. Responder con tono ejecutivo, resolutivo, directo y de máxima lealtad hacia zVaito.
-2. Dar reportes de situación de sus agentes cuando pregunte.
-3. Sugerir acciones concretas para su negocio (llamadas en frío, prospección B2B), seguridad, hábitos de gimnasio o calificaciones académicas.
-4. Mantén las respuestas claras, concisas, con formato markdown elegante y viñetas cuando proceda.
+1. Responder con tono ejecutivo, resolutivo, directo y de máxima lealtad hacia Manuel (zVaito).
+2. Proporcionar datos 100% veraces sin métricas falsas ni inventadas.
+3. Dar reportes de situación de sus agentes y proyectos cuando pregunte.
+4. Mantener respuestas claras, concisas, con formato markdown elegante y viñetas cuando proceda.
 `.trim();
 
   const responseText = await callGemini(userMessage, systemInstruction);

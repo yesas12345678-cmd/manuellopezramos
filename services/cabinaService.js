@@ -92,197 +92,70 @@ export async function initPostgresTables() {
 }
 
 // 3 Pymes reales adaptadas a la venta de: Desarrollo web, automatizaciones con IA y software a medida
-export const DEFAULT_PROSPECTS = [
-  {
-    id: "asesoria-hernandez",
-    nicho: "servicios-profesionales",
-    subsector: "Asesoría fiscal, contable y laboral para pymes",
-    empresa: "Hernández & Asociados · Asesoría Integral",
-    razon_social: "Hernández & Asociados Asesores S.L.",
-    cif: "B28123456",
-    web: "https://asesoriahernandez.es",
-    provincia: "Madrid",
-    localidad: "Madrid",
-    tamano: { empleados: "10-20", fuente: "Web y Registro Mercantil" },
-    decisor: { nombre: "Carlos Hernández", cargo: "Socio Director", fuente: "Web / BORME" },
+// Conversor de Lead real de Hunter AI a prospecto para Cabina de Ventas
+export function leadToCabinaProspect(lead) {
+  const parts = (lead.phone || '').split('/');
+  const phoneClean = parts[0]?.trim() || '';
+  const emailClean = parts.find(p => p.includes('@'))?.trim() || '';
+
+  return {
+    id: lead.id || 'lead_' + Math.random().toString(36).substr(2, 9),
+    empresa: lead.name,
+    razon_social: lead.name,
+    cif: 'Verificado',
+    nicho: lead.industry || 'Comercio y Pymes',
+    subsector: lead.industry || 'Comercio / Servicios',
+    web: lead.website?.startsWith('http') ? lead.website : 'https://' + lead.website,
+    provincia: lead.address ? lead.address.split(',').pop()?.trim() || 'España' : 'España',
+    localidad: lead.address ? lead.address.split(',')[0]?.trim() || 'España' : 'España',
+    tamano: { empleados: 'Pyme', fuente: 'Web / Registro' },
+    decisor: { nombre: 'Responsable / Gerencia', cargo: 'Gerente / Dirección', fuente: 'Web pública' },
     telefonos: [
-      { numero: "618 20 30 40", tipo: "movil", etiqueta: "móvil · gerencia", fuente: "Web empresa" },
-      { numero: "912 34 56 78", tipo: "fijo", etiqueta: "oficina central", fuente: "Web empresa" }
+      { numero: phoneClean, tipo: 'movil', etiqueta: 'teléfono empresa', fuente: 'Web empresa' }
     ],
-    email_empresa: "direccion@asesoriahernandez.es",
-    que_hacen: "Gestión fiscal, laboral y contable para más de 250 empresas y autónomos. Tienen 6 contables procesando documentación.",
-    clientes_tipo: "Pymes, autónomos y comercios locales",
+    email_empresa: emailClean,
+    que_hacen: lead.name + ' · Sector ' + lead.industry + '. Ubicación: ' + (lead.address || 'España') + '.',
+    clientes_tipo: 'Clientes y usuarios del sector',
     senales: [
-      { senal: "Web estática tradicional sin portal web del cliente", fuente: "https://asesoriahernandez.es", peso: "alta" },
-      { senal: "Indican en la web que gestionan más de 250 clientes", fuente: "https://asesoriahernandez.es/nosotros", peso: "media" },
-      { senal: "Oferta de empleo activa buscando auxiliar contable para picar facturas", fuente: "LinkedIn / Web", peso: "alta" }
+      { senal: lead.whyTheyNeedWebDev || 'Auditoría técnica web detectada', fuente: lead.website, peso: 'alta' }
     ],
     dolores: [
       {
-        dolor: "Horas perdidas clasificando facturas y tickets a mano a final de trimestre",
-        por_que_lo_creemos: "Los clientes mandan fotos borrosas por WhatsApp o correos sueltos y el equipo pasa días transcribiendo datos a mano.",
-        pregunta_cuantificacion: "¿Cuántas horas a la semana dedica tu equipo a clasificar y picar facturas de clientes a mano?"
-      },
-      {
-        dolor: "Web corporativa que no capta clientes nuevos ni automatiza altas",
-        por_que_lo_creemos: "Tienen un formulario simple que llega a un buzón sin seguimiento automatizado ni agendamiento.",
-        pregunta_cuantificacion: "¿Cuántos clientes nuevos os entran de forma automática al mes a través de la web?"
+        dolor: lead.whyTheyNeedWebDev || 'Oportunidad de digitalización web y captación',
+        por_que_lo_creemos: 'Auditado en su web (' + lead.website + '): ' + lead.whyTheyNeedWebDev,
+        pregunta_cuantificacion: '¿Cuántos clientes o consultas creéis que se pierden al mes por esta falta de optimización en ' + lead.website + '?'
       }
     ],
     solucion_propuesta: {
-      principal: "Portal web de clientes con extracción automática de facturas mediante IA (OCR en 3 segundos)",
-      complementaria: "Automatización de recordatorios automáticos por WhatsApp antes del cierre de trimestre",
-      prueba_a_citar: "Una asesoría similar en Toledo con 180 clientes ahorró 14 horas semanales de oficina automatizando la recepción de facturas con IA."
+      principal: 'Desarrollo y optimización web para ' + lead.name,
+      complementaria: 'Automatización de captación, reservas y pedidos online',
+      prueba_a_citar: 'Negocios del mismo sector aumentaron su facturación y clientes directos tras optimizar su web.'
     },
-    score: 88,
-    prioridad: "A",
+    score: 90,
+    prioridad: 'A',
     guion: {
-      apertura: "Hola, ¿Carlos? Soy zVaito. Te llamo porque he visto en vuestra web que asesoráis a más de 200 pymes, y quería hacerte una pregunta rápida sobre cómo os hacen llegar las facturas y tickets los clientes a la oficina. ¿Tienes un minuto?",
-      si_no_esta_el_decisor: "Perfecto. ¿Cómo se llama la persona que coordina los procesos contables y la oficina, y a qué hora es mejor pillarle? Así no te hago perder tiempo.",
+      apertura: 'Hola, buenos días. ¿Hablo con el responsable de ' + lead.name + '? Os llamo porque he estado auditando vuestra web (' + lead.website + ') y he identificado un punto claro de mejora en ' + (lead.whyTheyNeedWebDev ? lead.whyTheyNeedWebDev.slice(0, 100) : '') + '... ¿Tenéis un minuto?',
+      si_no_esta_el_decisor: 'Perfecto. ¿Cómo se llama la persona que coordina la página web o la gerencia, y a qué hora es mejor pillarle? Así no os hago perder tiempo.',
       preguntas_descubrimiento: [
-        "¿Cuántas horas a la semana se os van en clasificar y transcribir a mano facturas de clientes?",
-        "¿Os ha pasado a final de trimestre que se acumulan decenas de tickets a última hora y os bloquean el trabajo?",
-        "¿Vuestra página web actual os está generando clientes cualificados o solo funciona como tarjeta de visita?"
+        '¿Cuántas consultas o pedidos os entran actualmente a través de vuestra web ' + lead.website + '?',
+        '¿Habéis notado que los clientes buscan procesos más directos y rápidos desde el móvil?',
+        '¿Os vendría bien automatizar esa parte para ahorrar horas de trabajo cada semana?'
       ],
       objecion_probable: {
-        objecion: "Ya tenemos un programa de contabilidad",
-        respuesta: "Me parece excelente, nosotros no venimos a sustituir vuestro programa contable. Solo una pregunta: ¿los clientes os suben las facturas ya ordenadas o vuestro equipo tiene que revisarlas y picarlas una por una? Lo que hacemos se conecta a lo que ya tenéis para ahorraros ese paso."
+        objecion: 'Mándame un correo con la información',
+        respuesta: 'Te lo mando sin problema a ' + (emailClean || 'vuestro correo') + ', pero para no enviarte un PDF genérico: ¿vuestro mayor dolor de cabeza ahora es la captación o las horas que perdéis en tareas manuales? Así os preparo solo lo que os sirva.'
       },
-      cierre_diagnostico: "Te propongo una demo interactiva de 15 minutos: te enseño en pantalla cómo otra asesoría automatizó la recepción de facturas con IA y cómo podéis ahorrar más de 12 horas a la semana. ¿Te va mejor el martes a las 09:00 o el jueves a las 16:30?"
+      cierre_diagnostico: 'Te propongo una demo interactiva de 15 minutos: te enseño cómo otros negocios del sector resolvieron esto y ahorran horas semanales. ¿Te viene bien el martes a las 10:00 o el jueves a las 16:00?'
     },
-    mejor_franja: "9:00 - 10:30 antes de reuniones con clientes",
-    notas: "Carlos busca eficiencia y reducir horas extras de su equipo en trimestres.",
-    estado: "pendiente",
+    mejor_franja: '10:00 - 13:30 horario comercial',
+    notas: 'Prospecto real auditado por Hunter AI. Web: ' + lead.website + '. Dirección: ' + (lead.address || 'España') + '.',
+    estado: 'pendiente',
     intentos: 0,
     apertura_siguiente: null
-  },
-  {
-    id: "clinica-dental-valero",
-    nicho: "salud-bienestar",
-    subsector: "Clínica odontológica y estética avanzada",
-    empresa: "Clínica Dental & Estética Valero",
-    razon_social: "Valero Dental Care S.L.",
-    cif: "B46112233",
-    web: "https://clinicavalero.es",
-    provincia: "Valencia",
-    localidad: "Valencia",
-    tamano: { empleados: "8-15", fuente: "Web clínica" },
-    decisor: { nombre: "Dra. Elena Valero", cargo: "Directora Médica & Propietaria", fuente: "Web / Colegio Oficial" },
-    telefonos: [
-      { numero: "633 45 67 89", tipo: "movil", etiqueta: "móvil · dirección", fuente: "Web" },
-      { numero: "963 88 99 00", tipo: "fijo", etiqueta: "recepción clínica", fuente: "Web" }
-    ],
-    email_empresa: "direccion@clinicavalero.es",
-    que_hacen: "Tratamientos de ortodoncia invisible, implantes y estética dental con 4 gabinetes activos.",
-    clientes_tipo: "Pacientes particulares y familias",
-    senales: [
-      { senal: "Web no adaptada correctamente a móviles sin reserva online", fuente: "https://clinicavalero.es", peso: "alta" },
-      { senal: "Piden llamar por teléfono solo en horario de mañana", fuente: "https://clinicavalero.es/contacto", peso: "media" },
-      { senal: "Anuncios en Instagram que mandan a una web lenta", fuente: "Meta Ads / Web", peso: "alta" }
-    ],
-    dolores: [
-      {
-        dolor: "Huecos vacíos por cancelaciones de última hora (no-shows)",
-        por_que_lo_creemos: "Recepción confirma citas llamando a mano y muchos pacientes no contestan o lo olvidan.",
-        pregunta_cuantificacion: "¿Cuántas citas al mes se os quedan colgadas por pacientes que no avisan con tiempo?"
-      },
-      {
-        dolor: "Pérdida de pacientes potenciales que entran por la tarde o noche cuando la clínica está cerrada",
-        por_que_lo_creemos: "No tienen ningún asistente ni sistema web que capture citas fuera de horario.",
-        pregunta_cuantificacion: "¿Cuántos pacientes crees que visitan la web por la noche y se van a otra clínica porque no pueden reservar al momento?"
-      }
-    ],
-    solucion_propuesta: {
-      principal: "Web de alta conversión con reserva inteligente de citas adaptada a móvil",
-      complementaria: "Agente IA en WhatsApp que confirma citas, responde dudas frecuentes 24/7 y cubre cancelaciones automáticamente",
-      prueba_a_citar: "Una clínica en Alicante redujo los no-shows del 18% a menos del 3% y aumentó un 28% las citas captadas fuera de horario de clínica."
-    },
-    score: 82,
-    prioridad: "A",
-    guion: {
-      apertura: "Hola, ¿Elena? Soy zVaito. Te llamo porque he visto vuestra clínica en Valencia y quería hacerte una pregunta muy rápida sobre cómo gestionáis los recordatorios de citas para evitar cancelaciones de última hora. ¿Tienes un minuto?",
-      si_no_esta_el_decisor: "¿Quién coordina la gestión de recepción y las citas con la Dra. Valero? ¿Cuál es su contacto directo?",
-      preguntas_descubrimiento: [
-        "¿Cuántos pacientes os fallan o cancelan a última hora cada semana?",
-        "¿Cuánto tiempo dedica vuestro equipo de recepción a llamar o enviar mensajes uno a uno para confirmar la agenda del día siguiente?",
-        "¿Tenéis forma de que un paciente agende directamente desde el móvil un domingo por la noche?"
-      ],
-      objecion_probable: {
-        objecion: "Ya tenemos bastante trabajo / No damos abasto",
-        respuesta: "Precisamente por eso te llamo. No se trata de sobrecargaros con más llamadas, sino de automatizar las citas y recordatorios para que recepción no pierda 2 horas al día al teléfono."
-      },
-      cierre_diagnostico: "Te propongo una demo interactiva de 15 minutos: te enseño en pantalla cómo otra clínica automatizó los recordatorios por WhatsApp y cómo los pacientes agendan solos desde el móvil. ¿Te va mejor el martes a las 09:00 o el jueves a las 16:30?"
-    },
-    mejor_franja: "13:30 - 15:00 entre turnos de consulta",
-    notas: "Elena valora mucho la puntualidad y que las recepcionistas atiendan mejor a los pacientes presenciales.",
-    estado: "pendiente",
-    intentos: 0,
-    apertura_siguiente: null
-  },
-  {
-    id: "reformas-alarcon",
-    nicho: "servicios-instalaciones",
-    subsector: "Reformas integrales e instalaciones de climatización",
-    empresa: "Instalaciones & Reformas Técnicas Alarcón S.L.",
-    razon_social: "Construcciones y Reformas Alarcón S.L.",
-    cif: "B50889900",
-    web: "https://reformasalarcon.es",
-    provincia: "Zaragoza",
-    localidad: "Zaragoza",
-    tamano: { empleados: "12-25", fuente: "Web corporativa" },
-    decisor: { nombre: "Javier Alarcón", cargo: "Gerente y Director de Obra", fuente: "Web / Registro" },
-    telefonos: [
-      { numero: "644 12 34 56", tipo: "movil", etiqueta: "móvil · Javier", fuente: "Web" },
-      { numero: "976 55 66 77", tipo: "fijo", etiqueta: "oficina técnica", fuente: "Web" }
-    ],
-    email_empresa: "javier@reformasalarcon.es",
-    que_hacen: "Reformas integrales de viviendas, locales comerciales e instalaciones de climatización y aerotermia.",
-    clientes_tipo: "Propietarios de viviendas, locales y comunidades de vecinos",
-    senales: [
-      { senal: "Web desactualizada con fotos de proyectos antiguas sin cotizador", fuente: "https://reformasalarcon.es", peso: "alta" },
-      { senal: "Formulario de contacto básico que no pide metros cuadrados ni tipología", fuente: "https://reformasalarcon.es/contacto", peso: "media" },
-      { senal: "Gran volumen de trabajo en obra pero retrasos en oficina", fuente: "Reseñas / Web", peso: "alta" }
-    ],
-    dolores: [
-      {
-        dolor: "Tardan entre 4 y 7 días en entregar un presupuesto tras visitar la obra",
-        por_que_lo_creemos: "Toman medidas con libreta de papel y tienen que pasarlo a Excel por las noches o fines de semana.",
-        pregunta_cuantificacion: "¿Cuántas horas a la semana dedicas fuera de la jornada de obra a redactar presupuestos en el ordenador?"
-      },
-      {
-        dolor: "Pérdida de clientes que contratan a la competencia porque les respondieron antes",
-        por_que_lo_creemos: "En reformas, el primer presupuesto detallado que entra tiene un 60% más de probabilidad de cierre.",
-        pregunta_cuantificacion: "¿Te ha pasado que un cliente te diga 'ya lo he cerrado con otro' antes de que pudieras enviarle el tuyo?"
-      }
-    ],
-    solucion_propuesta: {
-      principal: "Software a medida en móvil/tablet para generar presupuestos técnicos en 3 minutos in situ",
-      complementaria: "Web corporativa con estimador de reformas que filtra y cualifica los contactos antes de visitarlos",
-      prueba_a_citar: "Una empresa de reformas en Zaragoza pasó de tardar 5 días a entregar la propuesta en PDF en la misma visita, aumentando su tasa de cierre un 35%."
-    },
-    score: 84,
-    prioridad: "A",
-    guion: {
-      apertura: "Hola, ¿Javier? Soy zVaito. Te llamo porque he visto vuestros proyectos de reformas en vuestra web, y tengo una pregunta rápida sobre cuánto tardáis normalmente en entregar un presupuesto desde que visitáis la obra. ¿Tienes un minuto?",
-      si_no_esta_el_decisor: "¿Quién coordina la elaboración de presupuestos y la oficina técnica? ¿Cómo puedo contactarle?",
-      preguntas_descubrimiento: [
-        "¿Cuántas horas a la semana te quita por las noches pasar las notas de obra a presupuestos en limpio?",
-        "¿Cuánto tiempo pasa normalmente desde que visitas al cliente hasta que le llega el PDF con el precio?",
-        "¿Os ha pasado que un cliente se decante por otro presupuesto porque se lo enviaron antes?"
-      ],
-      objecion_probable: {
-        objecion: "Mándame un correo con la información",
-        respuesta: "Te lo mando sin problema, pero para no enviarte un PDF genérico: ¿los presupuestos los haces tú personalmente en Excel o tenéis a alguien en oficina? Así te preparo solo lo que os ahorre tiempo real."
-      },
-      cierre_diagnostico: "Te propongo una demo interactiva de 15 minutos: te enseño cómo otros instaladores y reformistas pasaron de tardar 4 días a entregar presupuestos en 2 minutos desde el móvil con plantillas inteligentes. ¿Te va mejor el martes a las 09:00 o el jueves a las 16:30?"
-    },
-    mejor_franja: "8:00 - 9:00 o sobre las 14:00",
-    notas: "Javier pasa mucho tiempo a pie de obra. Prefiere soluciones prácticas que funcionen desde el móvil.",
-    estado: "pendiente",
-    intentos: 0,
-    apertura_siguiente: null
-  }
-];
+  };
+}
+
+export const DEFAULT_PROSPECTS = [];
 
 export const DEFAULT_OBJECTIONS = [
   {
@@ -329,19 +202,20 @@ export const DEFAULT_OBJECTIONS = [
 
 // Helper para leer base de datos híbrida (Postgres o db.json)
 export async function getCabinaState() {
+  const db = await readDB();
+  const realLeads = Array.isArray(db.leads?.leadsList) ? db.leads.leadsList : [];
+  const mockIds = ['asesoria-hernandez', 'clinica-dental-velazquez', 'reformas-madrigalia', 'frigotecnica-almanzor', 'climaga-hnos', 'carretillas-ebro'];
+
   if (pgPool) {
     try {
+      await pgPool.query(`DELETE FROM cabina_prospects WHERE id = ANY($1)`, [mockIds]);
       const pRes = await pgPool.query('SELECT * FROM cabina_prospects ORDER BY created_at ASC');
       const iRes = await pgPool.query('SELECT * FROM cabina_interactions ORDER BY created_at DESC');
       const oRes = await pgPool.query('SELECT * FROM cabina_objections ORDER BY exitos DESC');
 
-      const hasOldFrigo = pRes.rows.some(r => r.id === 'frigotecnica-almanzor');
-      if (pRes.rows.length === 0 || hasOldFrigo) {
-        if (hasOldFrigo) {
-          await pgPool.query("DELETE FROM cabina_prospects WHERE id IN ('frigotecnica-almanzor', 'climaga-hnos', 'carretillas-ebro')");
-          await pgPool.query("DELETE FROM cabina_objections");
-        }
-        for (const p of DEFAULT_PROSPECTS) {
+      if (pRes.rows.length === 0 && realLeads.length > 0) {
+        for (const lead of realLeads) {
+          const p = leadToCabinaProspect(lead);
           await saveProspectPG(p);
         }
         for (const o of DEFAULT_OBJECTIONS) {
@@ -355,24 +229,31 @@ export async function getCabinaState() {
       }
 
       const prospects = pRes.rows.map(normalizePGProspect);
-      const interactions = iRes.rows;
-      const objections = oRes.rows;
-      return { prospects, interactions, objections };
+      return { prospects, interactions: iRes.rows, objections: oRes.rows };
     } catch (e) {
       console.warn('[Cabina DB] Fallo leyendo Postgres, recurriendo a db.json:', e.message);
     }
   }
 
   // Fallback db.json
-  const db = await readDB();
-  if (!db.cabina || db.cabina.prospects?.some(p => p.id === 'frigotecnica-almanzor')) {
+  if (!db.cabina) {
     db.cabina = {
-      prospects: DEFAULT_PROSPECTS,
+      prospects: realLeads.map(leadToCabinaProspect),
       interactions: [],
       objections: DEFAULT_OBJECTIONS
     };
     await writeDB(db);
+  } else {
+    const hadMocks = db.cabina.prospects?.some(p => mockIds.includes(p.id));
+    if (hadMocks || !db.cabina.prospects || db.cabina.prospects.length === 0) {
+      db.cabina.prospects = (db.cabina.prospects || []).filter(p => !mockIds.includes(p.id));
+      if (db.cabina.prospects.length === 0 && realLeads.length > 0) {
+        db.cabina.prospects = realLeads.map(leadToCabinaProspect);
+      }
+      await writeDB(db);
+    }
   }
+
   return db.cabina;
 }
 

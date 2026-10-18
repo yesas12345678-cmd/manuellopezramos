@@ -1,42 +1,72 @@
 import dotenv from 'dotenv';
 dotenv.config();
 
+let activeModelCache = 'gemini-3.5-flash';
+
+/**
+ * Consulta la API ListModels de Google para descubrir qué modelos están autorizados para esta clave.
+ */
+async function discoverSupportedModels(apiKey) {
+  try {
+    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${apiKey}`);
+    if (!res.ok) return [];
+    const data = await res.json();
+    const models = (data.models || [])
+      .filter(m => Array.isArray(m.supportedGenerationMethods) && m.supportedGenerationMethods.includes('generateContent'))
+      .map(m => m.name.replace(/^models\//, ''));
+
+    // Priorizar modelos Flash sobre Pro (los Pro suelen tener cuota 0 en cuentas gratuitas)
+    return models.sort((a, b) => {
+      const aFlash = a.includes('flash') ? 0 : 1;
+      const bFlash = b.includes('flash') ? 0 : 1;
+      return aFlash - bFlash;
+    });
+  } catch (err) {
+    console.warn('[Gemini API] Error al descubrir modelos dinámicamente:', err.message);
+    return [];
+  }
+}
+
 /**
  * Helper to call Gemini API directly using native fetch.
- * Implements multi-model fallback chain and auto-retry on 503 (High Demand) / 429 (Rate Limits).
+ * Implements dynamic model discovery, multi-model fallback chain and auto-retry.
  */
-export async function callGemini(prompt, systemInstruction = '') {
+export async function callGemini(prompt, systemInstruction = '', options = {}) {
   const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey) {
     throw new Error('GEMINI_API_KEY no está configurada en las variables de entorno.');
   }
 
-  // Modelos activos de Google Gemini (serie 2.5 y 2.0)
-  const candidateModels = [
+  // Modelos candidatos prioritarios y verificados
+  let candidateModels = [
+    activeModelCache,
     process.env.GEMINI_MODEL,
-    'gemini-2.5-flash',
-    'gemini-2.0-flash',
-    'gemini-2.0-flash-lite',
-    'gemini-2.5-pro'
+    'gemini-3.5-flash',
+    'gemini-3-flash-preview',
+    'gemini-flash-latest',
+    'gemini-3.1-flash-lite',
+    'gemini-2.5-flash'
   ].filter((m, idx, arr) => m && arr.indexOf(m) === idx);
 
   let lastError = null;
   let hasHighDemand = false;
 
-  for (const model of candidateModels) {
-    for (let attempt = 1; attempt <= 3; attempt++) {
+  const tryCallModel = async (model) => {
+    for (let attempt = 1; attempt <= 2; attempt++) {
       try {
         const payload = {
-          contents: [
-            {
-              parts: [{ text: prompt }]
-            }
-          ]
+          contents: [{ parts: [{ text: prompt }] }]
         };
 
         if (systemInstruction) {
           payload.system_instruction = {
             parts: [{ text: systemInstruction }]
+          };
+        }
+
+        if (options.jsonMode) {
+          payload.generationConfig = {
+            responseMimeType: 'application/json'
           };
         }
 
@@ -54,45 +84,59 @@ export async function callGemini(prompt, systemInstruction = '') {
           const data = await response.json();
           const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
           if (text) {
+            activeModelCache = model; // Cachear el modelo comprobado
             return text;
           }
         }
 
         const status = response.status;
-        const errText = await response.text();
+        const errJson = await response.json().catch(() => ({}));
+        const errMsg = errJson?.error?.message || response.statusText;
 
-        // 503 (Alta demanda global en Google) o 429 (Límite temporal de peticiones)
         if (status === 503 || status === 429) {
-          console.warn(`[Gemini API] Modelo ${model} devolvió ${status} (alta demanda). Reintento ${attempt}/3...`);
+          console.warn(`[Gemini API] Modelo ${model} devolvió ${status} (${errMsg}). Reintento ${attempt}/2...`);
           hasHighDemand = true;
-          lastError = new Error(`Alta demanda en Google Gemini (${status}).`);
+          lastError = new Error(`Límite o demanda temporal en Google Gemini (${status}): ${errMsg}`);
           await new Promise(r => setTimeout(r, 1200 * attempt));
-          continue; // reintentar este modelo
+          continue;
         }
 
-        // Si es 404 (modelo no activo o no disponible con esta clave), probar siguiente sin enmascarar error previo
         if (status === 404) {
-          console.warn(`[Gemini API] Modelo ${model} no disponible (404). Pasando al siguiente modelo...`);
-          if (!hasHighDemand) {
-            lastError = new Error(`Modelo ${model} no disponible (404).`);
-          }
-          break; // pasar al siguiente modelo
+          console.warn(`[Gemini API] Modelo ${model} no disponible (404: ${errMsg}). Probando siguiente...`);
+          lastError = new Error(`Modelo ${model} no disponible: ${errMsg}`);
+          return null; // Probar siguiente modelo
         }
 
-        // Otros errores (400, 401, 403, etc.)
-        throw new Error(`Error de Gemini API (${status}): ${errText}`);
+        throw new Error(`Error de Gemini API (${status}): ${errMsg}`);
       } catch (err) {
-        if (!hasHighDemand) lastError = err;
-        if (attempt === 3) break;
+        lastError = err;
+        if (attempt === 2) return null;
       }
+    }
+    return null;
+  };
+
+  // 1. Probar lista inicial de modelos
+  for (const model of candidateModels) {
+    const text = await tryCallModel(model);
+    if (text) return text;
+  }
+
+  // 2. Si ninguno de los modelos predefinidos funcionó (404), descubrir dinámicamente vía ListModels
+  console.log('[Gemini API] Descubriendo modelos activos para esta clave...');
+  const discoveredModels = await discoverSupportedModels(apiKey);
+  for (const model of discoveredModels) {
+    if (!candidateModels.includes(model)) {
+      const text = await tryCallModel(model);
+      if (text) return text;
     }
   }
 
-  console.error('[Gemini API] No se pudo completar la llamada:', lastError?.message);
+  console.error('[Gemini API] No se pudo completar la llamada con ningún modelo:', lastError?.message);
   if (hasHighDemand) {
-    throw new Error('Los servidores de Google Gemini están experimentando alta demanda en este momento (503). Por favor, espera 10 segundos y vuelve a pulsar el botón.');
+    throw new Error('Los servidores de Google Gemini están experimentando alta demanda o límite de cuota (503/429). Espera unos segundos y vuelve a pulsar el botón.');
   }
-  throw lastError || new Error('No se pudo conectar con la API de Gemini.');
+  throw lastError || new Error('No se pudo conectar con la API de Google Gemini.');
 }
 
 /**
@@ -129,30 +173,24 @@ Formato de respuesta esperado (sin bloques de markdown de código, solo el texto
 ]`;
 
   const prompt = `Genera exactamente 5 nuevas ideas de software disruptivas y útiles para productividad o venta a negocios.${context ? ` Ten en cuenta este contexto o ideas previas: ${context}` : ''}`;
-  const responseText = await callGemini(prompt, systemInstruction);
+  const responseText = await callGemini(prompt, systemInstruction, { jsonMode: true });
   
   // Clean JSON block format if returned by Gemini (e.g. ```json ... ```)
   let cleanJson = responseText.trim();
-  if (cleanJson.startsWith('```json')) {
-    cleanJson = cleanJson.substring(7);
-  }
-  if (cleanJson.endsWith('```')) {
-    cleanJson = cleanJson.substring(0, cleanJson.length - 3);
+  const jsonMatch = cleanJson.match(/\[[\s\S]*\]/);
+  if (jsonMatch) {
+    cleanJson = jsonMatch[0];
+  } else {
+    cleanJson = cleanJson.replace(/^```json\s*/i, '').replace(/^```\s*/i, '').replace(/\s*```$/i, '');
   }
   
   try {
-    return JSON.parse(cleanJson.trim());
+    const parsed = JSON.parse(cleanJson.trim());
+    if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+    throw new Error('Formato de lista de ideas no válido devuelto por Gemini');
   } catch (e) {
     console.error('Error al parsear JSON de ideas de Gemini:', responseText);
-    // Fallback parser o estructura básica
-    return [
-      {
-        "title": "Software de Productividad Inteligente",
-        "description": "Error al estructurar respuesta de IA. Detalles: " + responseText.substring(0, 100),
-        "marketNeeds": "General",
-        "techStack": "Node.js, HTML"
-      }
-    ];
+    throw new Error('Google Gemini no devolvió las ideas en formato estructurado requerido. Inténtalo de nuevo.');
   }
 }
 
@@ -188,29 +226,23 @@ Formato esperado:
 ]`;
 
   const prompt = `Identifica exactamente 5 negocios reales y existentes en España en el sector de: ${niche}, con sus direcciones exactas y problemas web que puedan mejorarse con desarrollo de software.`;
-  const responseText = await callGemini(prompt, systemInstruction);
+  const responseText = await callGemini(prompt, systemInstruction, { jsonMode: true });
   
   let cleanJson = responseText.trim();
-  if (cleanJson.startsWith('```json')) {
-    cleanJson = cleanJson.substring(7);
-  }
-  if (cleanJson.endsWith('```')) {
-    cleanJson = cleanJson.substring(0, cleanJson.length - 3);
+  const jsonMatch = cleanJson.match(/\[[\s\S]*\]/);
+  if (jsonMatch) {
+    cleanJson = jsonMatch[0];
+  } else {
+    cleanJson = cleanJson.replace(/^```json\s*/i, '').replace(/^```\s*/i, '').replace(/\s*```$/i, '');
   }
   
   try {
-    return JSON.parse(cleanJson.trim());
+    const parsed = JSON.parse(cleanJson.trim());
+    if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+    throw new Error('Formato de lista no válido devuelto por Gemini');
   } catch (e) {
     console.error('Error al parsear JSON de leads de Gemini:', responseText);
-    return [
-      {
-        "name": "Negocio Simulado",
-        "website": "www.negociosimulado.com",
-        "phone": "info@negocio.com",
-        "industry": niche,
-        "whyTheyNeedWebDev": "Tiene un sitio web antiguo que no funciona bien en móviles."
-      }
-    ];
+    throw new Error('Google Gemini no devolvió la lista en formato estructurado requerido. Inténtalo de nuevo.');
   }
 }
 

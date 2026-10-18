@@ -58,6 +58,46 @@
   "leads": {
     "productIdeas": [
       {
+        "title": "ObraVisual Cam",
+        "description": "Software de bitácora visual automatizada para pequeñas empresas de reformas e interiorismo. El trabajador de la obra toma 3 fotos al día desde ángulos fijos marcados con realidad aumentada simple. La app ensambla automáticamente un vídeo timelapse semanal formateado con el logotipo de la empresa y una línea de tiempo del avance para enviarlo al propietario.",
+        "marketNeeds": "Elimina la ansiedad constante del cliente de reformas que llama diariamente para preguntar '¿Cómo va la obra?' y dota a los reformistas de un portafolio profesional para conseguir nuevos clientes.",
+        "techStack": "React Native (Expo), FFmpeg WASM para procesamiento de vídeo en cliente, Supabase, TailwindCSS.",
+        "id": "i_5w5otd0bn",
+        "createdAt": "2026-10-18T07:59:11.526Z"
+      },
+      {
+        "title": "CupoVivo Standby",
+        "description": "Gestor inteligente de 'lista de espera reactiva' para clínicas dentales, fisioterapeutas y centros de estética. Cuando un cliente cancela una cita a última hora, la herramienta detecta la vacante e inicia una secuencia de mensajes conversacionales vía WhatsApp a pacientes en lista de espera proponiéndoles cubrir el hueco con un micro-descuento por aviso inmediato.",
+        "marketNeeds": "Una hora de gabinete vacío en una clínica equivale a pérdida directa de margen. Permite rellenar hasta el 70% de las cancelaciones de última hora sin sobrecargar de llamadas a recepción.",
+        "techStack": "FastAPI (Python), WhatsApp Business Cloud API, PostgreSQL, Redis para colas de tareas.",
+        "id": "i_6c2ia47lq",
+        "createdAt": "2026-10-18T07:59:11.526Z"
+      },
+      {
+        "title": "MermaZero Express",
+        "description": "Plataforma de liquidación dinámica de stock diario para panaderías y reposterías artesanales. A las 17:00, el comerciante selecciona en 3 clics en una tablet los productos sobrantes. La herramienta genera y publica automáticamente micro-ofertas geolocalizadas con tiempo límite en Instagram Stories, canales de Telegram de vecinos y notificaciones Push a clientes frecuentes.",
+        "marketNeeds": "Transforma mermas alimentarias inevitables en ingresos de caja de última hora sin que el dueño pierda tiempo redactando publicaciones o gestionando redes sociales manualmente.",
+        "techStack": "SvelteKit, Node.js, Instagram Graph API, Telegram Bot API, Web Push Notifications.",
+        "id": "i_h1v98wea4",
+        "createdAt": "2026-10-18T07:59:11.526Z"
+      },
+      {
+        "title": "MechProof Link",
+        "description": "Sistema de micro-presupuestos audiovisuales para talleres mecánicos. El mecánico graba un vídeo de 10 segundos mostrando la pieza desgastada del vehículo. El software transcribe su voz explicativa, genera un presupuesto desglosado automático y envía un enlace interactivo al cliente donde puede ver el problema y presionar 'Aprobar reparación' con firma digital.",
+        "marketNeeds": "Los talleres sufren retrasos y pérdidas de ventas por la desconfianza del cliente al explicar fallos mecánicos por teléfono. Ver la prueba visual aumenta la tasa de aprobación de reparaciones en más de un 40%.",
+        "techStack": "Next.js, Whisper API, Cloudinary para optimización de vídeo, Stripe/MercadoPago API, Twilio.",
+        "id": "i_tnjgabeoj",
+        "createdAt": "2026-10-18T07:59:11.526Z"
+      },
+      {
+        "title": "TicketRuta OCR",
+        "description": "Aplicación web móvil ultra-rápida para técnicos de campo (fontaneros, electricistas, cerrajeros). El técnico fotografía los tickets en papel comprados en la ferretería; una IA especializada en recibos arrugados o borrosos extrae cada ítem, lo asigna automáticamente al expediente del cliente actual según su ubicación GPS y genera una adenda visual clara lista para adjuntar a la factura o enviar por WhatsApp.",
+        "marketNeeds": "Los profesionales independientes pierden hasta un 15% de sus ingresos anuales por olvidar cobrar materiales pequeños o traspapelar tickets de compra físicos acumulados en la furgoneta.",
+        "techStack": "PWA (React/Vite), OpenAI Vision API / GPT-4o-mini, Supabase, WhatsApp Business API.",
+        "id": "i_3rh0ahnhe",
+        "createdAt": "2026-10-18T07:59:11.525Z"
+      },
+      {
         "title": "AudioBitácora",
         "description": "Una aplicación web de voz a texto hiper-simplificada para técnicos de campo (fontaneros, electricistas, mecánicos). El técnico graba un audio de 30 segundos al terminar un trabajo explicando lo que hizo ('Cambié la junta de la culata, usé dos filtros marca X, tardé 2 horas'). Una IA extrae las piezas utilizadas, el tiempo de mano de obra, genera automáticamente un reporte técnico en PDF, actualiza un inventario local y redacta un mensaje de WhatsApp para enviar al cliente con el cobro detallado.",
         "marketNeeds": "Los profesionales de servicios técnicos odian el papeleo y pierden dinero porque olvidan cobrar piezas o tardan días en enviar presupuestos/facturas. Las soluciones actuales son ERPs complejos que no se usan desde el móvil bajo el coche o en un tejado. Esto resuelve la fricción administrativa con un solo botón de grabación.",
@@ -179,6 +219,66 @@
       }
     ],
     "leadsList": [
+      {
+        "name": "Cabaña Verónica",
+        "address": "Calle de los Herreros, 4, 39002 Santander",
+        "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Cabana+Veronica+Calle+de+los+Herreros+4+Santander",
+        "website": "www.cabanaveronica.com",
+        "phone": "+34 942 215 137 / info@cabanaveronica.com",
+        "industry": "Deportes de Montaña y Material Técnico",
+        "whyTheyNeedWebDev": "Falta de optimización para la búsqueda y filtrado por tallas, especificaciones técnicas y material. Se propone un desarrollo a medida para la gestión de productos con variaciones complejas, integración automática de stock entre almacén local y web, y optimización SEO técnico enfocado en búsqueda local y catálogo especializado de montaña.",
+        "id": "l_hx3tzfqkt",
+        "status": "Nuevo",
+        "foundAt": "2026-10-18T07:59:25.170Z"
+      },
+      {
+        "name": "Colmado Quílez / La Fuente",
+        "address": "Rambla de Catalunya, 65, 08007 Barcelona",
+        "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Colmado+Quilez+Rambla+de+Catalunya+65+Barcelona",
+        "website": "www.lafuente.es",
+        "phone": "+34 932 152 145 / info@lafuente.es",
+        "industry": "Alimentación Gourmet y Vinos",
+        "whyTheyNeedWebDev": "Su tienda online posee una interfaz anticuada que no refleja la experiencia de alta gama de su tienda física emblemática. Requiere una modernización integral del frontend con tecnología JAMstack/Next.js para carga instantánea, migración a una pasarela de pago para envíos refrigerados/especiales y desarrollo de un club de fidelización conectado al TPVP del local físico.",
+        "id": "l_f3fz47ukt",
+        "status": "Nuevo",
+        "foundAt": "2026-10-18T07:59:25.170Z"
+      },
+      {
+        "name": "Dooc Barcelona",
+        "address": "Carrer de Còrsega, 285, 08008 Barcelona",
+        "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Dooc+Carrer+de+Corsega+285+Barcelona",
+        "website": "www.dooc.es",
+        "phone": "+34 932 181 832 / info@dooc.es",
+        "industry": "Decoración, Muebles y Diseño de Interiores",
+        "whyTheyNeedWebDev": "La tienda online carece de un sistema interactivo de recogida local (Click & Collect) con gestión de franjas horarias y disponibilidad inmediata en tienda física. Se propone el desarrollo de un módulo personalizado de geolocalización e inventario por tienda, mejora del tiempo de respuesta del servidor (Core Web Vitals) y personalizador interactivo de productos.",
+        "id": "l_0tu2j8g7k",
+        "status": "Nuevo",
+        "foundAt": "2026-10-18T07:59:25.170Z"
+      },
+      {
+        "name": "Curiosite",
+        "address": "Calle de la Corredera Alta de San Pablo, 28, 28004 Madrid",
+        "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Curiosite+Calle+de+la+Corredera+Alta+de+San+Pablo+28+Madrid",
+        "website": "www.curiosite.es",
+        "phone": "+34 911 412 800 / contacto@curiosite.es",
+        "industry": "Tienda de Regalos y Objetos de Diseño",
+        "whyTheyNeedWebDev": "Alto porcentaje de usuarios móviles con abandono de carrito por un flujo de checkout con demasiados pasos. Se propone optimización de UX/UI enfocado en conversiones móviles (Mobile-First), desarrollo de checkout exprés con integración nativa de Apple Pay, Google Pay y Bizum en un solo clic, y optimización de carga de imágenes de catálogo (WebP/AVIF diferido).",
+        "id": "l_tfbvnswf7",
+        "status": "Nuevo",
+        "foundAt": "2026-10-18T07:59:25.170Z"
+      },
+      {
+        "name": "Librería La Central del Raval",
+        "address": "Carrer de Elisabets, 6, 08001 Barcelona",
+        "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Libreria+La+Central+Carrer+de+Elisabets+6+Barcelona",
+        "website": "www.lacentral.com",
+        "phone": "+34 933 170 293 / atencion@lacentral.com",
+        "industry": "Librería / Comercio Local y E-commerce",
+        "whyTheyNeedWebDev": "Su plataforma e-commerce actual gestiona un catálogo masivo, pero su buscador interno presenta latencias altas y filtrado complejo en dispositivos móviles. Se propone desarrollo e integración de un motor de búsqueda headless (Search API como Algolia/Meilisearch), optimización de caché para acelerar el tiempo de carga por debajo de 1.5s y sincronización en tiempo real del stock del ERP físico con la tienda online.",
+        "id": "l_a9wxwkllf",
+        "status": "Nuevo",
+        "foundAt": "2026-10-18T07:59:25.170Z"
+      },
       {
         "id": "l_1_burnout",
         "name": "Burnout Burgers Fuencarral",

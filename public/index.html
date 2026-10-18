@@ -16,7 +16,7 @@
   <!-- FontAwesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <!-- Estilos CSS -->
-  <link rel="stylesheet" href="css/style.css?v=4.2">
+  <link rel="stylesheet" href="css/style.css?v=5.1">
 </head>
 <body>
 
@@ -297,12 +297,14 @@
                 <div class="score-badge" id="ficha-score" title="Puntuación de encaje (0-100)">89</div>
                 <div class="ficha-title-block">
                   <div class="title-with-priority">
-                    <h3 id="ficha-empresa-nombre">Cargando empresa...</h3>
+                    <h3 id="ficha-empresa-nombre" style="color: #0f172a !important;">Cargando empresa...</h3>
                     <span id="ficha-prioridad-tag" class="priority-tag prio-A">Prioridad A</span>
                   </div>
                   <div class="ficha-subsector-row">
-                    <span id="ficha-subsector">Sector empresarial</span> · <span id="ficha-provincia">España</span>
-                    <a id="ficha-web-link" href="#" target="_blank" class="web-link" title="Abrir web"><i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+                    <span id="ficha-subsector" class="meta-subsector">Sector empresarial</span>
+                    <span class="meta-sep">•</span>
+                    <span id="ficha-provincia-box" class="meta-location"><i class="fa-solid fa-location-dot"></i> <span id="ficha-provincia">España</span></span>
+                    <a id="ficha-web-link" href="#" target="_blank" class="web-link-badge" title="Abrir web"><i class="fa-solid fa-arrow-up-right-from-square"></i> Web</a>
                   </div>
                 </div>
               </div>
@@ -310,7 +312,11 @@
               <!-- Decisor y Contacto -->
               <div class="ficha-decisor-box">
                 <div class="decisor-label">DECISOR:</div>
-                <div class="decisor-name"><strong id="ficha-decisor-nombre">Responsable de Negocio</strong> · <span id="ficha-decisor-cargo">Gerencia / Titular</span></div>
+                <div class="decisor-name">
+                  <strong id="ficha-decisor-nombre">Responsable de Negocio</strong>
+                  <span class="decisor-sep">—</span>
+                  <span id="ficha-decisor-cargo">Gerencia / Titular</span>
+                </div>
               </div>
 
               <!-- Teléfonos y Acción de Llamada -->

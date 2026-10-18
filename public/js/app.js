@@ -510,7 +510,7 @@ function renderCurrentProspect() {
   const webLink = document.getElementById('ficha-web-link');
   if (webLink) {
     webLink.href = p.web || '#';
-    webLink.style.display = p.web ? 'inline' : 'none';
+    webLink.style.display = p.web ? 'inline-flex' : 'none';
   }
 
   // Decisor

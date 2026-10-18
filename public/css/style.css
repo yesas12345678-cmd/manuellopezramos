@@ -2852,13 +2852,13 @@ tr:hover td {
 }
 
 .title-with-priority h3 {
-  font-size: 1.05rem;
+  font-size: 1.18rem;
   font-weight: 800;
-  color: #fff;
+  color: #0f172a !important;
   margin: 0;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  white-space: normal;
+  word-break: break-word;
+  line-height: 1.25;
 }
 
 .priority-tag {
@@ -7425,4 +7425,129 @@ input:focus, textarea:focus, select:focus {
 .obj-response {
   color: #0f172a !important;
   font-weight: 600 !important;
+}
+
+/* =====================================================================
+   HIGH-PRECISION CABINA FICHA CARD STYLING (FIX WHITE-ON-WHITE & LAYOUT)
+   ===================================================================== */
+#ficha-empresa-nombre,
+.title-with-priority h3,
+.ficha-title-block h3 {
+  color: #0f172a !important;
+  font-size: 1.22rem !important;
+  font-weight: 800 !important;
+  line-height: 1.25 !important;
+  margin: 0 !important;
+  display: block !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+.title-with-priority {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  gap: 10px !important;
+  flex-wrap: wrap !important;
+}
+
+.ficha-subsector-row {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  align-items: center !important;
+  gap: 6px 10px !important;
+  font-size: 0.8rem !important;
+  color: #475569 !important;
+  margin-top: 6px !important;
+  line-height: 1.35 !important;
+}
+
+.meta-subsector {
+  font-weight: 600 !important;
+  color: #334155 !important;
+}
+
+.meta-sep {
+  color: #cbd5e1 !important;
+  font-size: 0.75rem !important;
+}
+
+.meta-location {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 5px !important;
+  color: #475569 !important;
+  white-space: nowrap !important;
+  background: #f1f5f9 !important;
+  padding: 3px 9px !important;
+  border-radius: 6px !important;
+  border: 1px solid #cbd5e1 !important;
+  font-size: 0.76rem !important;
+  font-weight: 600 !important;
+}
+
+.meta-location i {
+  color: #ef4444 !important;
+  font-size: 0.75rem !important;
+}
+
+.web-link-badge {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 5px !important;
+  color: #2563eb !important;
+  background: #eff6ff !important;
+  padding: 3px 9px !important;
+  border-radius: 6px !important;
+  border: 1px solid #bfdbfe !important;
+  font-size: 0.76rem !important;
+  font-weight: 700 !important;
+  text-decoration: none !important;
+  transition: all 0.2s ease !important;
+}
+
+.web-link-badge:hover {
+  background: #2563eb !important;
+  color: #ffffff !important;
+}
+
+.ficha-decisor-box {
+  background: #f8fafc !important;
+  border: 1.5px solid #cbd5e1 !important;
+  border-radius: 10px !important;
+  padding: 9px 12px !important;
+  margin-top: 10px !important;
+  margin-bottom: 12px !important;
+}
+
+.decisor-label {
+  font-size: 0.68rem !important;
+  font-weight: 800 !important;
+  color: #64748b !important;
+  letter-spacing: 0.08em !important;
+  margin-bottom: 2px !important;
+}
+
+.decisor-name {
+  font-size: 0.88rem !important;
+  color: #0f172a !important;
+  display: flex !important;
+  align-items: center !important;
+  flex-wrap: wrap !important;
+  gap: 6px !important;
+}
+
+.decisor-name strong {
+  color: #0f172a !important;
+  font-weight: 750 !important;
+}
+
+.decisor-sep {
+  color: #94a3b8 !important;
+  margin: 0 2px !important;
+}
+
+#ficha-decisor-cargo {
+  color: #475569 !important;
+  font-weight: 500 !important;
 }

@@ -521,18 +521,18 @@ function renderCurrentProspect() {
   if (decisorCargoEl) decisorCargoEl.textContent = p.decisor?.cargo || 'Gerente / Dirección';
 
   // Teléfonos
-  const telPri = p.telefonos?.[0] || { numero: '600 00 00 00', etiqueta: 'gerencia' };
+  const telPri = p.telefonos?.[0] || { numero: '--', etiqueta: 'teléfono empresa' };
   const telLabelEl = document.getElementById('ficha-tel-label');
-  if (telLabelEl) telLabelEl.textContent = `${telPri.tipo || 'móvil'} · ${telPri.etiqueta || 'contacto'}`;
+  if (telLabelEl) telLabelEl.textContent = `${telPri.tipo || 'teléfono'} · ${telPri.etiqueta || 'contacto'}`;
   
   const telNumEl = document.getElementById('ficha-tel-numero');
-  if (telNumEl) telNumEl.textContent = telPri.numero;
+  if (telNumEl) telNumEl.textContent = telPri.numero || '--';
 
   const telSec = p.telefonos?.[1];
   const telSecEl = document.getElementById('ficha-tel-secondary');
   if (telSecEl) {
-    if (telSec) {
-      telSecEl.innerHTML = `<i class="fa-solid fa-phone-office"></i> ${telSec.numero}`;
+    if (telSec && telSec.numero) {
+      telSecEl.innerHTML = `<i class="fa-solid fa-phone"></i> ${telSec.numero}`;
       telSecEl.style.display = 'inline-flex';
     } else {
       telSecEl.style.display = 'none';
@@ -543,22 +543,27 @@ function renderCurrentProspect() {
   const cleanPhone = (telPri.numero || '').replace(/\D/g, '');
   const btnWa = document.getElementById('btn-whatsapp-direct');
   if (btnWa) {
-    btnWa.href = `https://wa.me/34${cleanPhone}`;
+    if (cleanPhone) {
+      btnWa.href = `https://wa.me/34${cleanPhone}`;
+      btnWa.style.display = 'inline-flex';
+    } else {
+      btnWa.style.display = 'none';
+    }
   }
 
   // Mejor franja
   const franjaEl = document.getElementById('ficha-mejor-franja');
-  if (franjaEl) franjaEl.textContent = `Mejor franja: ${p.mejor_franja || '9:00 - 13:00'}`;
+  if (franjaEl) franjaEl.textContent = `Mejor franja: ${p.mejor_franja || '10:00 - 13:30 horario comercial'}`;
 
   // Qué hacen
   const queHacenEl = document.getElementById('ficha-que-hacen');
-  if (queHacenEl) queHacenEl.textContent = p.que_hacen || 'Empresa de servicios técnicos y mantenimiento.';
+  if (queHacenEl) queHacenEl.textContent = p.que_hacen || `${p.empresa} · Negocio auditado en su web pública (${p.web || ''}).`;
 
   // Señales
   const senalesListEl = document.getElementById('ficha-senales-list');
   const ammoSenalesList = document.getElementById('ammo-signals-list');
   if (senalesListEl) {
-    const listHtml = (p.senales || []).map(s => `<li>${s.senal}</li>`).join('') || '<li>Sin señales web específicas.</li>';
+    const listHtml = (p.senales || []).map(s => `<li>${s.senal}</li>`).join('') || '<li>Auditoría técnica web disponible.</li>';
     senalesListEl.innerHTML = listHtml;
   }
   if (ammoSenalesList) {
@@ -585,13 +590,13 @@ function renderCurrentProspect() {
 
   // Solución y Prueba
   const solPriEl = document.getElementById('ficha-solucion-principal');
-  if (solPriEl) solPriEl.textContent = p.solucion_propuesta?.principal || 'Digitalización de partes y avisos a clientes.';
+  if (solPriEl) solPriEl.textContent = p.solucion_propuesta?.principal || `Desarrollo y optimización web para ${p.empresa}`;
   const solSecEl = document.getElementById('ficha-solucion-complementaria');
-  if (solSecEl) solSecEl.textContent = p.solucion_propuesta?.complementaria || '';
+  if (solSecEl) solSecEl.textContent = p.solucion_propuesta?.complementaria || 'Automatización de captación y procesos digitales';
   
   const pruebaEl = document.getElementById('ficha-prueba-citar');
   const ammoPruebaEl = document.getElementById('ammo-proof-text');
-  const pruebaText = p.solucion_propuesta?.prueba_a_citar || 'Un servicio técnico similar en Toledo redujo a cero las horas perdidas de facturación.';
+  const pruebaText = p.solucion_propuesta?.prueba_a_citar || 'Negocios auditados del mismo sector incrementaron sus contactos directos y reservas tras optimizar su web.';
   if (pruebaEl) pruebaEl.textContent = pruebaText;
   if (ammoPruebaEl) ammoPruebaEl.textContent = pruebaText;
 
@@ -599,16 +604,16 @@ function renderCurrentProspect() {
   // Paso 1: Apertura
   const aperturaTextEl = document.getElementById('script-text-apertura');
   if (aperturaTextEl) {
-    const decisorName = p.decisor?.nombre || 'buenos días';
-    const firstSignal = p.senales?.[0]?.senal?.toLowerCase() || 'vuestros servicios técnicos';
-    const defaultApertura = p.apertura_siguiente || p.guion?.apertura || `«Hola, ¿${decisorName}? Soy zVaito, de Verox. Te llamo porque he visto en vuestra web que ${firstSignal}, y tengo una pregunta rápida sobre cómo os llegan los partes a la oficina. ¿Tienes un minuto?»`;
+    const decisorName = p.decisor?.nombre || 'el responsable de ' + p.empresa;
+    const firstSignal = p.senales?.[0]?.senal ? p.senales[0].senal : 'vuestra presencia online';
+    const defaultApertura = p.apertura_siguiente || p.guion?.apertura || `«Hola, buenos días. ¿Hablo con ${decisorName}? Os llamo porque he estado auditando vuestra web (${p.web || ''}) y he detectado un punto de mejora claro en ${firstSignal}. ¿Tenéis un minuto?»`;
     aperturaTextEl.textContent = defaultApertura;
   }
 
   // Paso 2: ¿Decide él?
   const decideTextEl = document.getElementById('script-text-decide');
   if (decideTextEl) {
-    decideTextEl.textContent = p.guion?.si_no_esta_el_decisor ? '«¿Eres tú quien decide esto o lo lleva otra persona?»' : '«¿Eres tú quien lleva la oficina y la facturación, o lo lleva otra persona?»';
+    decideTextEl.textContent = p.guion?.si_no_esta_el_decisor || `«¿Eres tú quien coordina la página web y la captación de clientes en ${p.empresa}, o con quién tendría que hablar?»`;
   }
 
   // Paso 3: Preguntas de cuantificación
@@ -617,7 +622,7 @@ function renderCurrentProspect() {
     const questions = p.guion?.preguntas_descubrimiento || (p.dolores || []).map(d => d.pregunta_cuantificacion).filter(Boolean);
     discoveryEl.innerHTML = questions.map((q, idx) => `
       <li><strong>Pregunta ${idx + 1}:</strong> «${q}»</li>
-    `).join('') || '<li>«¿Cuántas horas a la semana se van en esto?»</li>';
+    `).join('') || `<li>«¿Cuántos clientes o contactos os entran actualmente por la web ${p.web || ''}?»</li>`;
   }
 
   // Paso 4: Cierre con huecos dinámicos
@@ -626,7 +631,7 @@ function renderCurrentProspect() {
   // COLUMNA 3: RESET COACH
   const sayNowText = document.getElementById('say-now-text');
   if (sayNowText) {
-    sayNowText.textContent = `Empieza la llamada con la apertura. Cuando ${p.decisor?.nombre || 'el cliente'} responda, el coach te dirá qué contestar aquí.`;
+    sayNowText.textContent = `Inicia la llamada con la apertura. Cuando el cliente responda, el coach te sugerirá la mejor respuesta en tiempo real.`;
   }
   const sayNowTag = document.getElementById('say-now-tag');
   if (sayNowTag) sayNowTag.textContent = 'Listo';

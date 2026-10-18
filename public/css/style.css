@@ -7051,8 +7051,378 @@ input:focus, textarea:focus, select:focus {
   color: #ffffff !important;
 }
 
+/* ================= ULTRA ALTO CONTRASTE: CABINA DE VENTAS ================= */
+#panel-sales {
+  color: #0f172a !important;
+}
 
+#panel-sales .cabina-col {
+  background: #ffffff !important;
+  border: 1.5px solid #cbd5e1 !important;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.05) !important;
+}
 
+/* Barra Superior de la Cabina */
+#panel-sales .stat-pill {
+  background: #f1f5f9 !important;
+  border: 1.5px solid #cbd5e1 !important;
+  color: #1e293b !important;
+  font-weight: 700 !important;
+}
+#panel-sales .stat-pill strong {
+  color: #0f172a !important;
+}
+#panel-sales .stat-pill.highlight-success {
+  background: #ecfdf5 !important;
+  border: 1.5px solid #10b981 !important;
+  color: #065f46 !important;
+}
+#panel-sales .stat-pill.highlight-success strong {
+  color: #065f46 !important;
+}
+#panel-sales .stat-pill.timer-pill {
+  background: #f5f3ff !important;
+  border: 1.5px solid #c4b5fd !important;
+  color: #5b21b6 !important;
+  font-weight: 800 !important;
+}
+#cabina-btn-prev, #cabina-btn-next, #cabina-prospect-select {
+  background: #ffffff !important;
+  border: 1.5px solid #94a3b8 !important;
+  color: #0f172a !important;
+  font-weight: 700 !important;
+}
+#cabina-queue-indicator {
+  color: #0f172a !important;
+  font-weight: 800 !important;
+}
 
+/* Columna 1: Ficha Header */
+.ficha-header-card {
+  background: #ffffff !important;
+  border-bottom: 2px solid #e2e8f0 !important;
+}
+.title-with-priority h3 {
+  color: #0f172a !important;
+  font-weight: 800 !important;
+}
+.ficha-subsector-row {
+  color: #334155 !important;
+  font-weight: 600 !important;
+}
+.web-link {
+  color: #2563eb !important;
+  font-weight: 700 !important;
+}
+.web-link:hover {
+  color: #1d4ed8 !important;
+}
+.ficha-decisor-box {
+  background: #f8fafc !important;
+  border: 1.5px solid #cbd5e1 !important;
+}
+.decisor-label {
+  color: #475569 !important;
+  font-weight: 800 !important;
+}
+.decisor-name {
+  color: #0f172a !important;
+  font-weight: 700 !important;
+}
+.contact-pill-btn {
+  background: #ecfdf5 !important;
+  color: #065f46 !important;
+  border: 1.5px solid #10b981 !important;
+  font-weight: 750 !important;
+}
+.contact-pill-btn:hover {
+  background: #059669 !important;
+  color: #ffffff !important;
+}
+.contact-secondary-pill {
+  background: #f1f5f9 !important;
+  color: #0f172a !important;
+  border: 1.5px solid #cbd5e1 !important;
+  font-weight: 700 !important;
+}
+.priority-tag.prio-A {
+  background: #ecfdf5 !important;
+  color: #065f46 !important;
+  border: 1.5px solid #10b981 !important;
+  font-weight: 800 !important;
+}
+.priority-tag.prio-B {
+  background: #fef3c7 !important;
+  color: #78350f !important;
+  border: 1.5px solid #d97706 !important;
+  font-weight: 800 !important;
+}
+.priority-tag.prio-C {
+  background: #f1f5f9 !important;
+  color: #334155 !important;
+  border: 1.5px solid #64748b !important;
+  font-weight: 800 !important;
+}
 
+/* Franja Horaria (Máximo Contraste WCAG AAA) */
+.best-time-box {
+  background: #fef3c7 !important;
+  color: #78350f !important;
+  border: 1.5px solid #d97706 !important;
+  font-weight: 750 !important;
+  padding: 6px 12px !important;
+  border-radius: 6px !important;
+}
+.best-time-box i {
+  color: #b45309 !important;
+  font-size: 0.85rem !important;
+}
 
+/* Pestañas de la Ficha */
+.ficha-tab-nav {
+  background: #f8fafc !important;
+  border-bottom: 2px solid #e2e8f0 !important;
+}
+.ftab-btn {
+  color: #475569 !important;
+  font-weight: 700 !important;
+  background: transparent !important;
+}
+.ftab-btn:hover {
+  color: #0f172a !important;
+  background: #f1f5f9 !important;
+}
+.ftab-btn.active {
+  color: #6d28d9 !important;
+  background: #f5f3ff !important;
+  border-bottom: 3px solid #7c3aed !important;
+  font-weight: 800 !important;
+}
+.info-block h4 {
+  color: #6d28d9 !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.05em !important;
+}
+.info-block p {
+  color: #0f172a !important;
+  font-weight: 550 !important;
+}
+.signals-bullet-list li {
+  color: #0f172a !important;
+  font-weight: 550 !important;
+}
+.signals-bullet-list li::before {
+  color: #7c3aed !important;
+}
+
+/* Dolores Detectados (Fondo rosa claro, texto rojo oscuro y pregunta morada de alto contraste) */
+.pain-card {
+  background: #fff1f2 !important;
+  border: 1.5px solid #fca5a5 !important;
+  border-radius: 8px !important;
+  padding: 10px 14px !important;
+}
+.pain-title {
+  color: #991b1b !important;
+  font-weight: 800 !important;
+  font-size: 0.86rem !important;
+}
+.pain-title i {
+  color: #dc2626 !important;
+}
+.pain-evidence {
+  color: #1e293b !important;
+  font-size: 0.82rem !important;
+  font-weight: 550 !important;
+  margin-top: 4px !important;
+  line-height: 1.45 !important;
+}
+.pain-question {
+  color: #1e1b4b !important;
+  background: #f5f3ff !important;
+  border: 1.5px solid #c4b5fd !important;
+  border-left: 5px solid #7c3aed !important;
+  font-size: 0.84rem !important;
+  font-weight: 750 !important;
+  font-style: italic !important;
+  padding: 8px 12px !important;
+  border-radius: 0 8px 8px 0 !important;
+  margin-top: 8px !important;
+  line-height: 1.45 !important;
+}
+
+/* Solución y Prueba */
+.case-quote-box {
+  background: #f5f3ff !important;
+  border: 1.5px solid #ddd6fe !important;
+  border-left: 4px solid #7c3aed !important;
+  border-radius: 0 8px 8px 0 !important;
+}
+.case-quote-box p {
+  color: #0f172a !important;
+  font-weight: 600 !important;
+}
+.case-quote-box i {
+  color: #7c3aed !important;
+}
+.highlight-text {
+  color: #1e1b4b !important;
+  font-weight: 700 !important;
+}
+.sub-text {
+  color: #334155 !important;
+  font-weight: 500 !important;
+}
+
+/* Columna 2: Guion en 4 Pasos */
+.guion-stepper-bar {
+  background: #f8fafc !important;
+  border-bottom: 2px solid #e2e8f0 !important;
+}
+.step-btn {
+  background: #ffffff !important;
+  border: 1.5px solid #cbd5e1 !important;
+  color: #334155 !important;
+  font-weight: 700 !important;
+}
+.step-btn:hover {
+  background: #f1f5f9 !important;
+  color: #0f172a !important;
+}
+.step-btn.active {
+  background: #f5f3ff !important;
+  border: 2px solid #7c3aed !important;
+  color: #6d28d9 !important;
+  font-weight: 800 !important;
+  box-shadow: 0 2px 6px rgba(124, 58, 237, 0.15) !important;
+}
+.step-num {
+  background: #e2e8f0 !important;
+  color: #0f172a !important;
+}
+.step-btn.active .step-num {
+  background: #7c3aed !important;
+  color: #ffffff !important;
+}
+.step-key {
+  color: #64748b !important;
+}
+.step-rule-hint {
+  background: #f5f3ff !important;
+  border: 1.5px solid #c4b5fd !important;
+  color: #5b21b6 !important;
+  font-weight: 700 !important;
+}
+.step-rule-hint.highlight {
+  background: #fef3c7 !important;
+  border: 1.5px solid #f59e0b !important;
+  color: #78350f !important;
+  font-weight: 700 !important;
+}
+.step-rule-hint.success {
+  background: #ecfdf5 !important;
+  border: 1.5px solid #10b981 !important;
+  color: #065f46 !important;
+  font-weight: 700 !important;
+}
+.script-reading-box {
+  background: #ffffff !important;
+  border: 2px solid #7c3aed !important;
+  box-shadow: 0 4px 14px rgba(124, 58, 237, 0.12) !important;
+}
+.script-hero-text {
+  color: #0f172a !important;
+  font-weight: 600 !important;
+}
+.sub-branch-box {
+  background: #f8fafc !important;
+  border: 1.5px solid #cbd5e1 !important;
+}
+.sub-branch-title {
+  color: #b45309 !important;
+  font-weight: 800 !important;
+}
+.script-secondary-text {
+  color: #1e293b !important;
+  font-weight: 600 !important;
+}
+.discovery-questions-box li {
+  color: #0f172a !important;
+  font-weight: 600 !important;
+}
+.discovery-questions-box strong {
+  color: #6d28d9 !important;
+}
+.slot-pick-btn {
+  background: #ffffff !important;
+  border: 1.5px solid #cbd5e1 !important;
+  color: #0f172a !important;
+  font-weight: 700 !important;
+}
+.slot-pick-btn:hover {
+  background: #f1f5f9 !important;
+}
+.slot-pick-btn.active {
+  background: #ecfdf5 !important;
+  border: 2px solid #059669 !important;
+  color: #065f46 !important;
+  font-weight: 800 !important;
+}
+.call-notes-input-box textarea {
+  background: #ffffff !important;
+  border: 1.5px solid #cbd5e1 !important;
+  color: #0f172a !important;
+  font-weight: 500 !important;
+}
+
+/* Columna 3: Coach Verox & Objeciones */
+.ammo-tab-nav {
+  background: #f8fafc !important;
+  border-bottom: 2px solid #e2e8f0 !important;
+}
+.atab-btn {
+  color: #475569 !important;
+  font-weight: 700 !important;
+  background: transparent !important;
+}
+.atab-btn:hover {
+  color: #0f172a !important;
+}
+.atab-btn.active {
+  color: #6d28d9 !important;
+  background: #f5f3ff !important;
+  border-bottom: 3px solid #7c3aed !important;
+  font-weight: 800 !important;
+}
+.say-now-box {
+  background: #f5f3ff !important;
+  border: 2px solid #7c3aed !important;
+  border-radius: 10px !important;
+  padding: 14px !important;
+}
+.say-now-title {
+  color: #5b21b6 !important;
+  font-weight: 800 !important;
+}
+.say-now-text {
+  color: #0f172a !important;
+  font-weight: 700 !important;
+}
+.coach-transcript-feed {
+  background: #f8fafc !important;
+  border: 1.5px solid #cbd5e1 !important;
+  color: #0f172a !important;
+}
+.obj-card {
+  background: #ffffff !important;
+  border: 1.5px solid #cbd5e1 !important;
+  color: #0f172a !important;
+}
+.obj-label {
+  color: #991b1b !important;
+  font-weight: 800 !important;
+}
+.obj-response {
+  color: #0f172a !important;
+  font-weight: 600 !important;
+}

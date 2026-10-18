@@ -3570,7 +3570,7 @@ function renderLifeTimeline(logs) {
   if (!feed) return;
 
   if (logs.length === 0) {
-    feed.innerHTML = '<div class="empty-state" style="padding: 24px; text-align: center; color: var(--text-muted); font-size: 0.88rem;"><i class="fa-solid fa-clock-rotate-left" style="font-size: 1.4rem; margin-bottom: 8px; display: block; opacity: 0.5;"></i>No hay misiones ejecutadas todavía.<br>El historial se registrará en vivo conforme tus agentes operen.</div>';
+    feed.innerHTML = '<div class="empty-state" style="padding: 24px; text-align: center; color: #475569; font-size: 0.88rem; font-weight: 500;"><i class="fa-solid fa-clock-rotate-left" style="font-size: 1.5rem; margin-bottom: 8px; display: block; color: #64748b;"></i><strong style="color: #0f172a; display: block; margin-bottom: 4px; font-weight: 700;">No hay misiones ejecutadas todavía.</strong>El historial se registrará en vivo conforme tus agentes operen.</div>';
     return;
   }
 
